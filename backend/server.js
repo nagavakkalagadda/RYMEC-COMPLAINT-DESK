@@ -28,14 +28,22 @@ const analyticsRoutes = require('./routes/analyticsRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 
+// Standard /api routes
 app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/notifications', notificationRoutes);
 
+// Direct mount routes (fail-safe for serverless rewrites)
+app.use('/auth', authRoutes);
+app.use('/complaints', complaintRoutes);
+app.use('/analytics', analyticsRoutes);
+app.use('/departments', departmentRoutes);
+app.use('/notifications', notificationRoutes);
+
 // Health & System Info
-app.get('/api/health', async (req, res) => {
+app.get(['/api/health', '/health'], async (req, res) => {
   const dbConnected = await testConnection();
   res.json({
     status: 'online',
@@ -81,7 +89,9 @@ async function runEscalationCycle() {
   }
 }
 
-setInterval(runEscalationCycle, 10 * 60 * 1000);
+if (!process.env.VERCEL) {
+  setInterval(runEscalationCycle, 10 * 60 * 1000);
+}
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -89,13 +99,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal Server Error: ' + err.message });
 });
 
-// Start Server
-app.listen(PORT, async () => {
-  console.log(`====================================================`);
-  console.log(`🏛️  RYMEC GRIEVANCE DESK - BACKEND API`);
-  console.log(`📍  Institution: Rao Bahadur Y. Mahabaleswarappa Engineering College`);
-  console.log(`🚀  Server running on http://localhost:${PORT}`);
-  console.log(`📡  API endpoints mounted at http://localhost:${PORT}/api`);
-  console.log(`====================================================`);
-  await testConnection();
-});
+// Start Server (only when executed directly, not inside Vercel serverless)
+if (require.main === module || !process.env.VERCEL) {
+  app.listen(PORT, async () => {
+    console.log(`====================================================`);
+    console.log(`🏛️  RYMEC GRIEVANCE DESK - BACKEND API`);
+    console.log(`📍  Institution: Rao Bahadur Y. Mahabaleswarappa Engineering College`);
+    console.log(`🚀  Server running on http://localhost:${PORT}`);
+    console.log(`📡  API endpoints mounted at http://localhost:${PORT}/api`);
+    console.log(`====================================================`);
+    await testConnection();
+  });
+}
+
+module.exports = app;
