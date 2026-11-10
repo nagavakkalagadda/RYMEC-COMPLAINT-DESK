@@ -42,6 +42,23 @@ app.use('/analytics', analyticsRoutes);
 app.use('/departments', departmentRoutes);
 app.use('/notifications', notificationRoutes);
 
+// Base API info
+app.get(['/api', '/'], (req, res) => {
+  res.json({
+    status: 'online',
+    institution: 'Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari',
+    project: 'RYMEC Grievance Desk API',
+    endpoints: [
+      '/api/auth',
+      '/api/complaints',
+      '/api/analytics',
+      '/api/departments',
+      '/api/notifications',
+      '/api/health'
+    ]
+  });
+});
+
 // Health & System Info
 app.get(['/api/health', '/health'], async (req, res) => {
   const dbConnected = await testConnection();
