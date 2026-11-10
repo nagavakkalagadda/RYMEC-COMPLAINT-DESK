@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "RYMEC Grievance Desk - Student Grievance Management Platform",
   "scripts": {
-    "build": "npm run build --prefix frontend",
+    "build": "cd frontend && npm install --include=dev && npm run build",
     "start": "node backend/server.js"
   },
   "dependencies": {
