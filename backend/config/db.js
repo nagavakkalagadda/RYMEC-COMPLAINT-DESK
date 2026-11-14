@@ -1,8 +1,11 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const connectionString = process.env.DATABASE_URL || 
-  'postgresql://neondb_owner:npg_Pfy0XE7TnhMN@ep-raspy-river-ar9edhbp-pooler.c-4.us-west-2.aws.neon.tech/neondb?sslmode=require';
+let connectionString = process.env.DATABASE_URL || 
+  'postgresql://neondb_owner:npg_Pfy0XE7TnhMN@ep-raspy-river-ar9edhbp.c-4.us-west-2.aws.neon.tech/neondb?sslmode=require';
+if (connectionString.includes('-pooler.')) {
+  connectionString = connectionString.replace('-pooler.', '.');
+}
 
 let pool;
 let isConnected = false;
