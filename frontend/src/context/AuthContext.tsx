@@ -6,9 +6,13 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (email: string, pass: string) => Promise<void>;
+  login: (email: string, pass: string) => Promise<any>;
   quickDemoLogin: (role: UserRole) => Promise<void>;
-  register: (data: any) => Promise<void>;
+  register: (data: any) => Promise<any>;
+  verifyOtp: (email: string, code: string) => Promise<any>;
+  resendOtp: (email: string) => Promise<any>;
+  updateProfile: (data: any) => Promise<any>;
+  changePassword: (current: string, newPass: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -32,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .finally(() => {
           setIsLoading(false);
         });
-    } else {
+  } else {
       setIsLoading(false);
     }
   }, [token]);
@@ -41,9 +45,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const data = await api.login(email, pass);
-      localStorage.setItem('rymec_auth_token', data.token);
-      setToken(data.token);
-      setUser(data.user);
+      if (data.token) {
+        localStorage.setItem('rymec_auth_token', data.token);
+        setToken(data.token);
+        setUser(data.user);
+      }
+      return data;
     } finally {
       setIsLoading(false);
     }
@@ -66,12 +73,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const res = await api.register(data);
-      localStorage.setItem('rymec_auth_token', res.token);
-      setToken(res.token);
-      setUser(res.user);
+      // Notice: token is NOT saved here because the user must verify OTP first!
+      return res;
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const verifyOtp = async (email: string, code: string) => {
+    setIsLoading(true);
+    try {
+      const res = await api.verifyOtp(email, code);
+      if (res.token) {
+        localStorage.setItem('rymec_auth_token', res.token);
+        setToken(res.token);
+        setUser(res.user);
+      }
+      return res;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resendOtp = async (email: string) => {
+    return await api.resendOtp(email);
+  };
+
+  const updateProfile = async (data: any) => {
+    const res = await api.updateProfile(data);
+    if (res.user) {
+      setUser(res.user);
+    }
+    return res;
+  };
+
+  const changePassword = async (current: string, newPass: string) => {
+    await api.changePassword(current, newPass);
   };
 
   const logout = () => {
@@ -99,6 +136,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         quickDemoLogin,
         register,
+        verifyOtp,
+        resendOtp,
+        updateProfile,
+        changePassword,
         logout,
         refreshUser,
       }}

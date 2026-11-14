@@ -6,7 +6,9 @@ import {
   PlusCircle, 
   Search, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Settings,
+  GraduationCap
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
@@ -49,33 +51,55 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate }
       {/* Welcome Banner */}
       <GlassCard className="p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-0.5 text-xs font-semibold text-silver-300">
-              <ShieldCheck className="h-3.5 w-3.5 text-brand-accent" />
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-0.5 text-xs font-semibold text-cyan-300">
+              <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
               RYMEC Student Grievance Portal
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Welcome, {user?.full_name}
             </h1>
-            <p className="text-xs sm:text-sm text-silver-400">
-              {user?.department || 'Engineering Student'} • USN: <span className="font-mono text-silver-200 font-semibold">{user?.usn_roll || 'Not Set'}</span>
-            </p>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-silver-300 pt-0.5">
+              <span className="font-semibold text-white">{user?.branch || user?.department || 'CSE'}</span>
+              {user?.section && (
+                <>
+                  <span className="text-silver-500">•</span>
+                  <span className="rounded bg-white/10 px-2 py-0.5 font-bold text-cyan-300">Sec {user.section}</span>
+                </>
+              )}
+              {user?.academic_year && (
+                <>
+                  <span className="text-silver-500">•</span>
+                  <span>{user.academic_year}</span>
+                </>
+              )}
+              <span className="text-silver-500">•</span>
+              <span>USN: <span className="font-mono text-silver-200 font-bold">{user?.usn_roll || 'Not Set'}</span></span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => onNavigate('submit')}
-              className="pebble-pill inline-flex items-center gap-2 bg-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-600 active:scale-98"
+              className="pebble-pill inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-blue-600 active:scale-98 transition-all"
             >
               <PlusCircle className="h-4 w-4" />
               <span>Submit Grievance</span>
             </button>
             <button
               onClick={() => onNavigate('track')}
-              className="pebble-pill inline-flex items-center gap-2 bg-white/5 px-4 py-2.5 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white"
+              className="pebble-pill inline-flex items-center gap-2 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white"
             >
               <Search className="h-4 w-4" />
               <span>Track By ID</span>
+            </button>
+            <button
+              onClick={() => onNavigate('profile')}
+              className="pebble-pill inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white"
+              title="Dashboard Settings & Profile"
+            >
+              <Settings className="h-4 w-4 text-cyan-400" />
+              <span>Settings</span>
             </button>
           </div>
         </div>

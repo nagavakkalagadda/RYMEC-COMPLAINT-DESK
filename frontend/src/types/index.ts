@@ -10,7 +10,10 @@ export interface User {
   academic_year?: string;
   hostel_block?: string;
   designation?: string;
+  branch?: string;
+  section?: string;
   is_verified?: boolean;
+  created_at?: string;
 }
 
 export type ComplaintCategory = 'hostel' | 'academic' | 'harassment' | 'admin' | 'other';
