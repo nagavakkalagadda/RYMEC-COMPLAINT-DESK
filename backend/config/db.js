@@ -44,7 +44,6 @@ async function query(text, params = []) {
       return res;
     } catch (err) {
       console.warn(`[DB PG Query Error, falling back gracefully]: ${err.message} - SQL: ${text.slice(0, 60)}...`);
-      // Fallback to local memory mock if PG fails
       return fallbackQuery(text, params);
     }
   }
@@ -56,42 +55,102 @@ function fallbackQuery(text, params) {
   const lower = sql.toLowerCase();
 
   // Basic mock responses for common SELECT/INSERT/UPDATE queries
-  if (lower.startsWith('select 1')) {
-    return { rows: [{ test: 1 }], rowCount: 1 };
+  if (lower.startsWith('select 1') || lower.startsWith('select now()')) {
+    return { rows: [{ current_time: new Date() }], rowCount: 1 };
   }
 
+  // SELECT FROM USERS
   if (lower.startsWith('select') && lower.includes('from users')) {
     let rows = [...inMemoryStore.users];
-    if (lower.includes('where email = $1')) {
-      const email = params[0]?.toLowerCase();
-      rows = rows.filter(u => u.email.toLowerCase() === email);
-    } else if (lower.includes('where id = $1')) {
+    if (lower.includes('lower(email) = $1') || lower.includes('email = $1')) {
+      const email = String(params[0] || '').toLowerCase().trim();
+      rows = rows.filter(u => String(u.email || '').toLowerCase().trim() === email);
+    } else if (lower.includes('id = $1')) {
       rows = rows.filter(u => u.id === Number(params[0]));
     }
     return { rows, rowCount: rows.length };
   }
 
+  // INSERT INTO USERS (Dynamically map columns from SQL query!)
   if (lower.startsWith('insert into users')) {
+    const colMatch = sql.match(/insert\s+into\s+users\s*\(([^)]+)\)/i);
     const newUser = {
       id: inMemoryStore.users.length + 1,
-      full_name: params[0],
-      email: params[1],
-      password_hash: params[2],
-      role: params[3],
-      usn_roll: params[4] || null,
-      department: params[5] || null,
-      academic_year: params[6] || null,
-      hostel_block: params[7] || null,
-      designation: params[8] || null,
-      is_verified: params[9] !== undefined ? params[9] : true,
-      verification_code: params[10] || null,
+      full_name: '',
+      email: '',
+      password_hash: '',
+      role: 'student',
+      usn_roll: null,
+      department: null,
+      academic_year: null,
+      hostel_block: null,
+      designation: null,
+      branch: null,
+      section: null,
+      is_verified: false,
+      verification_code: null,
       created_at: new Date(),
       updated_at: new Date()
     };
+
+    if (colMatch && colMatch[1]) {
+      const cols = colMatch[1].split(',').map(c => c.trim().toLowerCase());
+      cols.forEach((col, idx) => {
+        if (idx < params.length) {
+          newUser[col] = params[idx];
+        }
+      });
+    }
+
+    // Ensure email is trimmed
+    if (newUser.email) newUser.email = String(newUser.email).trim().toLowerCase();
+
     inMemoryStore.users.push(newUser);
     return { rows: [newUser], rowCount: 1 };
   }
 
+  // UPDATE USERS
+  if (lower.startsWith('update users')) {
+    // Check if updating by ID
+    const idParam = params[params.length - 1];
+    let user = inMemoryStore.users.find(u => u.id === Number(idParam));
+    if (!user && inMemoryStore.users.length > 0) {
+      user = inMemoryStore.users[0];
+    }
+
+    if (user) {
+      if (lower.includes('is_verified = true')) {
+        user.is_verified = true;
+        user.verification_code = null;
+      }
+      if (lower.includes('verification_code = $1')) {
+        user.verification_code = params[0];
+      }
+      if (lower.includes('password_hash = $1')) {
+        user.password_hash = params[0];
+      }
+
+      // Dynamic update fields
+      if (lower.includes('branch = $')) {
+        params.forEach((val, idx) => {
+          const paramStr = `$${idx + 1}`;
+          if (lower.includes(`full_name = ${paramStr}`)) user.full_name = val;
+          if (lower.includes(`branch = ${paramStr}`)) user.branch = val;
+          if (lower.includes(`section = ${paramStr}`)) user.section = val;
+          if (lower.includes(`academic_year = ${paramStr}`)) user.academic_year = val;
+          if (lower.includes(`hostel_block = ${paramStr}`)) user.hostel_block = val;
+          if (lower.includes(`department = ${paramStr}`)) user.department = val;
+          if (lower.includes(`designation = ${paramStr}`)) user.designation = val;
+        });
+      }
+
+      user.updated_at = new Date();
+      return { rows: [user], rowCount: 1 };
+    }
+    return { rows: [], rowCount: 0 };
+  }
+
+  // SELECT FROM COMPLAINTS
   if (lower.startsWith('select') && lower.includes('from complaints')) {
     let rows = [...inMemoryStore.complaints];
     if (lower.includes('where student_id = $1')) {
@@ -104,6 +163,7 @@ function fallbackQuery(text, params) {
     return { rows, rowCount: rows.length };
   }
 
+  // INSERT INTO COMPLAINTS
   if (lower.startsWith('insert into complaints')) {
     const newComplaint = {
       id: inMemoryStore.complaints.length + 1,
@@ -131,7 +191,22 @@ function fallbackQuery(text, params) {
     return { rows: [newComplaint], rowCount: 1 };
   }
 
-  // Default empty rows for unhandled mock queries
+  // AUDIT LOGS
+  if (lower.startsWith('insert into audit_logs')) {
+    const log = {
+      id: inMemoryStore.audit_logs.length + 1,
+      user_id: params[0],
+      action: params[1],
+      entity_type: params[2],
+      entity_id: params[3],
+      details: params[4],
+      created_at: new Date()
+    };
+    inMemoryStore.audit_logs.push(log);
+    return { rows: [log], rowCount: 1 };
+  }
+
+  // Default empty rows for unhandled queries
   return { rows: [], rowCount: 0 };
 }
 
