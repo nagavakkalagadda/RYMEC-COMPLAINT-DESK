@@ -5,8 +5,7 @@ import {
   Search, 
   Clock, 
   Lock, 
-  Award,
-  MapPin,
+  MapPin, 
   FileCheck,
   ChevronRight
 } from 'lucide-react';
@@ -37,12 +36,67 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
       </div>
 
       {/* ── Apple Liquid Glass Ambient Veil ── */}
-      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-navy-950/30 via-navy-950/50 to-navy-950/95" />
+      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-navy-950/25 via-navy-950/45 to-navy-950/95" />
+
+      {/* ── Top Corner Institutional Medallions (Official College Emblems) ── */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+        
+        {/* Left Corner: Founder & V.V. Sangha Insignia */}
+        <div className="ios-glass-card rounded-2xl p-2 px-3.5 flex items-center gap-3 shadow-lg">
+          <div className="flex items-center -space-x-2">
+            <img
+              src="/images/logos/rao-bahadur.png"
+              alt="Rao Bahadur Y. Mahabaleswarappa"
+              title="Founder Rao Bahadur Y. Mahabaleswarappa"
+              className="h-10 w-10 rounded-full border-2 border-white/40 object-cover shadow-sm bg-navy-900"
+            />
+            <img
+              src="/images/logos/vvs-logo.jpg"
+              alt="Veerasaiva Vidyavardhaka Sangha Emblem"
+              title="V.V. Sangha, Ballari"
+              className="h-10 w-10 rounded-full border-2 border-white/40 object-contain bg-white p-0.5 shadow-sm"
+            />
+            <img
+              src="/images/logos/logos.gif"
+              alt="RYMEC Official Crest"
+              title="RYMEC Official Crest"
+              className="h-10 w-10 rounded-full border-2 border-white/40 object-contain bg-white p-0.5 shadow-sm"
+            />
+          </div>
+          <div className="text-left">
+            <p className="text-[11px] font-bold tracking-tight text-white leading-tight">V.V. Sangha, Ballari</p>
+            <p className="text-[10px] text-silver-300 font-medium">Rao Bahadur Y.M.E.C.</p>
+          </div>
+        </div>
+
+        {/* Right Corner: Accreditation & 47-Year Legacy Seals */}
+        <div className="ios-glass-card rounded-2xl p-2 px-3.5 flex items-center gap-3 shadow-lg">
+          <div className="text-right">
+            <p className="text-[11px] font-bold tracking-tight text-white leading-tight">NAAC "A+" Accredited</p>
+            <p className="text-[10px] text-amber-300 font-semibold">47+ Years of Legacy</p>
+          </div>
+          <div className="flex items-center -space-x-2">
+            <img
+              src="/images/logos/naac-logo.jpg"
+              alt="NAAC A+ Accreditation"
+              title="NAAC 'A+' Grade Accreditation"
+              className="h-10 w-10 rounded-full border-2 border-white/40 object-contain bg-white p-0.5 shadow-sm"
+            />
+            <img
+              src="/images/logos/anniversary-47.jpg"
+              alt="47 Years Excellence"
+              title="47 Years of Excellence Emblem"
+              className="h-10 w-10 rounded-full border-2 border-white/40 object-cover shadow-sm"
+            />
+          </div>
+        </div>
+
+      </div>
 
       {/* ── Central Hero Section ── */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-28 pb-16 text-center max-w-4xl mx-auto">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-8 pb-14 text-center max-w-4xl mx-auto">
 
-        {/* iOS Frosted Capsule Badge */}
+        {/* Dynamic Island Status Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs text-white backdrop-blur-2xl shadow-[0_4px_20px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] mb-6">
           <span className="flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
           <span className="font-medium tracking-wide">NAAC A+ Accredited · VTU Affiliated · Estd. 1980</span>
