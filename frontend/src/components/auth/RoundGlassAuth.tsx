@@ -271,7 +271,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
               }}
               className={`relative flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
                 mode === 'login'
-                  ? 'text-white bg-brand-royal shadow-md font-bold'
+                  ? 'text-white ios-glass-btn-primary shadow-md font-bold'
                   : 'text-silver-400 hover:text-white'
               }`}
             >
@@ -726,7 +726,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
           <button
             type="submit"
             disabled={loading}
-            className="w-full pebble-pill mt-3 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-brand-royal py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 hover:from-blue-500 hover:to-blue-600 active:scale-98 disabled:opacity-50 transition-all"
+            className="w-full ios-glass-btn-primary mt-4 flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white shadow-xl shadow-blue-900/40 hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer"
           >
             {loading ? (
               <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
