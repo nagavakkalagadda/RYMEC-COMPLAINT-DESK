@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-navy-950/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 w-full border-b border-white/12 bg-navy-950/70 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.35)]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         
         {/* Brand Header */}
@@ -74,7 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
         </div>
 
         {/* Desktop Quick Links */}
-        <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/10 bg-navy-900/60 p-1 backdrop-blur-md">
+        <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/18 bg-white/5 p-1 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
           {[
             { id: 'home', label: 'Home' },
             { id: 'track', label: 'Track Status' },
@@ -87,8 +87,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
               onClick={() => setCurrentTab(item.id)}
               className={`relative rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
                 currentTab === item.id 
-                  ? 'text-white bg-brand-royal' 
-                  : 'text-silver-400 hover:text-silver-200'
+                  ? 'text-white ios-glass-btn-primary shadow-sm' 
+                  : 'text-silver-300 hover:text-white'
               }`}
             >
               <span>{item.label}</span>
