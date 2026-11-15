@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 const { JWT_SECRET } = require('../middleware/auth');
-const { sendEmailNotification, createEmailTemplate } = require('../services/emailService');
+const { sendEmailNotification, createEmailTemplate, createProfessionalOtpTemplate } = require('../services/emailService');
 
 // ──────────────────────────────────────────────────────────────
 // REGISTER – collects branch, section, current-studying details
@@ -113,17 +113,12 @@ async function register(req, res) {
         to: cleanEmail,
         subject: 'Your Verification Code - RYMEC-iSMART',
         eventType: 'otp',
-        html: createEmailTemplate(
-          'Verify Your RYMEC-iSMART Account',
-          `<p>Dear <b>${full_name}</b>,</p>
-           <p>Thank you for registering on the <b>RYMEC-iSMART Grievance Desk</b> (Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari).</p>
-           <p>Your one-time verification code (OTP) is:</p>
-           <div style="margin:24px 0;padding:20px;background:rgba(56,189,248,0.12);border:2px dashed #38BDF8;border-radius:10px;text-align:center;">
-             <span style="font-family:'Courier New',Courier,monospace;font-size:36px;font-weight:bold;letter-spacing:10px;color:#38BDF8;">${verification_code}</span>
-           </div>
-           <p style="color:#94A3B8;font-size:13px;">This verification code is valid for 10 minutes. Please enter it in the registration dialog to verify your identity.</p>
-           <p style="color:#64748B;font-size:12px;">If you did not request this registration, please disregard this email.</p>`
-        ),
+        html: createProfessionalOtpTemplate({
+          title: 'Account Verification Code',
+          recipientName: full_name,
+          code: verification_code,
+          purposeText: 'Thank you for registering on the <strong>RYMEC-iSMART Grievance Desk</strong>. To verify your institutional credentials, enter this one-time verification code:'
+        }),
         plainText: `Your RYMEC-iSMART verification code is ${verification_code}`
       });
     } catch (mailErr) {
@@ -230,15 +225,12 @@ async function resendOtp(req, res) {
         to: cleanEmail,
         subject: 'New Verification Code - RYMEC-iSMART',
         eventType: 'otp',
-        html: createEmailTemplate(
-          'New Verification Code',
-          `<p>Dear <b>${user.full_name}</b>,</p>
-           <p>You requested a fresh verification code for the RYMEC-iSMART Grievance Desk.</p>
-           <div style="margin:24px 0;padding:20px;background:rgba(56,189,248,0.12);border:2px dashed #38BDF8;border-radius:10px;text-align:center;">
-             <span style="font-family:'Courier New',Courier,monospace;font-size:36px;font-weight:bold;letter-spacing:10px;color:#38BDF8;">${newCode}</span>
-           </div>
-           <p style="color:#94A3B8;font-size:13px;">This code is valid for 10 minutes.</p>`
-        ),
+        html: createProfessionalOtpTemplate({
+          title: 'Fresh Verification Code',
+          recipientName: user.full_name,
+          code: newCode,
+          purposeText: 'You requested a fresh verification code for the <strong>RYMEC-iSMART Grievance Desk</strong>. Please enter the one-time code below to complete your verification:'
+        }),
         plainText: `Your new RYMEC-iSMART verification code is ${newCode}`
       });
     } catch (mailErr) {
@@ -480,6 +472,203 @@ async function getDemoAccounts(req, res) {
   return res.json({ demoAccounts: [] });
 }
 
+// ──────────────────────────────────────────────────────────────
+// FORGOT PASSWORD – Request 6-digit OTP to Gmail
+// ──────────────────────────────────────────────────────────────
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Registered institutional email is required' });
+    }
+    const cleanEmail = email.trim().toLowerCase();
+
+    // Ensure reset columns exist in users table
+    try {
+      await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_code VARCHAR(10);`);
+      await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_expires TIMESTAMP;`);
+    } catch (e) {
+      // Ignored if already exist
+    }
+
+    const result = await db.query(
+      'SELECT id, full_name, email FROM users WHERE LOWER(email) = $1',
+      [cleanEmail]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'No account registered with this email address' });
+    }
+
+    const user = result.rows[0];
+    const resetCode = String(Math.floor(100000 + Math.random() * 900000));
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    await db.query(
+      'UPDATE users SET reset_code = $1, reset_expires = $2 WHERE id = $3',
+      [resetCode, expiresAt, user.id]
+    );
+
+    let emailResult = { emailSent: false };
+    try {
+      emailResult = await sendEmailNotification({
+        to: cleanEmail,
+        subject: 'Password Reset Verification Code - RYMEC-iSMART',
+        eventType: 'password_reset_otp',
+        html: createProfessionalOtpTemplate({
+          title: 'Password Reset Verification Code',
+          recipientName: user.full_name,
+          code: resetCode,
+          purposeText: 'A request was received to reset your password for the <strong>RYMEC-iSMART Grievance Desk</strong>. Enter this 6-digit verification code to authenticate your identity:'
+        }),
+        plainText: `Your RYMEC-iSMART password reset verification code is ${resetCode}. Valid for 10 minutes.`
+      });
+    } catch (mailErr) {
+      console.warn('Mail send error in forgotPassword:', mailErr.message);
+    }
+
+    try {
+      await db.query(
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
+        [user.id, 'PASSWORD_RESET_REQUESTED', 'user', String(user.id), JSON.stringify({ email: cleanEmail })]
+      );
+    } catch (auditErr) {}
+
+    return res.json({
+      message: 'Password reset code has been sent to ' + cleanEmail + '. Please check your Gmail inbox or spam.',
+      email: cleanEmail,
+      emailSent: !!(emailResult && emailResult.emailSent)
+    });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    return res.status(500).json({ error: 'Server error processing password reset: ' + err.message });
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// VERIFY RESET OTP – Validate 6-digit code before password change
+// ──────────────────────────────────────────────────────────────
+async function verifyResetOtp(req, res) {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) {
+      return res.status(400).json({ error: 'Email and OTP code are required' });
+    }
+    const cleanEmail = email.trim().toLowerCase();
+
+    const result = await db.query(
+      'SELECT id, full_name, reset_code, reset_expires FROM users WHERE LOWER(email) = $1',
+      [cleanEmail]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Account not found' });
+    }
+
+    const user = result.rows[0];
+
+    if (!user.reset_code) {
+      return res.status(400).json({ error: 'No active password reset request found. Please request a new OTP.' });
+    }
+
+    if (user.reset_expires && new Date() > new Date(user.reset_expires)) {
+      return res.status(400).json({ error: 'OTP expired. Please request a new verification code.' });
+    }
+
+    if (String(user.reset_code).trim() !== String(code).trim()) {
+      return res.status(400).json({ error: 'Incorrect OTP. Please try again.' });
+    }
+
+    return res.json({
+      valid: true,
+      message: 'OTP verified successfully'
+    });
+  } catch (err) {
+    console.error('Verify reset OTP error:', err);
+    return res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// RESET PASSWORD – Update password after OTP verified
+// ──────────────────────────────────────────────────────────────
+async function resetPassword(req, res) {
+  try {
+    const { email, code, new_password } = req.body;
+    if (!email || !code || !new_password) {
+      return res.status(400).json({ error: 'Email, verification code, and new password are required' });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const result = await db.query(
+      'SELECT id, full_name, reset_code, reset_expires FROM users WHERE LOWER(email) = $1',
+      [cleanEmail]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Account not found' });
+    }
+
+    const user = result.rows[0];
+
+    if (!user.reset_code || String(user.reset_code).trim() !== String(code).trim()) {
+      return res.status(400).json({ error: 'Invalid or expired verification code' });
+    }
+
+    if (user.reset_expires && new Date() > new Date(user.reset_expires)) {
+      return res.status(400).json({ error: 'Verification code has expired. Please request a new OTP.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const newHash = await bcrypt.hash(new_password, salt);
+
+    await db.query(
+      'UPDATE users SET password_hash = $1, reset_code = NULL, reset_expires = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [newHash, user.id]
+    );
+
+    // Send confirmation security notification email
+    try {
+      await sendEmailNotification({
+        to: cleanEmail,
+        subject: 'Security Alert: Password Changed Successfully - RYMEC-iSMART',
+        eventType: 'password_reset_confirmed',
+        html: createProfessionalOtpTemplate({
+          title: 'Password Changed Successfully',
+          recipientName: user.full_name,
+          purposeText: 'Your account password for the <strong>RYMEC-iSMART Grievance Desk</strong> has been successfully updated. You may now sign in using your new password.',
+          bodyHtml: `<p>Dear <strong>${user.full_name}</strong>,</p>
+                     <p>Your password for the <strong>RYMEC-iSMART Grievance Desk</strong> was recently reset and updated.</p>
+                     <div style="margin:20px 0;padding:16px;background:rgba(34,197,94,0.1);border-left:4px solid #22C55E;border-radius:6px;">
+                       <p style="margin:0;color:#86EFAC;font-weight:600;">Status: Password Updated</p>
+                       <p style="margin:4px 0 0;font-size:12px;color:#CBD5E1;">If this was done by you, no further action is required.</p>
+                     </div>
+                     <p style="font-size:12px;color:#EF4444;">If you did NOT authorize this change, please report this immediately to the RYMEC IT Cell at rymec.ismart12@gmail.com.</p>`
+        }),
+        plainText: `Your RYMEC-iSMART password has been reset successfully.`
+      });
+    } catch (e) {}
+
+    try {
+      await db.query(
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
+        [user.id, 'PASSWORD_RESET_COMPLETED', 'user', String(user.id), JSON.stringify({ email: cleanEmail })]
+      );
+    } catch (auditErr) {}
+
+    return res.json({
+      success: true,
+      message: 'Password reset successful! You may now sign in with your new password.'
+    });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    return res.status(500).json({ error: 'Server error resetting password: ' + err.message });
+  }
+}
+
 module.exports = {
   register,
   verifyOtp,
@@ -488,5 +677,8 @@ module.exports = {
   getMe,
   updateProfile,
   changePassword,
-  getDemoAccounts
+  getDemoAccounts,
+  forgotPassword,
+  verifyResetOtp,
+  resetPassword
 };

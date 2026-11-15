@@ -11,6 +11,9 @@ interface AuthContextType {
   register: (data: any) => Promise<any>;
   verifyOtp: (email: string, code: string) => Promise<any>;
   resendOtp: (email: string) => Promise<any>;
+  forgotPassword: (email: string) => Promise<any>;
+  verifyResetOtp: (email: string, code: string) => Promise<any>;
+  resetPassword: (email: string, code: string, newPass: string) => Promise<any>;
   updateProfile: (data: any) => Promise<any>;
   changePassword: (current: string, newPass: string) => Promise<void>;
   logout: () => void;
@@ -99,6 +102,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return await api.resendOtp(email);
   };
 
+  const forgotPassword = async (email: string) => {
+    return await api.forgotPassword(email);
+  };
+
+  const verifyResetOtp = async (email: string, code: string) => {
+    return await api.verifyResetOtp(email, code);
+  };
+
+  const resetPassword = async (email: string, code: string, newPass: string) => {
+    return await api.resetPassword(email, code, newPass);
+  };
+
   const updateProfile = async (data: any) => {
     const res = await api.updateProfile(data);
     if (res.user) {
@@ -138,6 +153,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         verifyOtp,
         resendOtp,
+        forgotPassword,
+        verifyResetOtp,
+        resetPassword,
         updateProfile,
         changePassword,
         logout,

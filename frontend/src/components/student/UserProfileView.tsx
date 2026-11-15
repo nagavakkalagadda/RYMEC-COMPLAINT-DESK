@@ -19,19 +19,33 @@ import {
   Layers,
   Sparkles,
   KeyRound,
-  FileCheck
+  FileCheck,
+  X,
+  Check,
+  Send,
+  RefreshCw,
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { GlassCard } from '../3d/GlassCard';
+import { OtpOrbitVerification } from '../auth/OtpOrbitVerification';
 
 type SettingsTab = 'academic' | 'security' | 'account';
 
 export const UserProfileView: React.FC = () => {
-  const { user, logout, updateProfile, changePassword, refreshUser } = useAuth();
+  const { user, logout, updateProfile, changePassword, refreshUser, forgotPassword, verifyResetOtp, resetPassword } = useAuth();
   const [activeTab, setActiveTab] = useState<SettingsTab>('academic');
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // OTP Password Reset State for registered account settings
+  const [showOtpResetModal, setShowOtpResetModal] = useState(false);
+  const [otpResetStep, setOtpResetStep] = useState<'otp' | 'new-password'>('otp');
+  const [resetVerifiedCode, setResetVerifiedCode] = useState('');
+  const [otpNewPassword, setOtpNewPassword] = useState('');
+  const [otpConfirmPassword, setOtpConfirmPassword] = useState('');
+  const [showOtpNewPass, setShowOtpNewPass] = useState(false);
 
   // Profile Form state
   const [profileForm, setProfileForm] = useState({
@@ -120,6 +134,83 @@ export const UserProfileView: React.FC = () => {
       setPasswordForm({ current_password: '', new_password: '', confirm_password: '' });
     } catch (err: any) {
       setStatusMessage({ type: 'error', text: err.message || 'Failed to change password.' });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Trigger Forgot Password via Gmail OTP Gateway
+  const handleStartOtpReset = async () => {
+    if (!user?.email) return;
+    setIsSaving(true);
+    setStatusMessage(null);
+    try {
+      await forgotPassword(user.email);
+      setOtpResetStep('otp');
+      setShowOtpResetModal(true);
+      setStatusMessage({
+        type: 'success',
+        text: `6-Digit institutional verification OTP dispatched to ${user.email}`
+      });
+    } catch (err: any) {
+      setStatusMessage({
+        type: 'error',
+        text: err.message || 'Failed to dispatch verification OTP. Please try again.'
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Verify OTP code entered through the 6-digit circular orbit animation
+  const handleVerifyOtpReset = async (code: string) => {
+    if (!user?.email) return;
+    const res = await verifyResetOtp(user.email, code);
+    if (res && res.valid) {
+      setResetVerifiedCode(code);
+      setTimeout(() => {
+        setOtpResetStep('new-password');
+      }, 900);
+      return true;
+    }
+    return false;
+  };
+
+  // Resend OTP code
+  const handleResendOtpReset = async () => {
+    if (!user?.email) return;
+    await forgotPassword(user.email);
+  };
+
+  // Set new password after verified OTP
+  const handleCompleteOtpReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpNewPassword !== otpConfirmPassword) {
+      setStatusMessage({ type: 'error', text: 'Passwords do not match. Please verify.' });
+      return;
+    }
+    if (otpNewPassword.length < 6) {
+      setStatusMessage({ type: 'error', text: 'New password must contain at least 6 characters.' });
+      return;
+    }
+
+    setIsSaving(true);
+    setStatusMessage(null);
+    try {
+      await resetPassword(user!.email, resetVerifiedCode, otpNewPassword);
+      setShowOtpResetModal(false);
+      setOtpNewPassword('');
+      setOtpConfirmPassword('');
+      setResetVerifiedCode('');
+      setStatusMessage({
+        type: 'success',
+        text: 'Your password has been successfully reset via institutional Gmail OTP!'
+      });
+    } catch (err: any) {
+      setStatusMessage({
+        type: 'error',
+        text: err.message || 'Failed to reset password. Please try again.'
+      });
     } finally {
       setIsSaving(false);
     }
@@ -491,81 +582,144 @@ export const UserProfileView: React.FC = () => {
 
           {/* TAB 2: SECURITY & PASSWORD SETTINGS */}
           {activeTab === 'security' && (
-            <form onSubmit={handlePasswordSubmit} className="space-y-5 max-w-md">
-              <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-                <KeyRound className="h-4 w-4 text-cyan-400" />
-                <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">
-                  Account Password Management
-                </span>
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Option A: Direct Password Update */}
+              <form onSubmit={handlePasswordSubmit} className="space-y-4 rounded-2xl border border-white/10 bg-white/2 p-5">
+                <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+                  <KeyRound className="h-4 w-4 text-cyan-400" />
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block">
+                      Direct Password Update
+                    </span>
+                    <span className="text-[11px] text-silver-400">If you remember your current password</span>
+                  </div>
+                </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-silver-300 mb-1.5">Current Password</label>
-                <div className="relative">
+                <div>
+                  <label className="block text-xs font-semibold text-silver-300 mb-1.5">Current Password</label>
+                  <div className="relative">
+                    <input
+                      type={showCurrentPass ? 'text' : 'password'}
+                      required
+                      placeholder="Enter current password"
+                      value={passwordForm.current_password}
+                      onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPass(!showCurrentPass)}
+                      className="absolute right-3.5 top-3 text-silver-400 hover:text-white"
+                    >
+                      {showCurrentPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-silver-300 mb-1.5">New Password</label>
+                  <div className="relative">
+                    <input
+                      type={showNewPass ? 'text' : 'password'}
+                      required
+                      placeholder="Minimum 6 characters"
+                      value={passwordForm.new_password}
+                      onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPass(!showNewPass)}
+                      className="absolute right-3.5 top-3 text-silver-400 hover:text-white"
+                    >
+                      {showNewPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-silver-300 mb-1.5">Confirm New Password</label>
                   <input
-                    type={showCurrentPass ? 'text' : 'password'}
+                    type="password"
                     required
-                    placeholder="Enter current password"
-                    value={passwordForm.current_password}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                    placeholder="Re-enter new password"
+                    value={passwordForm.confirm_password}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
                   />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="pebble-pill w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-lg hover:from-blue-500 hover:to-blue-600 active:scale-98 disabled:opacity-50"
+                >
+                  {isSaving ? (
+                    <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Lock className="h-4 w-4" />
+                  )}
+                  <span>Update Password</span>
+                </button>
+              </form>
+
+              {/* Option B: Forgot Password Gateway via Gmail OTP */}
+              <div className="rounded-2xl border border-cyan-400/20 bg-gradient-to-b from-cyan-400/10 via-brand-royal/10 to-transparent p-5 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+                    <ShieldCheck className="h-4 w-4 text-cyan-400" />
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block">
+                        Forgot Password Gateway
+                      </span>
+                      <span className="text-[11px] text-silver-400">Institutional OTP Verification</span>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-silver-300 leading-relaxed">
+                    Forgot your current credentials? Trigger a secure 6-digit institutional one-time password (OTP) directly to your registered address:
+                  </p>
+
+                  <div className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-navy-950/70 p-3">
+                    <Mail className="h-4 w-4 text-cyan-400 shrink-0" />
+                    <span className="font-mono text-xs font-semibold text-cyan-200 truncate">
+                      {user.email}
+                    </span>
+                  </div>
+
+                  <div className="rounded-xl border border-white/5 bg-white/2 p-3 space-y-1.5 text-[11px] text-silver-400">
+                    <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+                      <Check className="h-3 w-3" />
+                      <span>Features 6-digit circular orbit verification</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-cyan-300 font-semibold">
+                      <Check className="h-3 w-3" />
+                      <span>Official RYMEC-iSMART security email template</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-blue-300 font-semibold">
+                      <Check className="h-3 w-3" />
+                      <span>10-minute military-grade OTP expiry window</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4">
                   <button
                     type="button"
-                    onClick={() => setShowCurrentPass(!showCurrentPass)}
-                    className="absolute right-3.5 top-3 text-silver-400 hover:text-white"
+                    onClick={handleStartOtpReset}
+                    disabled={isSaving}
+                    className="pebble-pill w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 px-5 py-3 text-xs font-bold text-navy-950 shadow-lg shadow-cyan-500/20 hover:from-cyan-300 hover:to-blue-500 active:scale-98 disabled:opacity-50 cursor-pointer"
                   >
-                    {showCurrentPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {isSaving ? (
+                      <span className="h-4 w-4 border-2 border-navy-950 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                    <span>Forgot Password? Reset via Gmail OTP</span>
                   </button>
                 </div>
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-silver-300 mb-1.5">New Password</label>
-                <div className="relative">
-                  <input
-                    type={showNewPass ? 'text' : 'password'}
-                    required
-                    placeholder="Minimum 6 characters"
-                    value={passwordForm.new_password}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPass(!showNewPass)}
-                    className="absolute right-3.5 top-3 text-silver-400 hover:text-white"
-                  >
-                    {showNewPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-silver-300 mb-1.5">Confirm New Password</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="Re-enter new password"
-                  value={passwordForm.confirm_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSaving}
-                className="pebble-pill flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-lg hover:from-blue-500 hover:to-blue-600 active:scale-98 disabled:opacity-50"
-              >
-                {isSaving ? (
-                  <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <Lock className="h-4 w-4" />
-                )}
-                <span>Update Password</span>
-              </button>
-            </form>
+            </div>
           )}
 
           {/* TAB 3: ACCOUNT & INSTITUTION INFO */}
@@ -608,6 +762,108 @@ export const UserProfileView: React.FC = () => {
           )}
         </div>
       </GlassCard>
+
+      {/* OTP Password Reset Modal */}
+      <AnimatePresence>
+        {showOtpResetModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowOtpResetModal(false)}
+              className="fixed inset-0 bg-navy-950/80 backdrop-blur-md"
+            />
+
+            {/* Modal Dialog */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-navy-900/95 p-6 sm:p-8 shadow-2xl backdrop-blur-2xl z-10"
+            >
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setShowOtpResetModal(false)}
+                className="absolute top-4 right-4 rounded-xl border border-white/10 bg-white/5 p-2 text-silver-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+
+              {otpResetStep === 'otp' ? (
+                <OtpOrbitVerification
+                  email={user.email}
+                  onVerify={handleVerifyOtpReset}
+                  onResend={handleResendOtpReset}
+                  title="Verify OTP to Reset Password"
+                  subtitle="A 6-digit institutional verification code was sent to your registered Gmail address."
+                  onBack={() => setShowOtpResetModal(false)}
+                />
+              ) : (
+                <form onSubmit={handleCompleteOtpReset} className="space-y-4">
+                  <div className="text-center mb-4">
+                    <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 text-navy-950 shadow-lg shadow-cyan-500/30">
+                      <Lock className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">Set New Password</h3>
+                    <p className="text-xs text-silver-400 mt-1">
+                      OTP verified successfully! Create a strong new password for your account.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-silver-300 mb-1.5">New Password</label>
+                    <div className="relative">
+                      <input
+                        type={showOtpNewPass ? 'text' : 'password'}
+                        required
+                        placeholder="Minimum 6 characters"
+                        value={otpNewPassword}
+                        onChange={(e) => setOtpNewPassword(e.target.value)}
+                        className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowOtpNewPass(!showOtpNewPass)}
+                        className="absolute right-3.5 top-3 text-silver-400 hover:text-white"
+                      >
+                        {showOtpNewPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-silver-300 mb-1.5">Confirm New Password</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="Re-enter new password"
+                      value={otpConfirmPassword}
+                      onChange={(e) => setOtpConfirmPassword(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="pebble-pill w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 py-3 text-xs font-bold text-navy-950 shadow-lg shadow-emerald-500/20 hover:from-emerald-300 hover:to-teal-400 active:scale-98 disabled:opacity-50 cursor-pointer"
+                  >
+                    {isSaving ? (
+                      <span className="h-4 w-4 border-2 border-navy-950 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Check className="h-4 w-4" />
+                    )}
+                    <span>Set New Password & Complete</span>
+                  </button>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
