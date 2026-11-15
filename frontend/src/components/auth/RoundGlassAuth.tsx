@@ -536,10 +536,10 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
                     </div>
                   </div>
 
-                  {/* Hostel Block */}
+                  {/* Accommodation */}
                   <div>
                     <label className="block text-[11px] font-semibold text-silver-300 mb-1">
-                      Hostel Accommodation <span className="text-silver-500 font-normal">(optional)</span>
+                      Accommodation
                     </label>
                     <select
                       name="hostel_block"
@@ -547,12 +547,9 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
                       onChange={handleChange}
                       className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"
                     >
-                      <option value="">Day Scholar (Not in Hostel)</option>
-                      <option value="Aryabhata Block-A">Aryabhata Block-A (Boys)</option>
-                      <option value="Aryabhata Block-B">Aryabhata Block-B (Boys)</option>
-                      <option value="Bhaskaracharya Block">Bhaskaracharya Block (Boys)</option>
-                      <option value="Chanakya Block">Chanakya Block (Boys)</option>
-                      <option value="Kittur Rani Chennamma Block">Kittur Rani Chennamma (Girls Hostel)</option>
+                      <option value="Day Scholar">Day Scholar</option>
+                      <option value="Hostel">Hostel</option>
+                      <option value="PG">PG</option>
                     </select>
                   </div>
                 </div>

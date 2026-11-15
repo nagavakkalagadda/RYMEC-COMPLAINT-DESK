@@ -45,15 +45,15 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         />
       </motion.div>
 
-      {/* ── Multi-layer Dark Overlay ── */}
+      {/* ── Multi-layer Dark Overlay (lighter – campus photo clearly visible) ── */}
       <div className="absolute inset-0 -z-20">
-        {/* Base dark veil */}
-        <div className="absolute inset-0 bg-navy-950/70" />
-        {/* Top gradient — let sky remain slightly visible */}
-        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/40 via-navy-950/65 to-navy-950/98" />
-        {/* Subtle vignette */}
+        {/* Base dark veil – very light so campus shows through */}
+        <div className="absolute inset-0 bg-navy-950/35" />
+        {/* Top gradient — campus visible at top, darker toward bottom for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/15 via-navy-950/40 to-navy-950/90" />
+        {/* Subtle vignette – softer */}
         <div className="absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, transparent 0%, rgba(7,12,24,0.55) 100%)' }}
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, transparent 0%, rgba(7,12,24,0.30) 100%)' }}
         />
       </div>
 

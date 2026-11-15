@@ -387,7 +387,7 @@ export const UserProfileView: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-silver-300 mb-1.5">Hostel Accommodation</label>
+                      <label className="block text-xs font-semibold text-silver-300 mb-1.5">Accommodation</label>
                       <select
                         disabled={!isEditing}
                         value={profileForm.hostel_block}
@@ -398,12 +398,9 @@ export const UserProfileView: React.FC = () => {
                             : 'border-white/10 bg-white/2 text-silver-400 cursor-not-allowed'
                         }`}
                       >
-                        <option value="">Day Scholar (Not in Hostel)</option>
-                        <option value="Aryabhata Block-A">Aryabhata Block-A (Boys)</option>
-                        <option value="Aryabhata Block-B">Aryabhata Block-B (Boys)</option>
-                        <option value="Bhaskaracharya Block">Bhaskaracharya Block (Boys)</option>
-                        <option value="Chanakya Block">Chanakya Block (Boys)</option>
-                        <option value="Kittur Rani Chennamma Block">Kittur Rani Chennamma (Girls Hostel)</option>
+                        <option value="Day Scholar">Day Scholar</option>
+                        <option value="Hostel">Hostel</option>
+                        <option value="PG">PG</option>
                       </select>
                     </div>
                   </div>
