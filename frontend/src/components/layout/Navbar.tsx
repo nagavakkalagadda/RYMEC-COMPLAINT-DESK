@@ -57,8 +57,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
           onClick={() => setCurrentTab('home')}
           className="group flex cursor-pointer items-center gap-3 transition-transform hover:opacity-95"
         >
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-navy-800 border border-white/15 text-white shadow-sm">
-            <Building2 className="h-5 w-5 text-brand-accent" />
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 shadow-sm overflow-hidden p-0.5 backdrop-blur-md shrink-0">
+            <img 
+              src="/images/vvs-logo.jpg" 
+              alt="RYMEC VVS Emblem" 
+              className="h-full w-full object-contain rounded-lg"
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">

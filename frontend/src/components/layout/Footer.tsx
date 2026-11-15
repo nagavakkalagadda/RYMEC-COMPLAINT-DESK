@@ -10,8 +10,12 @@ export const Footer: React.FC = () => {
           {/* Col 1: College Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-800 border border-white/15 text-white">
-                <Building2 className="h-5 w-5 text-brand-accent" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 overflow-hidden p-0.5 shadow-sm shrink-0">
+                <img 
+                  src="/images/vvs-logo.jpg" 
+                  alt="RYMEC VVS Emblem" 
+                  className="h-full w-full object-contain rounded-lg"
+                />
               </div>
               <div>
                 <h3 className="font-bold text-white text-base">RYMEC GRIEVANCE DESK</h3>
