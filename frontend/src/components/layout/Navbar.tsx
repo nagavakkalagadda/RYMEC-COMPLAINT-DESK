@@ -66,12 +66,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base tracking-wider text-white">RYMEC</span>
-              <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-silver-300">
+              <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-white via-sky-100 to-sky-200 bg-clip-text text-transparent">
+                RYMEC
+              </span>
+              <span className="rounded bg-amber-400/15 border border-amber-300/30 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 shadow-sm">
                 NAAC A+
               </span>
             </div>
-            <p className="text-[11px] font-medium tracking-tight text-silver-400 line-clamp-1">
+            <p className="text-[11px] font-medium tracking-tight text-slate-300/90 line-clamp-1">
               Rao Bahadur Y. Mahabaleswarappa Engineering College
             </p>
           </div>
