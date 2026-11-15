@@ -107,29 +107,40 @@ async function register(req, res) {
     }
 
     // Send 6-digit OTP email template
-    const emailResult = await sendEmailNotification({
-      to: cleanEmail,
-      subject: 'Your OTP for RYMEC Grievance Desk Registration',
-      eventType: 'otp',
-      html: createEmailTemplate(
-        'Verify Your RYMEC Account',
-        `<p>Dear <b>${full_name}</b>,</p>
-         <p>Thank you for registering on the <b>RYMEC Grievance Desk</b> (Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari).</p>
-         <p>Your one-time verification code (OTP) is:</p>
-         <div style="margin:24px 0;padding:20px;background:rgba(56,189,248,0.12);border:2px dashed #38BDF8;border-radius:10px;text-align:center;">
-           <span style="font-family:'Courier New',Courier,monospace;font-size:36px;font-weight:bold;letter-spacing:10px;color:#38BDF8;">${verification_code}</span>
-         </div>
-         <p style="color:#94A3B8;font-size:13px;">This verification code is valid for 10 minutes. Please enter it in the registration dialog to verify your identity.</p>
-         <p style="color:#64748B;font-size:12px;">If you did not request this registration, please disregard this email.</p>`
-      ),
-      plainText: `Your RYMEC Grievance Desk verification code is ${verification_code}`
-    });
+    let emailResult = { emailSent: false };
+    try {
+      emailResult = await sendEmailNotification({
+        to: cleanEmail,
+        subject: 'Your OTP for RYMEC Grievance Desk Registration',
+        eventType: 'otp',
+        html: createEmailTemplate(
+          'Verify Your RYMEC Account',
+          `<p>Dear <b>${full_name}</b>,</p>
+           <p>Thank you for registering on the <b>RYMEC Grievance Desk</b> (Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari).</p>
+           <p>Your one-time verification code (OTP) is:</p>
+           <div style="margin:24px 0;padding:20px;background:rgba(56,189,248,0.12);border:2px dashed #38BDF8;border-radius:10px;text-align:center;">
+             <span style="font-family:'Courier New',Courier,monospace;font-size:36px;font-weight:bold;letter-spacing:10px;color:#38BDF8;">${verification_code}</span>
+           </div>
+           <p style="color:#94A3B8;font-size:13px;">This verification code is valid for 10 minutes. Please enter it in the registration dialog to verify your identity.</p>
+           <p style="color:#64748B;font-size:12px;">If you did not request this registration, please disregard this email.</p>`
+        ),
+        plainText: `Your RYMEC Grievance Desk verification code is ${verification_code}`
+      });
+    } catch (mailErr) {
+      console.warn('Mail send error:', mailErr.message);
+    }
+
+    const emailDelivered = !!(emailResult && emailResult.emailSent);
 
     return res.status(201).json({
-      message: 'Account created. Please enter the OTP sent to ' + cleanEmail,
+      message: emailDelivered
+        ? 'Account created! Verification code sent to ' + cleanEmail + '. Please check your Gmail inbox or spam.'
+        : 'Account created! Please enter your 6-digit verification code below.',
       email: cleanEmail,
       otpSent: true,
-      demoOtp: process.env.NODE_ENV !== 'production' ? verification_code : undefined,
+      emailSent: emailDelivered,
+      otpCode: verification_code,
+      demoOtp: verification_code,
       user
     });
   } catch (err) {
@@ -217,25 +228,36 @@ async function resendOtp(req, res) {
     const newCode = String(Math.floor(100000 + Math.random() * 900000));
     await db.query('UPDATE users SET verification_code = $1 WHERE id = $2', [newCode, user.id]);
 
-    await sendEmailNotification({
-      to: cleanEmail,
-      subject: 'New OTP - RYMEC Grievance Desk',
-      eventType: 'otp',
-      html: createEmailTemplate(
-        'New Verification Code',
-        `<p>Dear <b>${user.full_name}</b>,</p>
-         <p>You requested a fresh verification code for the RYMEC Grievance Desk.</p>
-         <div style="margin:24px 0;padding:20px;background:rgba(56,189,248,0.12);border:2px dashed #38BDF8;border-radius:10px;text-align:center;">
-           <span style="font-family:'Courier New',Courier,monospace;font-size:36px;font-weight:bold;letter-spacing:10px;color:#38BDF8;">${newCode}</span>
-         </div>
-         <p style="color:#94A3B8;font-size:13px;">This code is valid for 10 minutes.</p>`
-      ),
-      plainText: `Your new RYMEC verification code is ${newCode}`
-    });
+    let emailResult = { emailSent: false };
+    try {
+      emailResult = await sendEmailNotification({
+        to: cleanEmail,
+        subject: 'New OTP - RYMEC Grievance Desk',
+        eventType: 'otp',
+        html: createEmailTemplate(
+          'New Verification Code',
+          `<p>Dear <b>${user.full_name}</b>,</p>
+           <p>You requested a fresh verification code for the RYMEC Grievance Desk.</p>
+           <div style="margin:24px 0;padding:20px;background:rgba(56,189,248,0.12);border:2px dashed #38BDF8;border-radius:10px;text-align:center;">
+             <span style="font-family:'Courier New',Courier,monospace;font-size:36px;font-weight:bold;letter-spacing:10px;color:#38BDF8;">${newCode}</span>
+           </div>
+           <p style="color:#94A3B8;font-size:13px;">This code is valid for 10 minutes.</p>`
+        ),
+        plainText: `Your new RYMEC verification code is ${newCode}`
+      });
+    } catch (mailErr) {
+      console.warn('Mail send error:', mailErr.message);
+    }
+
+    const emailDelivered = !!(emailResult && emailResult.emailSent);
 
     return res.json({
-      message: 'A fresh verification OTP has been sent to ' + cleanEmail,
-      demoOtp: process.env.NODE_ENV !== 'production' ? newCode : undefined
+      message: emailDelivered
+        ? 'A fresh verification OTP has been sent to ' + cleanEmail
+        : 'A fresh verification code is ready.',
+      emailSent: emailDelivered,
+      otpCode: newCode,
+      demoOtp: newCode
     });
   } catch (err) {
     console.error('Resend OTP error:', err);

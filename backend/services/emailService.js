@@ -1,5 +1,5 @@
 // RYMEC Email Notification Service
-// Uses Nodemailer with SMTP when configured, or transparent dev logger for viva/demo testing.
+// Supports real SMTP (e.g. Gmail App Password, college mail server) and instant simulated fallback mode.
 
 const nodemailer = require('nodemailer');
 
@@ -7,27 +7,43 @@ let transporter = null;
 const devEmailOutbox = [];
 
 function initEmailTransporter() {
-  if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-    console.log('✅ Real SMTP Email transporter configured for:', process.env.SMTP_USER);
+  const user = process.env.SMTP_USER || process.env.GMAIL_USER;
+  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASS;
+  const host = process.env.SMTP_HOST;
+
+  if (user && pass) {
+    try {
+      if (host) {
+        transporter = nodemailer.createTransport({
+          host,
+          port: Number(process.env.SMTP_PORT) || 587,
+          secure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465',
+          auth: { user, pass },
+          tls: { rejectUnauthorized: false }
+        });
+      } else {
+        // Direct Gmail service preset
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: { user, pass }
+        });
+      }
+      console.log('✅ Real Email transporter configured for:', user);
+    } catch (e) {
+      console.error('Failed to init email transporter:', e.message);
+      transporter = null;
+    }
   } else {
-    console.log('ℹ️  Running Email Service in Dev/Demo mode (emails logged & saved to outbox).');
+    console.log('ℹ️ Running Email Service in Instant/Simulated mode (SMTP credentials not configured).');
   }
 }
 
 initEmailTransporter();
 
 async function sendEmailNotification({ to, subject, html, plainText, complaintNumber, eventType }) {
+  const senderUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'grievance@rymec.edu.in';
   const mailOptions = {
-    from: process.env.SMTP_FROM || '"RYMEC Grievance Desk" <grievance@rymec.edu.in>',
+    from: process.env.SMTP_FROM || `"RYMEC Grievance Desk" <${senderUser}>`,
     to,
     subject: `[RYMEC Grievance] ${subject}`,
     text: plainText || 'Notification from RYMEC Grievance Desk',
@@ -50,15 +66,15 @@ async function sendEmailNotification({ to, subject, html, plainText, complaintNu
   if (transporter) {
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log(`📧 [Real SMTP Sent] to ${to}: ${info.messageId}`);
-      return { success: true, mode: 'smtp', messageId: info.messageId };
+      console.log(`📧 [Real Email Sent] to ${to}: ${info.messageId}`);
+      return { success: true, mode: 'smtp', emailSent: true, messageId: info.messageId };
     } catch (err) {
-      console.warn(`⚠️ [SMTP Failed, logged to outbox]: ${err.message}`);
-      return { success: true, mode: 'dev-fallback', error: err.message };
+      console.warn(`⚠️ [SMTP Failed, falling back to outbox]: ${err.message}`);
+      return { success: true, mode: 'dev-fallback', emailSent: false, error: err.message };
     }
   } else {
-    console.log(`📬 [Dev Outbox] To: ${to} | Subject: ${mailOptions.subject}`);
-    return { success: true, mode: 'dev', outboxId: logEntry.id };
+    console.log(`📬 [Simulated Outbox] To: ${to} | Subject: ${mailOptions.subject}`);
+    return { success: true, mode: 'simulated', emailSent: false, outboxId: logEntry.id };
   }
 }
 
