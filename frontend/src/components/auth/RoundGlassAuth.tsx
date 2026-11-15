@@ -139,12 +139,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
     setLoading(true);
     try {
       const res = await resendOtp(otpEmail);
-      setSuccessMsg(res.message || 'A fresh OTP code has been dispatched.');
+      setSuccessMsg(res.message || 'A fresh verification code has been dispatched to your Gmail.');
       setResendTimer(60);
-      const code = res.otpCode || res.demoOtp;
-      if (code) {
-        setDemoCodeHint(code);
-      }
     } catch (err: any) {
       setError(err.message || 'Failed to resend OTP.');
     } finally {
@@ -181,15 +177,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
         setOtpEmail(targetEmail);
         setMode('otp');
         setResendTimer(60);
-        const code = res.otpCode || res.demoOtp;
-        if (code) {
-          setDemoCodeHint(code);
-        }
-        if (res.emailSent) {
-          setSuccessMsg(`Verification email dispatched to ${targetEmail}. Please check your Inbox and Spam folder.`);
-        } else {
-          setSuccessMsg('Account created! Your instant verification code is ready below.');
-        }
+        setSuccessMsg(`Verification code sent to ${targetEmail}. Please check your Gmail inbox or spam folder.`);
       } else if (mode === 'otp') {
         const fullOtp = otpDigits.join('');
         if (fullOtp.length !== 6) {
@@ -702,44 +690,6 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
                 </div>
               </div>
 
-              {/* Instant Verification Code Card */}
-              {demoCodeHint && (
-                <div className="p-3.5 rounded-2xl border border-cyan-400/40 bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-navy-900/40 text-center space-y-2.5 shadow-lg">
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-xs font-semibold text-cyan-300 flex items-center gap-1.5">
-                      <Sparkles className="h-4 w-4 text-cyan-400" />
-                      Verification Code:
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const digits = String(demoCodeHint).split('').slice(0, 6);
-                        setOtpDigits(digits);
-                        setError(null);
-                        otpRefs.current[5]?.focus();
-                      }}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-cyan-400 text-navy-950 text-xs font-bold hover:bg-cyan-300 active:scale-95 transition-all shadow-md shadow-cyan-500/20"
-                    >
-                      ⚡ Auto-Fill Code
-                    </button>
-                  </div>
-                  
-                  <div className="flex items-center justify-center gap-2 py-1">
-                    {String(demoCodeHint).split('').map((char, i) => (
-                      <span
-                        key={i}
-                        className="flex h-9 w-8 items-center justify-center rounded-lg bg-white/10 border border-cyan-400/30 font-mono font-bold text-lg text-cyan-200 shadow-inner"
-                      >
-                        {char}
-                      </span>
-                    ))}
-                  </div>
-
-                  <p className="text-[11px] text-silver-400">
-                    Click <b className="text-cyan-300">Auto-Fill Code</b> or type the 6 digits into the boxes above.
-                  </p>
-                </div>
-              )}
 
               {/* Resend Code Action */}
               <div className="flex items-center justify-between text-xs pt-1 px-1">

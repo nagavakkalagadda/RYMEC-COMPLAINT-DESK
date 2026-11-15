@@ -43,10 +43,10 @@ initEmailTransporter();
 async function sendEmailNotification({ to, subject, html, plainText, complaintNumber, eventType }) {
   const senderUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'rymec.ismart12@gmail.com';
   const mailOptions = {
-    from: process.env.SMTP_FROM || `"RYMEC Grievance Desk" <${senderUser}>`,
+    from: process.env.SMTP_FROM || `"RYMEC-iSMART" <${senderUser}>`,
     to,
-    subject: `[RYMEC Grievance] ${subject}`,
-    text: plainText || 'Notification from RYMEC Grievance Desk',
+    subject: `[RYMEC-iSMART] ${subject}`,
+    text: plainText || 'Notification from RYMEC-iSMART Grievance Desk',
     html: html || `<p>${plainText}</p>`,
   };
 
@@ -83,8 +83,8 @@ function createEmailTemplate(title, bodyHtml, trackingId = null) {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0B132B; color: #F8FAFC; border-radius: 12px; overflow: hidden; border: 1px solid #1C2541;">
       <div style="background: linear-gradient(135deg, #1C2541 0%, #0B132B 100%); padding: 24px; text-align: center; border-bottom: 2px solid #38BDF8;">
-        <h2 style="margin: 0; color: #FFFFFF; font-size: 20px; letter-spacing: 0.5px;">RAO BAHADUR Y. MAHABALESWARAPPA ENGINEERING COLLEGE</h2>
-        <p style="margin: 6px 0 0; color: #38BDF8; font-weight: bold; font-size: 14px;">RYMEC GRIEVANCE DESK</p>
+        <h2 style="margin: 0; color: #FFFFFF; font-size: 19px; letter-spacing: 0.5px;">RAO BAHADUR Y. MAHABALESWARAPPA ENGINEERING COLLEGE</h2>
+        <p style="margin: 6px 0 0; color: #38BDF8; font-weight: bold; font-size: 15px; letter-spacing: 1px;">RYMEC-iSMART GRIEVANCE DESK</p>
       </div>
       <div style="padding: 28px 24px; background: #10172A; line-height: 1.6;">
         <h3 style="color: #38BDF8; margin-top: 0;">${title}</h3>
