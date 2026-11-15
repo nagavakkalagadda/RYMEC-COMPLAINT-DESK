@@ -3,7 +3,6 @@ import { useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { LiquidBottomNav } from './components/layout/LiquidBottomNav';
 import { Footer } from './components/layout/Footer';
-import { FloatingParticles } from './components/3d/FloatingParticles';
 import { RoundGlassAuth } from './components/auth/RoundGlassAuth';
 import { LandingHero } from './components/public/LandingHero';
 import { TransparencyWall } from './components/public/TransparencyWall';
@@ -132,9 +131,6 @@ export function App() {
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between">
-      {/* Background Floating Glass Particles */}
-      <FloatingParticles />
-
       {/* Top Navbar */}
       <Navbar
         currentTab={currentTab}
