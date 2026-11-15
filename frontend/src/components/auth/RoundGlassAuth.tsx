@@ -726,7 +726,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
           <button
             type="submit"
             disabled={loading}
-            className="w-full ios-glass-btn-primary mt-4 flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white shadow-xl shadow-blue-900/40 hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer"
+            className="w-full ios-glass-btn-primary mt-4 flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white shadow-sm hover:brightness-110 active:scale-98 disabled:opacity-50 transition-all cursor-pointer"
           >
             {loading ? (
               <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

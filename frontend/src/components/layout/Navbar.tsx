@@ -235,7 +235,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
           ) : (
             <button
               onClick={onOpenAuth}
-              className="ios-glass-btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold text-white tracking-wide shadow-lg shadow-blue-900/30 hover:shadow-blue-600/40 hover:scale-[1.03] active:scale-[0.97] transition-all cursor-pointer"
+              className="ios-glass-btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold text-white tracking-wide shadow-sm hover:brightness-110 active:scale-95 transition-all cursor-pointer"
             >
               <LogIn className="h-3.5 w-3.5" />
               <span>Sign In</span>

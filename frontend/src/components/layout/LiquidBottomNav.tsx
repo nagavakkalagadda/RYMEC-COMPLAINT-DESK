@@ -57,9 +57,9 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
   return (
     <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 safe-bottom">
       <motion.nav
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         className="bottom-nav-glass relative flex items-center gap-1 sm:gap-2 rounded-full p-1.5 sm:p-2 ring-1 ring-white/10"
       >
         {items.map((item) => {
@@ -70,14 +70,14 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id)}
-              className="group relative flex items-center gap-1.5 sm:gap-2 rounded-full px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-semibold transition-all focus:outline-none"
+              className="group relative flex items-center gap-1.5 sm:gap-2 rounded-full px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-medium transition-colors focus:outline-none"
             >
-              {/* Frosted Active Indicator */}
+              {/* Clean Frosted Active Indicator */}
               {isActive && (
                 <motion.div
                   layoutId="liquid-pill"
-                  className="absolute inset-0 rounded-full bg-white/15 border border-white/20 shadow-sm"
-                  transition={{ type: 'spring', stiffness: 450, damping: 32 }}
+                  className="absolute inset-0 rounded-full bg-white/10 border border-white/15"
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
                 />
               )}
 
@@ -94,18 +94,14 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
 
               {/* Label */}
               <span
-                className={`relative z-10 hidden sm:inline-block tracking-wide transition-colors ${
+                className={`relative z-10 hidden sm:inline-block tracking-normal transition-colors ${
                   isActive
-                    ? 'text-white font-bold'
+                    ? 'text-white font-semibold'
                     : 'text-silver-400 group-hover:text-silver-200'
                 }`}
               >
                 {item.label}
               </span>
-
-              {isActive && (
-                <span className="sm:hidden relative z-10 h-1.5 w-1.5 rounded-full bg-white shadow-sm" />
-              )}
             </button>
           );
         })}

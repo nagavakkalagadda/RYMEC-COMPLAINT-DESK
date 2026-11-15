@@ -14,7 +14,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`ios-glass-card rounded-3xl p-6 ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`ios-glass-card rounded-2xl p-6 ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
       <div className="relative z-10">{children}</div>
     </div>
