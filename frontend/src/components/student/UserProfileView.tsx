@@ -582,21 +582,22 @@ export const UserProfileView: React.FC = () => {
 
           {/* TAB 2: SECURITY & PASSWORD SETTINGS */}
           {activeTab === 'security' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Option A: Direct Password Update */}
+            <div className="max-w-md">
               <form onSubmit={handlePasswordSubmit} className="space-y-4 rounded-2xl border border-white/10 bg-white/2 p-5">
                 <div className="flex items-center gap-2 border-b border-white/10 pb-3">
                   <KeyRound className="h-4 w-4 text-cyan-400" />
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block">
-                      Direct Password Update
+                      Account Password Management
                     </span>
-                    <span className="text-[11px] text-silver-400">If you remember your current password</span>
+                    <span className="text-[11px] text-silver-400">Update your account credentials</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-silver-300 mb-1.5">Current Password</label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-semibold text-silver-300">Current Password</label>
+                  </div>
                   <div className="relative">
                     <input
                       type={showCurrentPass ? 'text' : 'password'}
@@ -604,7 +605,7 @@ export const UserProfileView: React.FC = () => {
                       placeholder="Enter current password"
                       value={passwordForm.current_password}
                       onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                      className="w-full rounded-2xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
                     />
                     <button
                       type="button"
@@ -625,7 +626,7 @@ export const UserProfileView: React.FC = () => {
                       placeholder="Minimum 6 characters"
                       value={passwordForm.new_password}
                       onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                      className="w-full rounded-2xl border border-white/10 bg-white/5 py-2.5 px-3.5 pr-10 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
                     />
                     <button
                       type="button"
@@ -645,14 +646,14 @@ export const UserProfileView: React.FC = () => {
                     placeholder="Re-enter new password"
                     value={passwordForm.confirm_password}
                     onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3.5 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 py-2.5 px-3.5 text-sm text-white placeholder-silver-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="pebble-pill w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-lg hover:from-blue-500 hover:to-blue-600 active:scale-98 disabled:opacity-50"
+                  className="pebble-pill w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-lg hover:from-blue-500 hover:to-blue-600 active:scale-98 disabled:opacity-50 cursor-pointer"
                 >
                   {isSaving ? (
                     <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -661,64 +662,20 @@ export const UserProfileView: React.FC = () => {
                   )}
                   <span>Update Password</span>
                 </button>
-              </form>
 
-              {/* Option B: Forgot Password Gateway via Gmail OTP */}
-              <div className="rounded-2xl border border-cyan-400/20 bg-gradient-to-b from-cyan-400/10 via-brand-royal/10 to-transparent p-5 flex flex-col justify-between">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <ShieldCheck className="h-4 w-4 text-cyan-400" />
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block">
-                        Forgot Password Gateway
-                      </span>
-                      <span className="text-[11px] text-silver-400">Institutional OTP Verification</span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-silver-300 leading-relaxed">
-                    Forgot your current credentials? Trigger a secure 6-digit institutional one-time password (OTP) directly to your registered address:
-                  </p>
-
-                  <div className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-navy-950/70 p-3">
-                    <Mail className="h-4 w-4 text-cyan-400 shrink-0" />
-                    <span className="font-mono text-xs font-semibold text-cyan-200 truncate">
-                      {user.email}
-                    </span>
-                  </div>
-
-                  <div className="rounded-xl border border-white/5 bg-white/2 p-3 space-y-1.5 text-[11px] text-silver-400">
-                    <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                      <Check className="h-3 w-3" />
-                      <span>Features 6-digit circular orbit verification</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-cyan-300 font-semibold">
-                      <Check className="h-3 w-3" />
-                      <span>Official RYMEC-iSMART security email template</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-blue-300 font-semibold">
-                      <Check className="h-3 w-3" />
-                      <span>10-minute military-grade OTP expiry window</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4">
+                {/* Integrated "Forgot password?" Link to OTP Verification Gateway */}
+                <div className="pt-3 border-t border-white/10 text-center">
                   <button
                     type="button"
                     onClick={handleStartOtpReset}
                     disabled={isSaving}
-                    className="pebble-pill w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 px-5 py-3 text-xs font-bold text-navy-950 shadow-lg shadow-cyan-500/20 hover:from-cyan-300 hover:to-blue-500 active:scale-98 disabled:opacity-50 cursor-pointer"
+                    className="text-xs font-semibold text-cyan-300 hover:text-cyan-200 transition-colors inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                   >
-                    {isSaving ? (
-                      <span className="h-4 w-4 border-2 border-navy-950 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Send className="h-4 w-4" />
-                    )}
-                    <span>Forgot Password? Reset via Gmail OTP</span>
+                    <span>Forgot password?</span>
+                    <span className="text-silver-400 font-normal">Reset via Gmail OTP verification →</span>
                   </button>
                 </div>
-              </div>
+              </form>
             </div>
           )}
 
