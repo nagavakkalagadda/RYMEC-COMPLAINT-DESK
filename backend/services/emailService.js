@@ -1,5 +1,5 @@
 // RYMEC Email Notification Service
-// Supports real SMTP (e.g. Gmail App Password, college mail server) and instant simulated fallback mode.
+// Connected to official Gmail SMTP Gateway (rymec.ismart12@gmail.com)
 
 const nodemailer = require('nodemailer');
 
@@ -7,8 +7,8 @@ let transporter = null;
 const devEmailOutbox = [];
 
 function initEmailTransporter() {
-  const user = process.env.SMTP_USER || process.env.GMAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASS;
+  const user = process.env.SMTP_USER || process.env.GMAIL_USER || 'rymec.ismart12@gmail.com';
+  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASS || 'ofmjheywujdzmvdb';
   const host = process.env.SMTP_HOST;
 
   if (user && pass) {
@@ -22,19 +22,19 @@ function initEmailTransporter() {
           tls: { rejectUnauthorized: false }
         });
       } else {
-        // Direct Gmail service preset
+        // Official Gmail SMTP service preset
         transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: { user, pass }
         });
       }
-      console.log('✅ Real Email transporter configured for:', user);
+      console.log('✅ Real Gmail SMTP transporter active for:', user);
     } catch (e) {
-      console.error('Failed to init email transporter:', e.message);
+      console.error('Failed to init Gmail transporter:', e.message);
       transporter = null;
     }
   } else {
-    console.log('ℹ️ Running Email Service in Instant/Simulated mode (SMTP credentials not configured).');
+    console.log('ℹ️ Running Email Service in simulated mode.');
   }
 }
 
@@ -66,14 +66,14 @@ async function sendEmailNotification({ to, subject, html, plainText, complaintNu
   if (transporter) {
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log(`📧 [Real Email Sent] to ${to}: ${info.messageId}`);
+      console.log(`📧 [Real Gmail Sent] to ${to}: ${info.messageId}`);
       return { success: true, mode: 'smtp', emailSent: true, messageId: info.messageId };
     } catch (err) {
-      console.warn(`⚠️ [SMTP Failed, falling back to outbox]: ${err.message}`);
+      console.warn(`⚠️ [Gmail SMTP Failed, falling back to outbox]: ${err.message}`);
       return { success: true, mode: 'dev-fallback', emailSent: false, error: err.message };
     }
   } else {
-    console.log(`📬 [Simulated Outbox] To: ${to} | Subject: ${mailOptions.subject}`);
+    console.log(`📬 [Outbox] To: ${to} | Subject: ${mailOptions.subject}`);
     return { success: true, mode: 'simulated', emailSent: false, outboxId: logEntry.id };
   }
 }
