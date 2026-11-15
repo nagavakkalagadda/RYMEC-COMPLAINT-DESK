@@ -115,3 +115,20 @@
 .safe-bottom {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
+
+/* Universal iOS Liquid Pebble Pill Class */
+.pebble-pill {
+  border-radius: 9999px !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Uniform Squircle Dropdown Selects and Inputs */
+select {
+  border-radius: 1rem !important; /* rounded-2xl */
+}
+
+input:not([type="checkbox"]):not([type="radio"]) {
+  border-radius: 1rem;
+}

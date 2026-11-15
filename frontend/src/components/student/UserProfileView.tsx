@@ -170,7 +170,7 @@ export const UserProfileView: React.FC = () => {
       setResetVerifiedCode(code);
       setTimeout(() => {
         setOtpResetStep('new-password');
-      }, 900);
+      }, 1600);
       return true;
     }
     return false;

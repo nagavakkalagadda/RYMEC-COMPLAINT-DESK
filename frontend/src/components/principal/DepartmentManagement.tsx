@@ -92,10 +92,10 @@ export const DepartmentManagement: React.FC = () => {
           <GlassCard key={d.id} className="p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-xs font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded">
+                <span className="font-mono text-xs font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-0.5 rounded-full">
                   {d.code}
                 </span>
-                <span className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase text-silver-400">
+                <span className="rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-bold uppercase text-silver-400">
                   {d.category_mapping}
                 </span>
               </div>

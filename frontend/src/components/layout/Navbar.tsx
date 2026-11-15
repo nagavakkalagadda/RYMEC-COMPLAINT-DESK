@@ -69,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
               <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-white via-sky-100 to-sky-200 bg-clip-text text-transparent">
                 RYMEC
               </span>
-              <span className="rounded bg-amber-400/15 border border-amber-300/30 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 shadow-sm">
+              <span className="rounded-full bg-amber-400/15 border border-amber-300/30 px-2 py-0.5 text-[10px] font-bold text-amber-300 shadow-sm">
                 NAAC A+
               </span>
             </div>
@@ -206,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
                     <div className="border-b border-white/10 pb-2.5 px-2">
                       <p className="text-sm font-bold text-white">{user.full_name}</p>
                       <p className="text-xs text-silver-400 truncate">{user.email}</p>
-                      <div className="mt-1 inline-block rounded bg-white/10 px-2 py-0.5 text-[10px] font-bold text-silver-300">
+                      <div className="mt-1 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-silver-300">
                         ROLE: {user.role.toUpperCase()}
                       </div>
                     </div>

@@ -175,7 +175,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
             <div className="flex flex-wrap items-center justify-center gap-3">
               <button
                 onClick={() => onGoToTrack && onGoToTrack(submittedData.complaint.complaint_number)}
-                className="pebble-pill inline-flex items-center gap-2 bg-brand-royal px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-600"
+                className="ios-glass-btn-primary inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs font-semibold text-white shadow-md hover:brightness-110 active:scale-95 cursor-pointer"
               >
                 <span>Track Status</span>
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -187,7 +187,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                   setDescription('');
                   setAttachment(null);
                 }}
-                className="pebble-pill inline-flex items-center gap-2 bg-white/5 px-5 py-2.5 text-xs font-semibold text-silver-300 hover:bg-white/10"
+                className="ios-glass-btn-secondary inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs font-semibold text-silver-300 hover:text-white cursor-pointer"
               >
                 <span>Submit Another</span>
               </button>
@@ -225,7 +225,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                   id="anonCheck"
                   checked={isAnonymous}
                   onChange={(e) => setIsAnonymous(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-white/20 bg-navy-800 text-brand-royal focus:ring-brand-accent"
+                  className="mt-0.5 h-4 w-4 rounded-md border-white/20 bg-navy-800 text-brand-royal focus:ring-brand-accent cursor-pointer"
                 />
                 <label htmlFor="anonCheck" className="text-xs text-silver-300 cursor-pointer">
                   <span className="font-semibold text-white block">File as Anonymous Grievance</span>

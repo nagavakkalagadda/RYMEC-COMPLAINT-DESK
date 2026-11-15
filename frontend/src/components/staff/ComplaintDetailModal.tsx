@@ -64,11 +64,11 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
           <span className="font-mono text-sm font-bold text-white">
             {complaint.complaint_number}
           </span>
-          <span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
+          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
             {complaint.priority} Priority
           </span>
           {complaint.is_escalated && (
-            <span className="rounded bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 text-[10px] font-semibold text-purple-300">
+            <span className="rounded-full bg-purple-500/10 border border-purple-500/20 px-2.5 py-0.5 text-[10px] font-semibold text-purple-300">
               Escalated Level {complaint.escalation_level}
             </span>
           )}

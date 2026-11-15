@@ -42,7 +42,7 @@ export const AuditLogViewer: React.FC = () => {
 
           <button
             onClick={loadLogs}
-            className="pebble-pill inline-flex items-center gap-2 bg-white/10 px-4 py-2 text-xs font-bold text-silver-300 hover:bg-white/20 hover:text-white"
+            className="pebble-pill inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-silver-300 hover:bg-white/20 hover:text-white transition-all cursor-pointer"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh Audit Logs</span>
@@ -79,7 +79,7 @@ export const AuditLogViewer: React.FC = () => {
                       {new Date(log.created_at).toLocaleString()}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="rounded bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 text-[10px] font-bold text-purple-300">
+                      <span className="rounded-full bg-purple-500/10 border border-purple-500/30 px-2.5 py-0.5 text-[10px] font-bold text-purple-300">
                         {log.action}
                       </span>
                     </td>

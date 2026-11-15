@@ -118,13 +118,13 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
               placeholder="Enter Grievance Tracking ID (e.g., GRV-2026-XXXXX)"
               value={complaintNumber}
               onChange={(e) => setComplaintNumber(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm font-mono text-white placeholder-silver-500 focus:border-brand-accent focus:outline-none"
+              className="w-full rounded-2xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm font-mono text-white placeholder-silver-500 focus:border-brand-accent focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="pebble-pill inline-flex items-center justify-center gap-2 bg-brand-royal px-6 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-600 disabled:opacity-50"
+            className="ios-glass-btn-primary inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-2.5 text-xs font-semibold text-white shadow-md hover:brightness-110 active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -161,10 +161,10 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
                   <span className="font-mono text-lg sm:text-xl font-bold text-white">
                     {complaint.complaint_number}
                   </span>
-                  <span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
+                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
                     {complaint.status}
                   </span>
-                  <span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
+                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
                     {complaint.priority} Priority
                   </span>
                 </div>
@@ -252,7 +252,7 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
                   <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
                       <div className="flex items-center gap-2">
-                        <span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
+                        <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
                           {event.status}
                         </span>
                         <span className="text-xs font-semibold text-white">

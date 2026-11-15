@@ -64,7 +64,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate }
               {user?.section && (
                 <>
                   <span className="text-silver-500">•</span>
-                  <span className="rounded bg-white/10 px-2 py-0.5 font-bold text-cyan-300">Sec {user.section}</span>
+                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 font-bold text-cyan-300">Sec {user.section}</span>
                 </>
               )}
               {user?.academic_year && (
@@ -194,12 +194,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate }
                       {c.category}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
+                      <span className="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
                         {c.priority}
                       </span>
                     </td>
                     <td className="py-3 px-3">
-                      <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
+                      <span className="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
                         {c.status}
                       </span>
                     </td>

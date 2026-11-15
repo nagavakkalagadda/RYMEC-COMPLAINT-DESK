@@ -72,7 +72,7 @@ export const TransparencyWall: React.FC = () => {
                   <span className="font-mono text-xs font-semibold text-silver-200">
                     {item.complaint_number}
                   </span>
-                  <span className="rounded bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-silver-400">
+                  <span className="rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-400">
                     {item.category}
                   </span>
                 </div>

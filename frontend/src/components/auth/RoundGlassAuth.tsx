@@ -147,7 +147,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
     if (res && res.token) {
       setTimeout(() => {
         onClose();
-      }, 900);
+      }, 1600);
       return true;
     }
     return false;
@@ -164,7 +164,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
       setResetVerifiedCode(code);
       setTimeout(() => {
         setMode('new-password');
-      }, 900);
+      }, 1600);
       return true;
     }
     return false;

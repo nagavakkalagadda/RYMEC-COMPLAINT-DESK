@@ -28,7 +28,7 @@ export const TrendAlertBanner: React.FC<TrendAlertBannerProps> = ({ alerts }) =>
 
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider rounded px-2 py-0.5 bg-black/30 border border-white/10">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider rounded-full px-2.5 py-0.5 bg-black/30 border border-white/10">
                 AI Pattern Detection
               </span>
               <span className="text-xs font-bold text-white uppercase">

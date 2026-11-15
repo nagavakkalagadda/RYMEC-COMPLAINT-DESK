@@ -34,7 +34,7 @@ export const PebblePill: React.FC<PebblePillProps> = ({
       whileTap={{ scale: 0.98, y: 1 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       onClick={onClick}
-      className={`pebble-pill inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wide transition-all ${variantStyles[variant]} ${className}`}
+      className={`pebble-pill inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-all shadow-sm ${variantStyles[variant]} ${className}`}
     >
       {children}
     </motion.button>

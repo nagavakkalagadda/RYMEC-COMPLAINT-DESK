@@ -85,7 +85,7 @@ export const StaffDashboard: React.FC = () => {
 
           <button
             onClick={loadData}
-            className="pebble-pill inline-flex items-center gap-2 bg-white/5 px-4 py-2 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white"
+            className="pebble-pill inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh Queue</span>
@@ -195,12 +195,12 @@ export const StaffDashboard: React.FC = () => {
                       {c.category}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
+                      <span className="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
                         {c.priority}
                       </span>
                     </td>
                     <td className="py-3 px-3">
-                      <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
+                      <span className="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-white/10 text-silver-300">
                         {c.status}
                       </span>
                     </td>
