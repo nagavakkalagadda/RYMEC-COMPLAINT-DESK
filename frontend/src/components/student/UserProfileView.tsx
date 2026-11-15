@@ -328,10 +328,10 @@ export const UserProfileView: React.FC = () => {
           </div>
 
           {/* Navigation Pills */}
-          <div className="flex rounded-xl border border-white/10 bg-navy-950/60 p-1">
+          <div className="flex rounded-2xl border border-white/10 bg-navy-950/60 p-1">
             <button
               onClick={() => setActiveTab('academic')}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 activeTab === 'academic'
                   ? 'bg-cyan-400 text-navy-950 font-bold shadow'
                   : 'text-silver-400 hover:text-white'
@@ -343,7 +343,7 @@ export const UserProfileView: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('security')}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 activeTab === 'security'
                   ? 'bg-cyan-400 text-navy-950 font-bold shadow'
                   : 'text-silver-400 hover:text-white'
@@ -355,7 +355,7 @@ export const UserProfileView: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('account')}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 activeTab === 'account'
                   ? 'bg-cyan-400 text-navy-950 font-bold shadow'
                   : 'text-silver-400 hover:text-white'
@@ -371,7 +371,7 @@ export const UserProfileView: React.FC = () => {
         <div className="p-6 sm:p-8">
           {/* TAB 1: ACADEMIC & BRANCH SETTINGS */}
           {activeTab === 'academic' && (
-            <form onSubmit={handleProfileSubmit} className="space-y-6">
+            <form onSubmit={handleProfileSubmit} className="space-y-6 max-w-2xl mx-auto">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-cyan-400" />
@@ -582,8 +582,8 @@ export const UserProfileView: React.FC = () => {
 
           {/* TAB 2: SECURITY & PASSWORD SETTINGS */}
           {activeTab === 'security' && (
-            <div className="max-w-md">
-              <form onSubmit={handlePasswordSubmit} className="space-y-4 rounded-2xl border border-white/10 bg-white/2 p-5">
+            <div className="max-w-md mx-auto">
+              <form onSubmit={handlePasswordSubmit} className="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-7 shadow-xl backdrop-blur-xl">
                 <div className="flex items-center gap-2 border-b border-white/10 pb-3">
                   <KeyRound className="h-4 w-4 text-cyan-400" />
                   <div>
@@ -681,7 +681,7 @@ export const UserProfileView: React.FC = () => {
 
           {/* TAB 3: ACCOUNT & INSTITUTION INFO */}
           {activeTab === 'account' && (
-            <div className="space-y-4 max-w-xl">
+            <div className="space-y-5 max-w-2xl mx-auto">
               <div className="flex items-center gap-2 border-b border-white/10 pb-3">
                 <Building className="h-4 w-4 text-cyan-400" />
                 <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">
