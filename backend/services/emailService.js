@@ -41,7 +41,7 @@ function initEmailTransporter() {
 initEmailTransporter();
 
 async function sendEmailNotification({ to, subject, html, plainText, complaintNumber, eventType }) {
-  const senderUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'grievance@rymec.edu.in';
+  const senderUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'rymec.ismart12@gmail.com';
   const mailOptions = {
     from: process.env.SMTP_FROM || `"RYMEC Grievance Desk" <${senderUser}>`,
     to,

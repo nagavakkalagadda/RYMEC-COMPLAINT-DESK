@@ -153,7 +153,7 @@ async function submitComplaint(req, res) {
       }
     });
 
-    // Send confirmation email
+    // Send confirmation email to student
     if (studentEmail) {
       await sendEmailNotification({
         to: studentEmail,
@@ -173,6 +173,30 @@ async function submitComplaint(req, res) {
         ),
         plainText: `Your grievance ${complaintNumber} has been received. Track status with ID: ${complaintNumber}`
       });
+    }
+
+    // Send admin notification to host email (rymec.ismart12@gmail.com)
+    const hostAdminEmail = process.env.ADMIN_NOTIFY_EMAIL || process.env.GMAIL_USER || 'rymec.ismart12@gmail.com';
+    try {
+      await sendEmailNotification({
+        to: hostAdminEmail,
+        subject: `[PORTAL ALERT] New Grievance: ${complaintNumber} (${finalPriority.toUpperCase()})`,
+        eventType: 'admin_alert',
+        complaintNumber,
+        html: createEmailTemplate(
+          `New Grievance Submitted: ${title}`,
+          `<p>A new student grievance has been logged on the portal.</p>
+           <p><b>Reference Number:</b> ${complaintNumber}</p>
+           <p><b>Submitted By:</b> ${is_anonymous ? 'Anonymous Student' : studentName} (${studentEmail || 'N/A'})</p>
+           <p><b>Category:</b> ${finalCategory.toUpperCase()}</p>
+           <p><b>Priority:</b> ${finalPriority.toUpperCase()}</p>
+           <p><b>Description:</b> ${description}</p>`,
+          complaintNumber
+        ),
+        plainText: `New grievance ${complaintNumber} registered by ${is_anonymous ? 'Anonymous' : studentName}: ${title}`
+      });
+    } catch (e) {
+      console.warn('Host admin notification warning:', e.message);
     }
 
     return res.status(201).json({
