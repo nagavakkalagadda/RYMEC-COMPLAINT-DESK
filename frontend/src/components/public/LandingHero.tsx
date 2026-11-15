@@ -7,7 +7,8 @@ import {
   Lock, 
   Award,
   MapPin,
-  FileCheck
+  FileCheck,
+  ChevronRight
 } from 'lucide-react';
 import { GlassCard } from '../3d/GlassCard';
 
@@ -25,60 +26,60 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-hidden">
 
-      {/* ── RYMEC Campus Photograph ── */}
+      {/* ── Background RYMEC Campus Photograph ── */}
       <div className="absolute inset-0 -z-30">
         <img
           src="/images/rymec-campus.png"
           alt="Rao Bahadur Y. Mahabaleswarappa Engineering College Campus"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center scale-[1.02]"
           draggable={false}
         />
       </div>
 
-      {/* ── Quiet Dark Overlay for Text Legibility ── */}
-      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-navy-950/40 via-navy-950/60 to-navy-950/95" />
+      {/* ── Apple Liquid Glass Ambient Veil ── */}
+      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-navy-950/30 via-navy-950/50 to-navy-950/95" />
 
-      {/* ── Hero Main Content ── */}
+      {/* ── Central Hero Section ── */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-28 pb-16 text-center max-w-4xl mx-auto">
 
-        {/* Institutional Accreditation */}
-        <div className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-navy-900/70 px-3.5 py-1.5 text-xs text-silver-300 mb-6 backdrop-blur-md">
-          <Award className="h-4 w-4 text-cyan-400 shrink-0" />
-          <span>NAAC A+ Accredited · VTU Affiliated · Estd. 1980</span>
+        {/* iOS Frosted Capsule Badge */}
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs text-white backdrop-blur-2xl shadow-[0_4px_20px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] mb-6">
+          <span className="flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+          <span className="font-medium tracking-wide">NAAC A+ Accredited · VTU Affiliated · Estd. 1980</span>
         </div>
 
-        {/* College & Portal Titles */}
+        {/* Institution Identity */}
         <div className="space-y-3 mb-6">
-          <p className="text-xs font-medium uppercase tracking-wider text-silver-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-silver-300/90">
             Veerasaiva Vidyavardhaka Sangha, Ballari
           </p>
 
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-silver-200 leading-snug">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-medium text-silver-100 leading-snug drop-shadow-sm">
             Rao Bahadur Y. Mahabaleswarappa Engineering College
           </h2>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mt-1">
-            Grievance Redressal Portal
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mt-1 drop-shadow-md">
+            RYMEC Grievance Desk
           </h1>
         </div>
 
-        {/* Campus Location */}
-        <div className="flex items-center justify-center gap-1.5 mb-6 text-silver-400 text-xs">
+        {/* Campus Location Pin */}
+        <div className="flex items-center justify-center gap-1.5 mb-6 text-silver-300 text-xs">
           <MapPin className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
           <span>V.V. Sangha Campus, Cantonment, Ballari — 583 104, Karnataka</span>
         </div>
 
-        {/* Purpose Statement */}
-        <p className="text-sm sm:text-base text-silver-300 leading-relaxed font-normal max-w-2xl mx-auto mb-8">
-          The official institutional grievance redressal system for students, faculty, and administration —
+        {/* Institutional Purpose Statement */}
+        <p className="text-sm sm:text-base text-silver-200/90 leading-relaxed font-normal max-w-2xl mx-auto mb-8">
+          The institutional grievance redressal system for students, faculty, and administration —
           providing confidential reporting, direct departmental routing, and time-bound resolution tracking.
         </p>
 
-        {/* Two Deliberate Actions */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+        {/* Apple-grade Liquid Glass Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3.5 mb-6">
           <button
             onClick={onGetStarted}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-500 active:scale-[0.98] transition-colors"
+            className="ios-glass-btn-primary rounded-2xl px-7 py-3.5 text-sm font-semibold text-white flex items-center gap-2 cursor-pointer"
           >
             <span>Submit Grievance</span>
             <ArrowRight className="h-4 w-4" />
@@ -86,65 +87,66 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <button
             onClick={onTrack}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-silver-200 hover:bg-white/10 hover:border-white/25 active:scale-[0.98] transition-colors"
+            className="ios-glass-btn-secondary rounded-2xl px-6 py-3.5 text-sm font-semibold text-white flex items-center gap-2 cursor-pointer"
           >
-            <Search className="h-4 w-4 text-silver-400" />
-            <span>Track Grievance</span>
+            <Search className="h-4 w-4 text-silver-300" />
+            <span>Track Status</span>
           </button>
         </div>
 
-        {/* Quiet Tertiary Link */}
+        {/* Floating Capsule for Transparency Wall */}
         <button
           onClick={onViewTransparency}
-          className="text-xs text-silver-400 hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white"
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs text-silver-300 hover:text-white hover:bg-white/10 hover:border-white/25 backdrop-blur-xl transition-all cursor-pointer shadow-sm"
         >
-          View Public Transparency Wall →
+          <span>Public Transparency Wall</span>
+          <ChevronRight className="h-3.5 w-3.5 text-cyan-400" />
         </button>
 
       </div>
 
-      {/* ── Institutional Pillars ── */}
+      {/* ── iOS Frosted Glass Widgets Grid ── */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {[
             {
               icon: Lock,
               title: 'Confidential Reporting',
-              desc: 'File sensitive matters without disclosing personal identity to non-committee members.',
-              tag: 'Privacy'
+              desc: 'Submit sensitive concerns with anonymous protection without disclosing identity to non-committee members.',
+              tag: 'Confidential'
             },
             {
               icon: ShieldCheck,
-              title: 'Direct Routing',
-              desc: 'Grievances automatically dispatch to the responsible department head, warden, or mentor.',
-              tag: 'Routing'
+              title: 'Automated Routing',
+              desc: 'Matters automatically dispatch to the responsible department head, hostel warden, or academic counselor.',
+              tag: 'Automated'
             },
             {
               icon: Clock,
               title: 'Time-Bound SLA',
-              desc: '7-day target for standard matters and 3-day resolution for urgent safety submissions.',
-              tag: 'Milestone'
+              desc: 'Standard issues handled within 7 days. Urgent matters prioritized for 3-day turnaround with escalation.',
+              tag: 'Guaranteed'
             },
             {
               icon: FileCheck,
-              title: 'Permanent Audit Trail',
-              desc: 'All official remarks, status changes, and committee notes are timestamped and logged.',
-              tag: 'Accountability'
+              title: 'Verified Audit Trail',
+              desc: 'Every committee action, status update, and remark is recorded with timestamped institutional accountability.',
+              tag: 'Audit Log'
             }
           ].map((item, idx) => {
             const Icon = item.icon;
             return (
-              <GlassCard key={idx} className="p-5 text-left">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-cyan-400">
-                    <Icon className="h-4 w-4" />
+              <GlassCard key={idx} className="p-6 text-left">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-b from-white/15 to-white/5 border border-white/20 text-cyan-400 shadow-[inset_0_1px_1px_rgba(255,255,255,0.35)]">
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <span className="text-[11px] font-mono text-silver-400">
+                  <span className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase bg-white/5 border border-white/10 text-silver-300">
                     {item.tag}
                   </span>
                 </div>
-                <h3 className="text-sm font-semibold text-white mb-1.5">{item.title}</h3>
-                <p className="text-xs text-silver-400 leading-relaxed">{item.desc}</p>
+                <h3 className="text-sm font-semibold text-white mb-1.5 tracking-tight">{item.title}</h3>
+                <p className="text-xs text-silver-300 leading-relaxed font-normal">{item.desc}</p>
               </GlassCard>
             );
           })}
