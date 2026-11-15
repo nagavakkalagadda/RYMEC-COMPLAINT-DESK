@@ -84,6 +84,18 @@ export const AboutCollege: React.FC = () => {
               <Mail className="h-4 w-4 text-cyan-400 shrink-0" />
               <span>principal@rymec.edu.in</span>
             </div>
+            <div className="mt-2 rounded-xl border border-blue-400/20 bg-blue-500/10 p-2.5 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-blue-300 block">
+                Official Grievance Desk
+              </span>
+              <a 
+                href="mailto:rymec.ismart12@gmail.com" 
+                className="font-medium text-white hover:text-blue-200 transition-colors flex items-center gap-1.5 break-all text-xs"
+              >
+                <Mail className="h-3.5 w-3.5 text-blue-300 shrink-0" />
+                <span>rymec.ismart12@gmail.com</span>
+              </a>
+            </div>
           </div>
 
           <div className="border-t border-white/10 pt-4">

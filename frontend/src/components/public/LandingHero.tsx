@@ -5,6 +5,7 @@ import {
   Search, 
   Clock, 
   Lock, 
+  Mail,
   MapPin,
   FileCheck,
   ChevronRight
@@ -149,6 +150,43 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               </GlassCard>
             );
           })}
+        </div>
+      </div>
+
+      {/* ── Official Grievance Contact & Report Support Banner ── */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+        <div className="ios-glass-card rounded-3xl p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-5 border border-white/20 shadow-2xl">
+          <div className="flex items-center gap-4 text-left w-full md:w-auto">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 border border-white/20 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.35)] backdrop-blur-md shrink-0">
+              <Mail className="h-6 w-6 text-blue-300" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
+                  Official Grievance & Redressal Helpdesk
+                </span>
+                <span className="rounded-full bg-emerald-500/20 border border-emerald-400/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                  Active
+                </span>
+              </div>
+              <h4 className="text-sm sm:text-base font-semibold text-white mt-0.5">
+                Have a grievance or need direct committee escalation?
+              </h4>
+              <p className="text-xs text-silver-300 mt-0.5">
+                Submit your concerns or request procedural assistance directly via our institutional redressal gateway.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 w-full md:w-auto justify-end">
+            <a
+              href="mailto:rymec.ismart12@gmail.com"
+              className="ios-glass-btn-primary rounded-2xl px-5 py-3 text-xs sm:text-sm font-semibold text-white inline-flex items-center justify-center gap-2.5 w-full md:w-auto shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-transform cursor-pointer"
+            >
+              <Mail className="h-4 w-4" />
+              <span>rymec.ismart12@gmail.com</span>
+            </a>
+          </div>
         </div>
       </div>
 

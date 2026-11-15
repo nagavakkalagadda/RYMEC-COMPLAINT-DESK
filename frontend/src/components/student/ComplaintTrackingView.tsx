@@ -318,6 +318,14 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
         </motion.div>
       )}
 
+      {/* Direct Escalation & Contact Notice */}
+      <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-4 text-center text-xs text-silver-400">
+        <span>Facing issues tracking your complaint or need urgent committee escalation? Email: </span>
+        <a href="mailto:rymec.ismart12@gmail.com" className="text-blue-400 hover:text-blue-300 font-semibold underline">
+          rymec.ismart12@gmail.com
+        </a>
+      </div>
+
     </div>
   );
 };

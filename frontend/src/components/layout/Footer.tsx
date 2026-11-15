@@ -5,10 +5,10 @@ export const Footer: React.FC = () => {
   return (
     <footer className="w-full border-t border-white/10 bg-navy-950/95 pt-12 pb-28 text-silver-400">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           
           {/* Col 1: College Info */}
-          <div className="md:col-span-2 space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 overflow-hidden p-0.5 shadow-sm shrink-0">
                 <img 
@@ -22,15 +22,15 @@ export const Footer: React.FC = () => {
                 <p className="text-xs text-silver-400 font-medium">Veerasaiva Vidyavardhaka Sangha, Ballari</p>
               </div>
             </div>
-            <p className="text-xs text-silver-400 leading-relaxed max-w-md">
-              Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), established in 1980, is affiliated to VTU Belagavi, approved by AICTE New Delhi, and accredited with NAAC A+ Grade. This institutional grievance platform ensures swift, transparent, and audited redressal for all students and scholars.
+            <p className="text-xs text-silver-400 leading-relaxed">
+              Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Estd. 1980, affiliated to VTU Belagavi, AICTE approved, NAAC A+ accredited. Providing confidential, audited institutional redressal.
             </p>
-            <div className="flex items-center gap-3 text-xs text-silver-300">
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 text-silver-300 border border-white/10">
-                <Award className="h-3.5 w-3.5 text-silver-400" /> NAAC A+ Accredited
+            <div className="flex flex-wrap items-center gap-2 text-xs text-silver-300">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2.5 py-0.5 text-silver-300 border border-white/10 text-[11px]">
+                <Award className="h-3 w-3 text-silver-400" /> NAAC A+
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 text-silver-300 border border-white/10">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" /> VTU Affiliated
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2.5 py-0.5 text-silver-300 border border-white/10 text-[11px]">
+                <ShieldCheck className="h-3 w-3 text-emerald-400" /> VTU Affiliated
               </span>
             </div>
           </div>
@@ -39,11 +39,11 @@ export const Footer: React.FC = () => {
           <div className="space-y-3">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white">Statutory Cells</h4>
             <ul className="space-y-2 text-xs">
+              <li className="hover:text-white transition-colors cursor-pointer">Student Grievance Redressal (SGRC)</li>
               <li className="hover:text-white transition-colors cursor-pointer">Internal Complaints Committee (ICC)</li>
               <li className="hover:text-white transition-colors cursor-pointer">Anti-Ragging Squad & Cell</li>
-              <li className="hover:text-white transition-colors cursor-pointer">SC/ST/OBC Grievance Committee</li>
+              <li className="hover:text-white transition-colors cursor-pointer">SC/ST/OBC Grievance Cell</li>
               <li className="hover:text-white transition-colors cursor-pointer">Women Protection & Safety Desk</li>
-              <li className="hover:text-white transition-colors cursor-pointer">Chief Proctor & Student Welfare</li>
             </ul>
           </div>
 
@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
             <div className="space-y-2 text-xs">
               <p className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-silver-400 shrink-0 mt-0.5" />
-                <span>Cantonment, Ballari - 583104, Karnataka, India</span>
+                <span>Cantonment, Ballari - 583104, Karnataka</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-silver-400 shrink-0" />
@@ -62,6 +62,31 @@ export const Footer: React.FC = () => {
               <p className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-silver-400 shrink-0" />
                 <span>principal@rymec.edu.in</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Col 4: Official Grievance & Report Helpdesk */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white">Grievance & Report Helpdesk</h4>
+            <div className="space-y-2 text-xs">
+              <p className="text-silver-400 leading-relaxed text-[11px]">
+                For direct complaint filing, status inquiries, or urgent committee escalation:
+              </p>
+              <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-1">
+                <span className="text-[10px] uppercase font-bold text-blue-400 block tracking-wider">
+                  Direct Grievance Email
+                </span>
+                <a 
+                  href="mailto:rymec.ismart12@gmail.com" 
+                  className="font-medium text-white hover:text-blue-300 transition-colors flex items-center gap-1.5 break-all text-xs"
+                >
+                  <Mail className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                  <span>rymec.ismart12@gmail.com</span>
+                </a>
+              </div>
+              <p className="text-[11px] text-silver-500">
+                Operating Hours: Mon–Sat 9:00 AM – 5:00 PM IST
               </p>
             </div>
           </div>
