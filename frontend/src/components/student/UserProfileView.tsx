@@ -429,6 +429,8 @@ export const UserProfileView: React.FC = () => {
                         }`}
                       >
                         <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+                        <option value="CSE - Cyber Security">CSE - Cyber Security (CSE-CS)</option>
+                        <option value="Data Science">Data Science (CS-DS)</option>
                         <option value="Information Science & Engineering">Information Science & Engineering (ISE)</option>
                         <option value="Artificial Intelligence & ML">Artificial Intelligence & ML (AIML)</option>
                         <option value="Electronics & Communication">Electronics & Communication (ECE)</option>
@@ -512,6 +514,8 @@ export const UserProfileView: React.FC = () => {
                       }`}
                     >
                       <option value="Computer Science & Engineering">CSE</option>
+                      <option value="CSE - Cyber Security">CSE - Cyber Security</option>
+                      <option value="Data Science">Data Science</option>
                       <option value="Information Science & Engineering">ISE</option>
                       <option value="Artificial Intelligence & ML">AIML</option>
                       <option value="Electronics & Communication">ECE</option>

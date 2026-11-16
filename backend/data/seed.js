@@ -8,6 +8,8 @@ async function seed() {
     // 1. Seed Departments
     const departments = [
       { name: 'Computer Science & Engineering', code: 'CSE', cat: 'academic', email: 'hod.cse@rymec.edu.in', desc: 'Department of Computer Science & Engineering' },
+      { name: 'CSE - Cyber Security', code: 'CSE-CS', cat: 'academic', email: 'hod.cs@rymec.edu.in', desc: 'Department of CSE - Cyber Security' },
+      { name: 'Data Science', code: 'DS', cat: 'academic', email: 'hod.ds@rymec.edu.in', desc: 'Department of Data Science' },
       { name: 'Information Science & Engineering', code: 'ISE', cat: 'academic', email: 'hod.ise@rymec.edu.in', desc: 'Department of Information Science & Engineering' },
       { name: 'Artificial Intelligence & Machine Learning', code: 'AIML', cat: 'academic', email: 'hod.aiml@rymec.edu.in', desc: 'Department of AI & Machine Learning' },
       { name: 'Hostel & Residential Facilities', code: 'HOSTEL', cat: 'hostel', email: 'warden@rymec.edu.in', desc: 'Boys and Girls Hostel Administration' },
