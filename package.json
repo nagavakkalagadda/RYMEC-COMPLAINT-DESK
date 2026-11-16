@@ -4,7 +4,8 @@
   "description": "RYMEC Grievance Desk - Student Grievance Management Platform",
   "scripts": {
     "build": "cd frontend && npm install --include=dev && npm run build",
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "db:inspect": "node scripts/inspect-database.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

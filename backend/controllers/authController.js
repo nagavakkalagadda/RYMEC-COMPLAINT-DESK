@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 const { JWT_SECRET } = require('../middleware/auth');
 const { sendEmailNotification, createEmailTemplate, createProfessionalOtpTemplate } = require('../services/emailService');
+const { recordAuditLog } = require('../services/auditService');
 
 // ──────────────────────────────────────────────────────────────
 // REGISTER – collects branch, section, current-studying details
@@ -98,10 +99,7 @@ async function register(req, res) {
     const user = result.rows[0];
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [user.id, 'USER_REGISTERED', 'user', String(user.id), JSON.stringify({ role: user.role, email: user.email })]
-      );
+      await recordAuditLog(req, user.id, 'USER_REGISTERED', 'user', user.id, { role: user.role, email: user.email });
     } catch (auditErr) {
       console.warn('Audit log insert warning:', auditErr.message);
     }
@@ -183,10 +181,7 @@ async function verifyOtp(req, res) {
     );
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [user.id, 'USER_VERIFIED', 'user', String(user.id), JSON.stringify({ email: cleanEmail })]
-      );
+      await recordAuditLog(req, user.id, 'USER_VERIFIED', 'user', user.id, { email: cleanEmail });
     } catch (auditErr) {
       console.warn('Audit log insert error:', auditErr.message);
     }
@@ -289,10 +284,7 @@ async function login(req, res) {
     );
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [user.id, 'USER_LOGIN', 'user', String(user.id), JSON.stringify({ role: user.role })]
-      );
+      await recordAuditLog(req, user.id, 'USER_LOGIN', 'user', user.id, { role: user.role, email: cleanEmail });
     } catch (auditErr) {
       console.warn('Audit log error:', auditErr.message);
     }
@@ -407,10 +399,7 @@ async function updateProfile(req, res) {
     const result = await db.query(sql, values);
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [userId, 'USER_PROFILE_UPDATED', 'user', String(userId), JSON.stringify(req.body)]
-      );
+      await recordAuditLog(req, userId, 'USER_PROFILE_UPDATED', 'user', userId, req.body);
     } catch (auditErr) {
       console.warn('Audit log error:', auditErr.message);
     }
@@ -453,10 +442,7 @@ async function changePassword(req, res) {
     await db.query('UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [newHash, userId]);
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [userId, 'PASSWORD_CHANGED', 'user', String(userId), JSON.stringify({})]
-      );
+      await recordAuditLog(req, userId, 'PASSWORD_CHANGED', 'user', userId, {});
     } catch (auditErr) {
       console.warn('Audit log error:', auditErr.message);
     }
@@ -528,10 +514,7 @@ async function forgotPassword(req, res) {
     }
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [user.id, 'PASSWORD_RESET_REQUESTED', 'user', String(user.id), JSON.stringify({ email: cleanEmail })]
-      );
+      await recordAuditLog(req, user.id, 'PASSWORD_RESET_REQUESTED', 'user', user.id, { email: cleanEmail });
     } catch (auditErr) {}
 
     return res.json({
@@ -653,10 +636,7 @@ async function resetPassword(req, res) {
     } catch (e) {}
 
     try {
-      await db.query(
-        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details) VALUES ($1,$2,$3,$4,$5)`,
-        [user.id, 'PASSWORD_RESET_COMPLETED', 'user', String(user.id), JSON.stringify({ email: cleanEmail })]
-      );
+      await recordAuditLog(req, user.id, 'PASSWORD_RESET_COMPLETED', 'user', user.id, { email: cleanEmail });
     } catch (auditErr) {}
 
     return res.json({

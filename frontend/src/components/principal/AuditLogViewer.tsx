@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Clock, User, FileText, Search, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Clock, User, FileText, Search, RefreshCw, MapPin, Globe } from 'lucide-react';
 import { api } from '../../services/api';
 import { GlassCard } from '../3d/GlassCard';
 
@@ -69,32 +69,46 @@ export const AuditLogViewer: React.FC = () => {
                   <th className="py-2.5 px-3">Action Event</th>
                   <th className="py-2.5 px-3">Entity Type</th>
                   <th className="py-2.5 px-3">Actor / User</th>
-                  <th className="py-2.5 px-3">Details</th>
+                  <th className="py-2.5 px-3">Location &amp; IP</th>
+                  <th className="py-2.5 px-3">Step Details</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-white/5 transition-colors">
-                    <td className="py-3 px-3 font-mono text-[11px] text-silver-400 whitespace-nowrap">
-                      {new Date(log.created_at).toLocaleString()}
-                    </td>
-                    <td className="py-3 px-3">
-                      <span className="rounded-full bg-purple-500/10 border border-purple-500/30 px-2.5 py-0.5 text-[10px] font-bold text-purple-300">
-                        {log.action}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 font-semibold text-white uppercase text-[10px]">
-                      {log.entity_type} {log.entity_id ? `(#${log.entity_id})` : ''}
-                    </td>
-                    <td className="py-3 px-3 text-silver-300">
-                      {log.user_name || 'System Auto-Engine'} 
-                      {log.user_role && <span className="opacity-70 text-[10px] block uppercase">({log.user_role})</span>}
-                    </td>
-                    <td className="py-3 px-3 font-mono text-[11px] text-silver-400 max-w-xs truncate">
-                      {typeof log.details === 'object' ? JSON.stringify(log.details) : String(log.details || '-')}
-                    </td>
-                  </tr>
-                ))}
+                {logs.map((log) => {
+                  const location = log.details?.location || 'Ballari, KA (RYMEC)';
+                  const ip = log.ip_address || log.details?.ip || '127.0.0.1';
+                  return (
+                    <tr key={log.id} className="hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-3 font-mono text-[11px] text-silver-400 whitespace-nowrap">
+                        {new Date(log.created_at).toLocaleString()}
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className="rounded-full bg-purple-500/10 border border-purple-500/30 px-2.5 py-0.5 text-[10px] font-bold text-purple-300">
+                          {log.action}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 font-semibold text-white uppercase text-[10px]">
+                        {log.entity_type} {log.entity_id ? `(#${log.entity_id})` : ''}
+                      </td>
+                      <td className="py-3 px-3 text-silver-300">
+                        {log.user_name || 'System Auto-Engine'} 
+                        {log.user_role && <span className="opacity-70 text-[10px] block uppercase">({log.user_role})</span>}
+                      </td>
+                      <td className="py-3 px-3 text-[11px]">
+                        <div className="flex items-center gap-1.5 text-cyan-400 font-medium">
+                          <MapPin className="h-3 w-3 shrink-0 text-cyan-400" />
+                          <span>{location}</span>
+                        </div>
+                        <div className="text-[10px] text-silver-500 font-mono mt-0.5 pl-4.5">
+                          IP: {ip}
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 font-mono text-[11px] text-silver-400 max-w-xs truncate">
+                        {typeof log.details === 'object' ? JSON.stringify(log.details) : String(log.details || '-')}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

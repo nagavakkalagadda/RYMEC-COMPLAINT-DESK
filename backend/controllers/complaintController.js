@@ -9,6 +9,7 @@ const {
 } = require('../services/aiService');
 const { sendEmailNotification, createEmailTemplate } = require('../services/emailService');
 const { maskAnonymousData } = require('../middleware/auth');
+const { recordAuditLog } = require('../services/auditService');
 
 // Unique ID generator format: GRV-2026-XXXXX
 function generateComplaintId() {
@@ -198,6 +199,15 @@ async function submitComplaint(req, res) {
     } catch (e) {
       console.warn('Host admin notification warning:', e.message);
     }
+
+    try {
+      await recordAuditLog(req, req.user?.id, 'COMPLAINT_SUBMITTED', 'complaint', complaint.id, {
+        complaintNumber: complaint.complaint_number,
+        category: complaint.category,
+        priority: complaint.priority,
+        isAnonymous: complaint.is_anonymous
+      });
+    } catch (auditErr) {}
 
     return res.status(201).json({
       message: 'Grievance submitted successfully',
@@ -431,18 +441,14 @@ async function updateStatus(req, res) {
       ]
     );
 
-    // Audit Log
-    await db.query(
-      `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, details)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [
-        req.user.id,
-        'STATUS_UPDATE',
-        'complaint',
-        String(complaintId),
-        JSON.stringify({ from: complaint.status, to: status, remarks })
-      ]
-    );
+    // Audit Log with location and IP telemetry
+    try {
+      await recordAuditLog(req, req.user.id, 'STATUS_UPDATE', 'complaint', complaintId, {
+        from: complaint.status,
+        to: status,
+        remarks
+      });
+    } catch (auditErr) {}
 
     // Send Notification to Student if exists
     if (complaint.student_id) {
