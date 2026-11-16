@@ -8,8 +8,7 @@ import {
   User, 
   BarChart3, 
   Inbox, 
-  Building, 
-  ShieldCheck 
+  Building 
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -32,7 +31,7 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
     { id: 'home', label: 'Home', icon: Home },
     { id: 'submit', label: 'Submit', icon: PlusCircle },
     { id: 'track', label: 'Track', icon: Search },
-    { id: 'audit-logs', label: 'Audit Logs', icon: ShieldCheck },
+    { id: 'history', label: 'History', icon: Clock },
     { id: 'profile', label: 'Profile', icon: User },
   ];
 
@@ -40,7 +39,7 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
     { id: 'overview', label: 'Overview', icon: Home },
     { id: 'complaints', label: 'Complaints', icon: Inbox },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'audit-logs', label: 'Audit Logs', icon: ShieldCheck },
+    { id: 'departments', label: 'Departments', icon: Building },
     { id: 'profile', label: 'Profile', icon: User },
   ];
 

@@ -223,15 +223,6 @@ export const api = {
     return data;
   },
 
-  async getAuditLogs(offset = 0) {
-    const res = await fetch(`${API_BASE}/analytics/audit-logs?offset=${offset}`, {
-      headers: getAuthHeaders(),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch audit logs');
-    return data.logs;
-  },
-
   // Departments
   async getDepartments() {
     const res = await fetch(`${API_BASE}/departments`);

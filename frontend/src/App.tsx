@@ -14,7 +14,6 @@ import { UserProfileView } from './components/student/UserProfileView';
 import { StaffDashboard } from './components/staff/StaffDashboard';
 import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
 import { DepartmentManagement } from './components/principal/DepartmentManagement';
-import { AuditLogViewer } from './components/principal/AuditLogViewer';
 import { GrievanceChatbot } from './components/chatbot/GrievanceChatbot';
 
 export function App() {
@@ -102,9 +101,6 @@ export function App() {
 
       case 'departments':
         return <DepartmentManagement />;
-
-      case 'audit-logs':
-        return <AuditLogViewer />;
 
       case 'transparency':
         return <TransparencyWall />;
