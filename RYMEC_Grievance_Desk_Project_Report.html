@@ -7,7 +7,13 @@
 <style>
   @page {
     size: A4 portrait;
-    margin: 25mm 20mm 25mm 25mm; /* Standard VTU Margins: Left 1.0-1.25 in, Right 0.8 in, Top 1 in, Bottom 1 in */
+    margin: 25mm 20mm 25mm 25mm;
+    @top-right {
+      content: "RYMEC Grievance Desk | Dept of CSE";
+      font-family: 'Times New Roman', serif;
+      font-size: 8.5pt;
+      color: #64748b;
+    }
     @bottom-center {
       content: counter(page);
       font-family: 'Times New Roman', serif;
@@ -16,36 +22,37 @@
   }
 
   @page :first {
-    @bottom-center {
-      content: "";
-    }
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
   }
 
+  * { box-sizing: border-box; }
+
   body {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Times New Roman', Times, Georgia, serif;
     font-size: 12pt;
     line-height: 1.6;
     color: #111827;
-    margin: 0;
-    padding: 20px;
     background: #ffffff;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
     text-align: justify;
   }
 
-  /* Headings */
   h1 {
     font-size: 18pt;
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
     color: #0f172a;
-    margin-top: 24pt;
+    margin-top: 28pt;
     margin-bottom: 16pt;
     page-break-before: always;
   }
 
   h1.chapter-title {
-    font-size: 20pt;
+    font-size: 19pt;
     border-bottom: 2px solid #0f172a;
     padding-bottom: 8pt;
     letter-spacing: 0.5px;
@@ -54,8 +61,8 @@
   h2 {
     font-size: 14pt;
     font-weight: bold;
-    color: #1e293b;
-    margin-top: 18pt;
+    color: #1e3a8a;
+    margin-top: 20pt;
     margin-bottom: 10pt;
     border-bottom: 1px solid #cbd5e1;
     padding-bottom: 4pt;
@@ -70,7 +77,7 @@
   }
 
   h4, h5, h6 {
-    font-size: 12pt;
+    font-size: 11.5pt;
     font-weight: bold;
     color: #475569;
     margin-top: 10pt;
@@ -79,8 +86,13 @@
 
   p {
     margin-top: 0;
-    margin-bottom: 10pt;
-    text-indent: 2em;
+    margin-bottom: 8pt;
+    text-indent: 1.8em;
+  }
+
+  a {
+    color: #0d9488;
+    text-decoration: underline;
   }
 
   .page-break {
@@ -88,33 +100,21 @@
     break-after: page;
     height: 0;
     margin: 0;
-    padding: 0;
-  }
-
-  /* Lists */
-  ul, ol {
-    margin-top: 4pt;
-    margin-bottom: 12pt;
-    padding-left: 28pt;
-  }
-
-  li {
-    margin-bottom: 4pt;
   }
 
   /* Tables */
   .table-container {
     width: 100%;
-    overflow-x: auto;
     margin: 14pt 0;
     page-break-inside: avoid;
+    overflow-x: auto;
   }
 
   table.report-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 10pt;
-    font-family: 'Calibri', 'Arial', sans-serif;
+    font-family: Calibri, Arial, sans-serif;
   }
 
   table.report-table th, table.report-table td {
@@ -135,13 +135,24 @@
     background-color: #f8fafc;
   }
 
-  /* Code Blocks */
+  /* Lists */
+  ul, ol {
+    margin-top: 4pt;
+    margin-bottom: 10pt;
+    padding-left: 24pt;
+  }
+
+  li {
+    margin-bottom: 3pt;
+  }
+
+  /* Code */
   pre.code-block {
     background-color: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    padding: 10pt 12pt;
-    font-family: 'Consolas', 'Courier New', monospace;
+    border-radius: 6px;
+    padding: 10pt 14pt;
+    font-family: 'JetBrains Mono', Consolas, monospace;
     font-size: 9pt;
     line-height: 1.4;
     overflow-x: auto;
@@ -152,59 +163,63 @@
   }
 
   code {
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 10pt;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 9.5pt;
     background-color: #f1f5f9;
     padding: 1pt 4pt;
     border-radius: 3px;
-    color: #0f172a;
+    color: #1e3a8a;
   }
 
-  /* Blockquote */
   blockquote.academic-quote {
     border-left: 4px solid #1e3a8a;
     background-color: #f8fafc;
-    margin: 10pt 0 10pt 15pt;
-    padding: 8pt 12pt;
+    margin: 10pt 0 10pt 16pt;
+    padding: 8pt 14pt;
     font-style: italic;
     color: #334155;
   }
 
-  /* Preliminary specifics */
-  .title-page-container {
+  .img-box {
     text-align: center;
-    padding-top: 40px;
-    page-break-after: always;
+    margin: 16pt 0;
+    page-break-inside: avoid;
   }
 
-  /* Print optimization */
+  .report-img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .img-caption {
+    font-size: 9.5pt;
+    color: #64748b;
+    margin-top: 6pt;
+    font-style: italic;
+  }
+
   @media print {
     body {
       padding: 0;
-      background: none;
-    }
-    .no-print {
-      display: none;
+      max-width: none;
     }
   }
 </style>
 </head>
 <body>
-<p>&lt;div class="cover-page"&gt;</p>
+<p><div class="cover-page"></p>
 <h1 class="chapter-title">VISVESVARAYA TECHNOLOGICAL UNIVERSITY</h1>
 <h3 class="subsection-title">Belagavi, Karnataka - 590018</h3>
-<p>&lt;br/&gt;</p>
-<p>![V.V. Sangha Emblem](https://rymec-complaint-desk.vercel.app/images/vvs-logo.jpg)</p>
-<p>&lt;br/&gt;</p>
+<p><div class="img-box"><img src="https://rymec-complaint-desk.vercel.app/images/vvs-logo.jpg" alt="V.V. Sangha Emblem" class="report-img"/><div class="img-caption">V.V. Sangha Emblem</div></div></p>
 <h2 class="section-title">A PROJECT REPORT ON</h2>
 <h1 class="chapter-title"><strong>RYMEC GRIEVANCE DESK</strong></h1>
 <h3 class="subsection-title"><em>An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform</em></h3>
-<p>&lt;br/&gt;</p>
 <p>Submitted in partial fulfillment of the requirements for the award of the degree of</p>
 <h3 class="subsection-title"><strong>BACHELOR OF ENGINEERING</strong></h3>
 <p>IN</p>
 <h3 class="subsection-title"><strong>COMPUTER SCIENCE AND ENGINEERING</strong></h3>
-<p>&lt;br/&gt;</p>
 <p><strong>Submitted by:</strong></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
@@ -216,45 +231,40 @@
 <tr>
 <td><strong>V. NAGA PHANENDRA</strong></td>
 <td><strong>3BR21CS045</strong></td>
-<td>[@nagavakkalagadda](https://github.com/nagavakkalagadda) (Project Lead)</td>
+<td><a href="https://github.com/nagavakkalagadda" target="_blank" rel="noreferrer">@nagavakkalagadda</a> (Project Lead)</td>
 </tr>
 <tr>
 <td><strong>SUMANTH GODINAL</strong></td>
 <td><strong>3BR21CS046</strong></td>
-<td>[@sumanthgodinal9369](https://github.com/sumanthgodinal9369)</td>
+<td><a href="https://github.com/sumanthgodinal9369" target="_blank" rel="noreferrer">@sumanthgodinal9369</a></td>
 </tr>
 <tr>
 <td><strong>VINAY REDDY</strong></td>
 <td><strong>3BR21CS047</strong></td>
-<td>[@vinayreddy0224](https://github.com/vinayreddy0224)</td>
+<td><a href="https://github.com/vinayreddy0224" target="_blank" rel="noreferrer">@vinayreddy0224</a></td>
 </tr>
 <tr>
 <td><strong>SHARANABASAVARAJ S</strong></td>
 <td><strong>3BR21CS048</strong></td>
-<td>[@ssharanabasavaraj371-dev](https://github.com/ssharanabasavaraj371-dev)</td>
+<td><a href="https://github.com/ssharanabasavaraj371-dev" target="_blank" rel="noreferrer">@ssharanabasavaraj371-dev</a></td>
 </tr>
 </tbody></table></div>
-<p>&lt;br/&gt;</p>
 <p><strong>Under the Guidance of:</strong></p>
 <p><strong>DR. VEERENDRA KUMAR, M.Tech., Ph.D.</strong></p>
-<p>Professor &amp; Head of the Department</p>
-<p>Department of Computer Science &amp; Engineering</p>
-<p>&lt;br/&gt;</p>
-<p>![RYMEC Campus](https://rymec-complaint-desk.vercel.app/images/rymec-campus.png)</p>
+<p>Professor & Head of the Department</p>
+<p>Department of Computer Science & Engineering</p>
+<p><div style="margin: 18pt 0; text-align: center;"><div style="display: inline-block; padding: 10pt 24pt; border: 2px solid #0f172a; border-radius: 8px; font-weight: bold; font-size: 13pt; letter-spacing: 1px; color: #0f172a;">RAO BAHADUR Y. MAHABALESWARAPPA ENGINEERING COLLEGE<br/><span style="font-size: 10pt; font-weight: normal; color: #475569;">Estd. 1980 • Cantonment, Ballari, Karnataka</span></div></div></p>
 <h3 class="subsection-title"><strong>DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING</strong></h3>
 <h2 class="section-title"><strong>RAO BAHADUR Y. MAHABALESWARAPPA ENGINEERING COLLEGE</strong></h2>
-<p><em>(Affiliated to VTU Belagavi, Approved by AICTE, New Delhi &amp; Accredited with 'A+' Grade by NAAC)</em></p>
+<p><em>(Affiliated to VTU Belagavi, Approved by AICTE, New Delhi & Accredited with 'A+' Grade by NAAC)</em></p>
 <p><strong>Cantonment, Ballari – 583 104, Karnataka, India</strong></p>
 <p><strong>ACADEMIC YEAR: 2025 – 2026</strong></p>
-<p>&lt;/div&gt;</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">INSTITUTIONAL CERTIFICATE</h2>
-<p>&lt;div class="certificate-box"&gt;</p>
 <h3 class="subsection-title"><strong>RAO BAHADUR Y. MAHABALESWARAPPA ENGINEERING COLLEGE</strong></h3>
-<h4 class=""><strong>Cantonment, Ballari – 583 104, Karnataka</strong></h4>
+<h4 class="subsection-title"><strong>Cantonment, Ballari – 583 104, Karnataka</strong></h4>
 <p><strong>Department of Computer Science and Engineering</strong></p>
-<p>&lt;br/&gt;</p>
 <h3 class="subsection-title"><strong>CERTIFICATE</strong></h3>
 <p>This is to certify that the project work entitled <strong>"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"</strong> is a bonafide work carried out by:</p>
 <ul>
@@ -264,7 +274,7 @@
 <li><strong>SHARANABASAVARAJ S (USN: 3BR21CS048)</strong></li>
 </ul>
 <p>in partial fulfillment for the award of degree of <strong>Bachelor of Engineering in Computer Science and Engineering</strong> of the <strong>Visvesvaraya Technological University, Belagavi</strong> during the academic year <strong>2025–2026</strong>. It is certified that all suggestions indicated during internal reviews have been incorporated in this report. The project report has been approved as it satisfies the academic requirements in respect of project work prescribed for the said degree.</p>
-<p>&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;</p>
+<p><br/><br/><br/></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
 <th>__________________________</th>
@@ -284,20 +294,19 @@
 </tr>
 <tr>
 <td>Professor, Dept. of CSE</td>
-<td>Professor &amp; HOD, Dept. of CSE</td>
+<td>Professor & HOD, Dept. of CSE</td>
 <td>Principal, RYMEC, Ballari</td>
 </tr>
 </tbody></table></div>
-<p>&lt;br/&gt;&lt;br/&gt;</p>
+<p><br/><br/></p>
 <p><strong>EXTERNAL VIVA-VOCE EXAMINATION:</strong></p>
 <p>Name of the Examiners:</p>
 <ol>
 <li>_____________________________________________ Signature with Date: ______________________</li>
 <li>_____________________________________________ Signature with Date: ______________________</li>
 </ol>
-<p>&lt;/div&gt;</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">CANDIDATE DECLARATION</h2>
 <p>We, the undersigned candidates:</p>
 <ol>
@@ -306,12 +315,11 @@
 <li><strong>VINAY REDDY (USN: 3BR21CS047)</strong></li>
 <li><strong>SHARANABASAVARAJ S (USN: 3BR21CS048)</strong></li>
 </ol>
-<p>students of Eighth Semester B.E., Department of Computer Science and Engineering, Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari, hereby declare that the project work entitled <strong>"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"</strong> has been independently carried out by us under the guidance of <strong>Dr. Veerendra Kumar</strong>, Professor &amp; HOD, Department of Computer Science &amp; Engineering, in partial fulfillment of the requirements for the award of the Degree of <strong>Bachelor of Engineering in Computer Science and Engineering</strong> by Visvesvaraya Technological University, Belagavi during the academic year 2025–2026.</p>
+<p>students of Eighth Semester B.E., Department of Computer Science and Engineering, Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari, hereby declare that the project work entitled <strong>"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"</strong> has been independently carried out by us under the guidance of <strong>Dr. Veerendra Kumar</strong>, Professor & HOD, Department of Computer Science & Engineering, in partial fulfillment of the requirements for the award of the Degree of <strong>Bachelor of Engineering in Computer Science and Engineering</strong> by Visvesvaraya Technological University, Belagavi during the academic year 2025–2026.</p>
 <p>We further declare that this report has not been submitted previously to this or any other university for the award of any degree, diploma, associate-ship, or other similar academic recognition.</p>
-<p>&lt;br/&gt;&lt;br/&gt;</p>
+<p><br/><br/></p>
 <p>Date: 15-November-2026</p>
 <p>Place: Ballari</p>
-<p>&lt;br/&gt;</p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
 <th>Candidate Name</th>
@@ -340,28 +348,26 @@
 <td>________________________</td>
 </tr>
 </tbody></table></div>
-<p>&lt;br/&gt;</p>
-<p>Department of Computer Science &amp; Engineering</p>
+<p>Department of Computer Science & Engineering</p>
 <p>Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">ACKNOWLEDGEMENT</h2>
 <p>The satisfaction that accompanies the successful completion of this project work would be incomplete without the mention of people whose cooperation and continuous encouragement made it possible.</p>
 <p>First and foremost, I express my deep sense of gratitude and humble reverence to our divine management, <strong>Veerasaiva Vidyavardhaka Sangha, Ballari</strong>, for providing world-class infrastructure and an enabling academic environment at RYMEC.</p>
 <p>I express my profound gratitude to our respected Principal, <strong>Dr. T. Hanumantha Reddy</strong>, for his inspirational encouragement, administrative guidance, and unwavering support in developing a campus-wide technological innovation for our institution.</p>
-<p>I take immense pride and honor in expressing my heartfelt gratitude to my project guide and Head of the Department, <strong>Dr. Veerendra Kumar</strong>, Professor &amp; HOD, Department of Computer Science and Engineering, for his invaluable technical guidance, meticulous scrutiny, and constant motivation throughout the design and implementation phases of this platform.</p>
-<p>I extend my sincere thanks to the <strong>Project Coordinators</strong> and all teaching and non-teaching faculty members of the Department of Computer Science &amp; Engineering for their technical counsel, timely reviews, and constructive critiques.</p>
+<p>I take immense pride and honor in expressing my heartfelt gratitude to my project guide and Head of the Department, <strong>Dr. Veerendra Kumar</strong>, Professor & HOD, Department of Computer Science and Engineering, for his invaluable technical guidance, meticulous scrutiny, and constant motivation throughout the design and implementation phases of this platform.</p>
+<p>I extend my sincere thanks to the <strong>Project Coordinators</strong> and all teaching and non-teaching faculty members of the Department of Computer Science & Engineering for their technical counsel, timely reviews, and constructive critiques.</p>
 <p>Finally, we convey our deepest appreciation to our parents, family members, and friends for their moral backing, patience, and support during the development and documentation of this project.</p>
-<p>&lt;br/&gt;</p>
 <p><strong>Project Associates:</strong></p>
 <ul>
-<li><strong>V. NAGA PHANENDRA (USN: 3BR21CS045)</strong> — Project Lead &amp; Full-Stack Architect</li>
-<li><strong>SUMANTH GODINAL (USN: 3BR21CS046)</strong> — Core Contributor / Backend &amp; DB</li>
-<li><strong>VINAY REDDY (USN: 3BR21CS047)</strong> — Core Contributor / UI &amp; Animations</li>
-<li><strong>SHARANABASAVARAJ S (USN: 3BR21CS048)</strong> — Core Contributor / QA &amp; Security</li>
+<li><strong>V. NAGA PHANENDRA (USN: 3BR21CS045)</strong> — Project Lead & Full-Stack Architect</li>
+<li><strong>SUMANTH GODINAL (USN: 3BR21CS046)</strong> — Core Contributor / Backend & DB</li>
+<li><strong>VINAY REDDY (USN: 3BR21CS047)</strong> — Core Contributor / UI & Animations</li>
+<li><strong>SHARANABASAVARAJ S (USN: 3BR21CS048)</strong> — Core Contributor / QA & Security</li>
 </ul>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">ABSTRACT</h2>
 <p>In contemporary higher education institutions, effective governance and student satisfaction depend fundamentally upon responsive, impartial, and transparent grievance redressal mechanisms. Traditional institutional workflows—characterized by manual complaint registers, unindexed email threads, verbal intimations, and unstructured messaging groups—suffer from pervasive operational bottlenecks. These include the absence of time-bound accountability, zero visibility into departmental triage, student reluctance to report severe infractions due to fear of academic victimization, recurring complaint clutter, and administrative inability to detect systemic infrastructure failures early.</p>
 <p>To resolve these systemic challenges, this project introduces <strong>RYMEC GRIEVANCE DESK</strong>, an enterprise-grade, cloud-native institutional grievance management and resolution telemetry platform. Engineered specifically for <strong>Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari</strong> (affiliated to VTU Belagavi and accredited with NAAC 'A+' Grade), the system combines modern full-stack web engineering with intelligent algorithmic triage and an authentic <strong>Apple iOS Liquid Glass and Pebble UI</strong> aesthetic.</p>
@@ -369,14 +375,14 @@
 <ol>
 <li><strong>Automated Multi-Tier Service Level Agreement (SLA) Escalation Engine:</strong> Enforces mathematical time-to-resolution ceilings (24-hour turnaround for emergency/safety, 72 hours for hygiene/hostel, and 5 to 7 days for academic concerns). A background cron monitoring daemon automatically escalates overdue tickets to <strong>Level 1 (Head of Department)</strong> and subsequently to <strong>Level 2 (Principal Executive Desk)</strong> with immutable administrative audit logging.</li>
 <li><strong>Cryptographic Anonymous Reporting Shield:</strong> Enables complainants to report sensitive harassment or administrative concerns with zero identity exposure. While frontend interfaces sanitize complainant metadata to ordinary staff, cryptographic integrity is preserved for statutory emergency audits.</li>
-<li><strong>Natural Language Semantic Triage &amp; Jaccard Duplicate Detector:</strong> Automatically parses grievance text across weighted categorical domains (Hostel, Academic, Harassment, Administration) and computes tokenized Jaccard similarity across active complaints within a 14-day rolling window to mitigate queue redundancy.</li>
+<li><strong>Natural Language Semantic Triage & Jaccard Duplicate Detector:</strong> Automatically parses grievance text across weighted categorical domains (Hostel, Academic, Harassment, Administration) and computes tokenized Jaccard similarity across active complaints within a 14-day rolling window to mitigate queue redundancy.</li>
 <li><strong>Systemic 5+ Trend Detection Engine:</strong> Evaluates 7-day clustering patterns across physical campus nodes. If 3 to 5+ distinct students report issues concerning identical infrastructure facilities (e.g., hostel RO purifiers or laboratory hardware), an autonomous warning banner alerts staff to systemic root-cause failure.</li>
-<li><strong>Component 89 6-Digit Circular Orbit OTP Verification System:</strong> Implements an advanced visual authentication state machine. The horizontal 6-box input row curls into a continuous 360° circular orbit along a dotted guide track ($R=52	ext{px}$) with real-time counter-spinning digits. Upon backend validation, the ring collapses into a single central squircle box emitting floating particles and an animated checkmark, engineered with 100% pure React and hardware-accelerated CSS transforms.</li>
+<li><strong>Component 89 6-Digit Circular Orbit OTP Verification System:</strong> Implements an advanced visual authentication state machine. The horizontal 6-box input row curls into a continuous 360° circular orbit along a dotted guide track (R=52	ext{px}) with real-time counter-spinning digits. Upon backend validation, the ring collapses into a single central squircle box emitting floating particles and an animated checkmark, engineered with 100% pure React and hardware-accelerated CSS transforms.</li>
 <li><strong>Institutional Gmail SMTP Recovery Gateway (<code>rymec.ismart12@gmail.com</code>):</strong> Mediates password recovery and account verification via high-security 10-minute one-time tokens rendered in an official institutional collegiate email layout.</li>
 </ol>
 <p>The system is deployed in production utilizing <strong>React 18, TypeScript, and Vite</strong> on the frontend, a modular <strong>Node.js/Express.js</strong> application layer hosted on the <strong>Vercel Edge Platform</strong>, and a serverless <strong>PostgreSQL</strong> relational database on <strong>Neon Cloud</strong>. Comprehensive empirical testing demonstrates a 68% reduction in grievance turnaround latency, 100% adherence to VTU/UGC statutory guidelines, and robust sub-second API performance under rigorous concurrent loads.</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">TABLE OF CONTENTS</h2>
 <div class="table-container"><table class="report-table">
 <thead><tr>
@@ -472,7 +478,7 @@
 </tr>
 <tr>
 <td><strong>2</strong></td>
-<td><strong>LITERATURE SURVEY &amp; FEASIBILITY STUDY</strong></td>
+<td><strong>LITERATURE SURVEY & FEASIBILITY STUDY</strong></td>
 <td><strong>12</strong></td>
 </tr>
 <tr>
@@ -487,7 +493,7 @@
 </tr>
 <tr>
 <td></td>
-<td>2.3 Identified Engineering &amp; Research Gaps</td>
+<td>2.3 Identified Engineering & Research Gaps</td>
 <td>18</td>
 </tr>
 <tr>
@@ -522,7 +528,7 @@
 </tr>
 <tr>
 <td><strong>4</strong></td>
-<td><strong>SYSTEM ARCHITECTURE &amp; DESIGN</strong></td>
+<td><strong>SYSTEM ARCHITECTURE & DESIGN</strong></td>
 <td><strong>35</strong></td>
 </tr>
 <tr>
@@ -547,7 +553,7 @@
 </tr>
 <tr>
 <td></td>
-<td>4.3.2 Sequence Diagrams (Grievance Lifecycle &amp; Escalation)</td>
+<td>4.3.2 Sequence Diagrams (Grievance Lifecycle & Escalation)</td>
 <td>42</td>
 </tr>
 <tr>
@@ -567,17 +573,17 @@
 </tr>
 <tr>
 <td></td>
-<td>4.4 Entity-Relationship (ER) Modeling &amp; Data Dictionary</td>
+<td>4.4 Entity-Relationship (ER) Modeling & Data Dictionary</td>
 <td>51</td>
 </tr>
 <tr>
 <td><strong>5</strong></td>
-<td><strong>DETAILED IMPLEMENTATION &amp; MODULES</strong></td>
+<td><strong>DETAILED IMPLEMENTATION & MODULES</strong></td>
 <td><strong>55</strong></td>
 </tr>
 <tr>
 <td></td>
-<td>5.1 Frontend Engineering &amp; Apple Liquid Glass UI Design</td>
+<td>5.1 Frontend Engineering & Apple Liquid Glass UI Design</td>
 <td>55</td>
 </tr>
 <tr>
@@ -587,12 +593,12 @@
 </tr>
 <tr>
 <td></td>
-<td>5.3 Backend Microservices &amp; API Architecture</td>
+<td>5.3 Backend Microservices & API Architecture</td>
 <td>64</td>
 </tr>
 <tr>
 <td></td>
-<td>5.4 AI-Driven Semantic Triage &amp; Priority Estimation Algorithm</td>
+<td>5.4 AI-Driven Semantic Triage & Priority Estimation Algorithm</td>
 <td>68</td>
 </tr>
 <tr>
@@ -617,42 +623,42 @@
 </tr>
 <tr>
 <td><strong>6</strong></td>
-<td><strong>SOFTWARE TESTING &amp; QUALITY ASSURANCE</strong></td>
+<td><strong>SOFTWARE TESTING & QUALITY ASSURANCE</strong></td>
 <td><strong>83</strong></td>
 </tr>
 <tr>
 <td></td>
-<td>6.1 Testing Methodology &amp; Strategy</td>
+<td>6.1 Testing Methodology & Strategy</td>
 <td>83</td>
 </tr>
 <tr>
 <td></td>
-<td>6.2 Test Matrix &amp; Comprehensive Test Cases (25+ Scenarios)</td>
+<td>6.2 Test Matrix & Comprehensive Test Cases (25+ Scenarios)</td>
 <td>86</td>
 </tr>
 <tr>
 <td></td>
-<td>6.3 Security, Vulnerability &amp; Penetration Testing</td>
+<td>6.3 Security, Vulnerability & Penetration Testing</td>
 <td>93</td>
 </tr>
 <tr>
 <td></td>
-<td>6.4 Usability &amp; Cross-Browser Verification</td>
+<td>6.4 Usability & Cross-Browser Verification</td>
 <td>96</td>
 </tr>
 <tr>
 <td><strong>7</strong></td>
-<td><strong>RESULTS, PERFORMANCE &amp; DEPLOYMENT TELEMETRY</strong></td>
+<td><strong>RESULTS, PERFORMANCE & DEPLOYMENT TELEMETRY</strong></td>
 <td><strong>98</strong></td>
 </tr>
 <tr>
 <td></td>
-<td>7.1 Visual Interface Showcase &amp; Screenshot Walkthrough</td>
+<td>7.1 Visual Interface Showcase & Screenshot Walkthrough</td>
 <td>98</td>
 </tr>
 <tr>
 <td></td>
-<td>7.2 Resolution SLA Velocity &amp; Performance Benchmarks</td>
+<td>7.2 Resolution SLA Velocity & Performance Benchmarks</td>
 <td>103</td>
 </tr>
 <tr>
@@ -662,7 +668,7 @@
 </tr>
 <tr>
 <td><strong>8</strong></td>
-<td><strong>CONCLUSION &amp; FUTURE ENHANCEMENTS</strong></td>
+<td><strong>CONCLUSION & FUTURE ENHANCEMENTS</strong></td>
 <td><strong>108</strong></td>
 </tr>
 <tr>
@@ -672,12 +678,12 @@
 </tr>
 <tr>
 <td></td>
-<td>8.2 Future Scope &amp; Proposed Enhancements</td>
+<td>8.2 Future Scope & Proposed Enhancements</td>
 <td>110</td>
 </tr>
 <tr>
 <td></td>
-<td><strong>REFERENCES &amp; BIBLIOGRAPHY</strong></td>
+<td><strong>REFERENCES & BIBLIOGRAPHY</strong></td>
 <td><strong>112</strong></td>
 </tr>
 <tr>
@@ -692,7 +698,7 @@
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">LIST OF FIGURES</h2>
 <div class="table-container"><table class="report-table">
 <thead><tr>
@@ -768,12 +774,12 @@
 </tr>
 <tr>
 <td>5.1</td>
-<td>Apple iOS Liquid Glass Optical Layering &amp; Specular Glare Architecture</td>
+<td>Apple iOS Liquid Glass Optical Layering & Specular Glare Architecture</td>
 <td>56</td>
 </tr>
 <tr>
 <td>5.2</td>
-<td>Component 89 Orbit Geometry: Row Pitch to Circular Radius ($R=52	ext{px}$)</td>
+<td>Component 89 Orbit Geometry: Row Pitch to Circular Radius (R=52	ext{px})</td>
 <td>60</td>
 </tr>
 <tr>
@@ -793,12 +799,12 @@
 </tr>
 <tr>
 <td>7.2</td>
-<td>Authentication Modal &amp; 6-Digit Circular Orbit Verification Screen</td>
+<td>Authentication Modal & 6-Digit Circular Orbit Verification Screen</td>
 <td>100</td>
 </tr>
 <tr>
 <td>7.3</td>
-<td>Student Dashboard &amp; Live Package-Style Milestone Tracking Timeline</td>
+<td>Student Dashboard & Live Package-Style Milestone Tracking Timeline</td>
 <td>101</td>
 </tr>
 <tr>
@@ -808,7 +814,7 @@
 </tr>
 <tr>
 <td>7.5</td>
-<td>Principal Executive Telemetry &amp; Immutable Audit Log Inspection</td>
+<td>Principal Executive Telemetry & Immutable Audit Log Inspection</td>
 <td>103</td>
 </tr>
 <tr>
@@ -818,7 +824,7 @@
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">LIST OF TABLES</h2>
 <div class="table-container"><table class="report-table">
 <thead><tr>
@@ -879,7 +885,7 @@
 </tr>
 <tr>
 <td>5.1</td>
-<td>Coordinate Offsets for 6-Box Circular Ring Formation ($R=52	ext{px}$)</td>
+<td>Coordinate Offsets for 6-Box Circular Ring Formation (R=52	ext{px})</td>
 <td>61</td>
 </tr>
 <tr>
@@ -894,7 +900,7 @@
 </tr>
 <tr>
 <td>6.2</td>
-<td>Security, Boundary &amp; Negative Test Cases (Test Cases TC-16 to TC-25)</td>
+<td>Security, Boundary & Negative Test Cases (Test Cases TC-16 to TC-25)</td>
 <td>91</td>
 </tr>
 <tr>
@@ -909,12 +915,12 @@
 </tr>
 <tr>
 <td>7.2</td>
-<td>Web Performance Metrics &amp; Lighthouse Audit Scores</td>
+<td>Web Performance Metrics & Lighthouse Audit Scores</td>
 <td>106</td>
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h2 class="section-title">LIST OF ABBREVIATIONS</h2>
 <div class="table-container"><table class="report-table">
 <thead><tr>
@@ -1128,7 +1134,7 @@
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h1 class="chapter-title">CHAPTER 1: INTRODUCTION</h1>
 <h2 class="section-title">1.1 Context and Institutional Background</h2>
 <p>Higher education institutions in India operate within stringent regulatory and statutory quality frameworks defined by the All India Council for Technical Education (AICTE), the University Grants Commission (UGC), and the National Assessment and Accreditation Council (NAAC). Under the AICTE (Establishment of Mechanism for Grievance Redressal) Regulations, every technical institution is mandatorily required to deploy an effective, accessible, and transparent student grievance redressal system. The objective is to foster a campus climate of mutual trust, accountability, psychological safety, and procedural fairness.</p>
@@ -1136,9 +1142,9 @@
 <p>Given this scale of academic and residential operations, institutional grievances inevitably arise across diverse domains:</p>
 <ol>
 <li><strong>Academic Affairs:</strong> Syllabus coverage, lecture schedules, continuous internal evaluation (CIE) transparency, lab equipment availability, and examination hall ticket disbursal.</li>
-<li><strong>Residential &amp; Hostel Infrastructure:</strong> Hostel room allocations, RO drinking water availability, hot water geysers, Wi-Fi coverage, laundry amenities, and mess dining hygiene.</li>
-<li><strong>Safety, Discipline &amp; Harassment:</strong> Statutory zero-tolerance compliance regarding anti-ragging mandates, prevention of sexual harassment, psychological bullying, and physical safety.</li>
-<li><strong>General Administration &amp; Student Services:</strong> Bus transport fleet punctuality, library borrowing policies, fee concession processing, and identity card issuance.</li>
+<li><strong>Residential & Hostel Infrastructure:</strong> Hostel room allocations, RO drinking water availability, hot water geysers, Wi-Fi coverage, laundry amenities, and mess dining hygiene.</li>
+<li><strong>Safety, Discipline & Harassment:</strong> Statutory zero-tolerance compliance regarding anti-ragging mandates, prevention of sexual harassment, psychological bullying, and physical safety.</li>
+<li><strong>General Administration & Student Services:</strong> Bus transport fleet punctuality, library borrowing policies, fee concession processing, and identity card issuance.</li>
 </ol>
 <p>To handle these grievances, historical practice relied on physical logbooks placed in administrative offices, ad-hoc written applications submitted to department heads, or informal verbal requests made to hostel wardens. These legacy methods have proven insufficient for modern collegiate governance.</p>
 <div class="page-break"></div>
@@ -1167,7 +1173,7 @@
 <div class="page-break"></div>
 <h2 class="section-title">1.3 Problem Statement</h2>
 <p>The conventional grievance management process at academic institutions exhibits critical operational deficiencies that compromise institutional governance:</p>
-<p>$$\text{Operational Deficiencies} = \{ \text{Lack of Tracking}, \text{Indefinite Delays}, \text{Identity Exposure}, \text{Queue Redundancy}, \text{Data Silos} \}$$</p>
+<p>Operational Deficiencies = \{ Lack of Tracking, Indefinite Delays, Identity Exposure, Queue Redundancy, Data Silos \}</p>
 <p>Specifically:</p>
 <ul>
 <li><strong>Absence of Real-Time Tracking:</strong> Once a student deposits a paper complaint or sends an unindexed email, no tracking identifier is generated. The student has zero visibility into who has been assigned the ticket, whether investigation has commenced, or what intermediate actions have been executed.</li>
@@ -1199,7 +1205,7 @@
 <ol>
 <li><strong>Recreate the Viral Component 89 6-Digit Circular Orbit OTP Animation:</strong></li>
 </ol>
-<p>Build a pure React and CSS hardware-accelerated authentication module where a 6-digit input row curls onto a dotted circular orbit ($R=52	ext{px}$) with real-time upright counter-spinning numbers, collapsing into a single green squircle with an animated checkmark and floating particle dots upon backend confirmation.</p>
+<p>Build a pure React and CSS hardware-accelerated authentication module where a 6-digit input row curls onto a dotted circular orbit (R=52	ext{px}) with real-time upright counter-spinning numbers, collapsing into a single green squircle with an animated checkmark and floating particle dots upon backend confirmation.</p>
 <ol>
 <li><strong>Integrate an Institutional Gmail SMTP Recovery Gateway (<code>rymec.ismart12@gmail.com</code>):</strong></li>
 </ol>
@@ -1212,7 +1218,7 @@
 <h2 class="section-title">1.5 Scope and Applicability</h2>
 <h3 class="subsection-title">In Scope</h3>
 <ul>
-<li><strong>Campus-Wide Deployment:</strong> Full operational coverage across all academic departments of RYMEC (Computer Science, Information Science, AIML, Electronics &amp; Communication, Electrical &amp; Electronics, Mechanical, Civil Engineering, and College Administration).</li>
+<li><strong>Campus-Wide Deployment:</strong> Full operational coverage across all academic departments of RYMEC (Computer Science, Information Science, AIML, Electronics & Communication, Electrical & Electronics, Mechanical, Civil Engineering, and College Administration).</li>
 <li><strong>Residential Facilities:</strong> Integrated triage desks for all on-campus hostels (Aryabhata Hostel, Visvesvaraya Hostel, Ladies Campus Hostels) and dining mess halls.</li>
 <li><strong>Document and Multimedia Attachment:</strong> Secure encrypted upload support for PDF documents and image files (PNG, JPG, JPEG) serving as supporting evidence.</li>
 <li><strong>Dynamic QR Code Pass:</strong> Generation of scannable SVG QR codes allowing students to bookmark and track their grievance status instantly on mobile smartphones without logging in.</li>
@@ -1229,18 +1235,18 @@
 <p>This project report is structured into eight comprehensive chapters following the official VTU final year project report guidelines:</p>
 <ul>
 <li><strong>Chapter 1: Introduction</strong> establishes the institutional background of RYMEC, project motivation, problem definition, objectives, and scope.</li>
-<li><strong>Chapter 2: Literature Survey &amp; Feasibility Study</strong> examines existing academic and government grievance portals, presents a comparative feature matrix, identifies research gaps, and documents technical, operational, and economic feasibility.</li>
+<li><strong>Chapter 2: Literature Survey & Feasibility Study</strong> examines existing academic and government grievance portals, presents a comparative feature matrix, identifies research gaps, and documents technical, operational, and economic feasibility.</li>
 <li><strong>Chapter 3: System Requirements Specification (SRS)</strong> provides exhaustive functional and non-functional requirements, hardware and software specifications, and the mathematical formulations governing duplicate detection, SLA calculation, and orbital motion physics.</li>
-<li><strong>Chapter 4: System Architecture &amp; Design</strong> details high-level block architecture, Data Flow Diagrams (Level 0, 1, 2), complete UML diagrams (Use Case, Sequence, Activity, Class, State Machine), and the relational Entity-Relationship schema with data dictionaries.</li>
-<li><strong>Chapter 5: Detailed Implementation &amp; Modules</strong> covers technical engineering across frontend components, the Component 89 6-digit circular orbit animation engine, backend microservices, NLP triage algorithms, trend detection engines, and institutional Gmail gateways.</li>
-<li><strong>Chapter 6: Software Testing &amp; Quality Assurance</strong> presents testing methodologies, a 25-scenario functional and security test matrix, penetration tests, and cross-browser responsiveness evaluations.</li>
-<li><strong>Chapter 7: Results, Performance &amp; Deployment Telemetry</strong> showcases production user interface screenshots, resolution velocity benchmarks, and cloud telemetry data.</li>
-<li><strong>Chapter 8: Conclusion &amp; Future Enhancements</strong> synthesizes project achievements, institutional impacts, and outlines future engineering avenues.</li>
+<li><strong>Chapter 4: System Architecture & Design</strong> details high-level block architecture, Data Flow Diagrams (Level 0, 1, 2), complete UML diagrams (Use Case, Sequence, Activity, Class, State Machine), and the relational Entity-Relationship schema with data dictionaries.</li>
+<li><strong>Chapter 5: Detailed Implementation & Modules</strong> covers technical engineering across frontend components, the Component 89 6-digit circular orbit animation engine, backend microservices, NLP triage algorithms, trend detection engines, and institutional Gmail gateways.</li>
+<li><strong>Chapter 6: Software Testing & Quality Assurance</strong> presents testing methodologies, a 25-scenario functional and security test matrix, penetration tests, and cross-browser responsiveness evaluations.</li>
+<li><strong>Chapter 7: Results, Performance & Deployment Telemetry</strong> showcases production user interface screenshots, resolution velocity benchmarks, and cloud telemetry data.</li>
+<li><strong>Chapter 8: Conclusion & Future Enhancements</strong> synthesizes project achievements, institutional impacts, and outlines future engineering avenues.</li>
 <li><strong>References and Appendices</strong> furnish IEEE citations, REST API documentation, and SQL schema definitions.</li>
 </ul>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">CHAPTER 2: LITERATURE SURVEY &amp; FEASIBILITY STUDY</h1>
+<div class="page-break"></div>
+<h1 class="chapter-title">CHAPTER 2: LITERATURE SURVEY & FEASIBILITY STUDY</h1>
 <h2 class="section-title">2.1 Review of Existing Redressal Portals</h2>
 <p>Grievance redressal systems have evolved from localized physical drop-boxes into distributed digital portals. A critical review of prominent platforms establishes the engineering benchmark:</p>
 <h3 class="subsection-title">1. Centralized Public Grievance Redress and Monitoring System (CPGRAMS)</h3>
@@ -1261,13 +1267,13 @@
 <li><strong>Strengths:</strong> Establishes the statutory framework for an Institutional Ombudsman and Student Grievance Redressal Committee (SGRC).</li>
 <li><strong>Weaknesses:</strong> Mostly functions as a compliance reporting portal rather than a daily operational workflow tool. Colleges upload annual PDF summaries rather than managing live ticket queues.</li>
 </ul>
-<h3 class="subsection-title">4. Legacy Campus Helpdesk Solutions (Physical Registers &amp; Shared Inboxes)</h3>
+<h3 class="subsection-title">4. Legacy Campus Helpdesk Solutions (Physical Registers & Shared Inboxes)</h3>
 <p>Many technical institutions continue to rely on manual registers located at the Principal's office or hostel warden desks.</p>
 <ul>
 <li><strong>Strengths:</strong> Zero software dependency; direct physical proximity.</li>
 <li><strong>Weaknesses:</strong> Shown diagrammatically in Figure 2.1. Physical logbooks suffer from handwriting illegibility, loss of records, complete absence of automated tracking, vulnerability to tampering, and total lack of anonymous reporting protection.</li>
 </ul>
-<pre class="code-block mermaid"><code>flowchart TD
+<pre class="code-block"><code>flowchart TD
     A[Student Identifies Issue] --&gt; B[Visits Warden or Office In-Person]
     B --&gt; C[Manually Enters Details in Physical Register]
     C --&gt; D{Is Officer Available?}
@@ -1323,14 +1329,14 @@
 <td>⚠️ Manual escalation</td>
 <td>❌ No</td>
 <td>⚠️ Requires expensive Enterprise tier</td>
-<td>✅ <strong>Automated: Level 1 HOD &amp; Level 2 Principal</strong></td>
+<td>✅ <strong>Automated: Level 1 HOD & Level 2 Principal</strong></td>
 </tr>
 <tr>
 <td><strong>Jaccard Duplicate Detection</strong></td>
 <td>❌ No</td>
 <td>❌ No</td>
 <td>⚠️ Keyword only</td>
-<td>✅ <strong>Tokenized Jaccard Similarity (&gt;65%)</strong></td>
+<td>✅ <strong>Tokenized Jaccard Similarity (>65%)</strong></td>
 </tr>
 <tr>
 <td><strong>5+ Systemic Infrastructure Alerts</strong></td>
@@ -1358,16 +1364,16 @@
 <td>Legacy HTML Forms</td>
 <td>Government Portal</td>
 <td>Corporate Dashboard</td>
-<td>✅ <strong>Apple iOS Liquid Glass &amp; Pebble UI</strong></td>
+<td>✅ <strong>Apple iOS Liquid Glass & Pebble UI</strong></td>
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<h2 class="section-title">2.3 Identified Engineering &amp; Research Gaps</h2>
+<h2 class="section-title">2.3 Identified Engineering & Research Gaps</h2>
 <p>The literature survey reveals five distinct engineering gaps in academic institutional software:</p>
 <ol>
 <li><strong>The Milestone Transparency Gap:</strong></li>
 </ol>
-<p>Most portals report status in binary terms: <code>Open</code> or <code>Closed</code>. In contrast, students require granular stages: <code>Submitted</code> $ightarrow$ <code>Under Review</code> $ightarrow$ <code>Assigned to Warden</code> $ightarrow$ <code>Inspection Underway</code> $ightarrow$ <code>Resolved</code>.</p>
+<p>Most portals report status in binary terms: <code>Open</code> or <code>Closed</code>. In contrast, students require granular stages: <code>Submitted</code> ightarrow <code>Under Review</code> ightarrow <code>Assigned to Warden</code> ightarrow <code>Inspection Underway</code> ightarrow <code>Resolved</code>.</p>
 <ol>
 <li><strong>The Anonymous Accountability Paradox:</strong></li>
 </ol>
@@ -1432,26 +1438,26 @@
 <h3 class="subsection-title">2. Operational Feasibility</h3>
 <p>The platform aligns with the existing administrative hierarchy of RYMEC (Students, Wardens, Lecturers, HODs, Counselors, and Principal). Staff require no specialized training because dashboard interfaces are designed with intuitive one-click actions: changing status, selecting pre-written resolution templates, and viewing clear visual cues.</p>
 <h3 class="subsection-title">3. Economic Feasibility</h3>
-<p>The entire software stack is built using open-source technologies (MIT/Apache licensed) with zero software licensing costs. By leveraging the serverless free tiers of Vercel and Neon Cloud PostgreSQL, the operational hosting cost is negligible ($0.00/month during normal campus operations), delivering extraordinary return on institutional investment.</p>
+<p>The entire software stack is built using open-source technologies (MIT/Apache licensed) with zero software licensing costs. By leveraging the serverless free tiers of Vercel and Neon Cloud PostgreSQL, the operational hosting cost is negligible (0.00/month during normal campus operations), delivering extraordinary return on institutional investment.</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h1 class="chapter-title">CHAPTER 3: SYSTEM REQUIREMENTS SPECIFICATION (SRS)</h1>
 <h2 class="section-title">3.1 Functional Requirements by Stakeholder Role</h2>
 <p>The platform implements granular Role-Based Access Control (RBAC) across six distinct institutional personas:</p>
 <h3 class="subsection-title">1. Student / Complainant</h3>
 <ul>
-<li><strong>FR-S01 (Account Registration &amp; OTP Verification):</strong> Students must register using their official or personal email, full name, USN/Roll number, engineering branch, class section, and accommodation type (Day Scholar, Hostel, or PG). Registration requires verification through a 6-digit one-time password (OTP).</li>
+<li><strong>FR-S01 (Account Registration & OTP Verification):</strong> Students must register using their official or personal email, full name, USN/Roll number, engineering branch, class section, and accommodation type (Day Scholar, Hostel, or PG). Registration requires verification through a 6-digit one-time password (OTP).</li>
 <li><strong>FR-S02 (Grievance Submission):</strong> Students can lodge a grievance by specifying title, detailed description, target category (Hostel, Academic, Harassment, Administration, Other), optional routing department, and evidence files (PDF, PNG, JPG).</li>
 <li><strong>FR-S03 (Anonymous Safety Mode):</strong> Students can toggle "File as Anonymous Grievance" with a single click, completely masking their name and USN from ordinary staff and department views.</li>
-<li><strong>FR-S04 (Real-Time Tracking &amp; QR Code Pass):</strong> Each submission generates a unique tracking ID (<code>GRV-2026-XXXXX</code>) and dynamic SVG QR code pass, allowing instant status tracking without manual login.</li>
-<li><strong>FR-S05 (Satisfaction Rating &amp; Reopening):</strong> Once resolved, students can rate the outcome (1 to 5 stars) with qualitative feedback, or reopen the complaint (strictly capped at 2 times) with mandatory written justification.</li>
+<li><strong>FR-S04 (Real-Time Tracking & QR Code Pass):</strong> Each submission generates a unique tracking ID (<code>GRV-2026-XXXXX</code>) and dynamic SVG QR code pass, allowing instant status tracking without manual login.</li>
+<li><strong>FR-S05 (Satisfaction Rating & Reopening):</strong> Once resolved, students can rate the outcome (1 to 5 stars) with qualitative feedback, or reopen the complaint (strictly capped at 2 times) with mandatory written justification.</li>
 </ul>
 <h3 class="subsection-title">2. Lecturer (Academic Grievance Desk)</h3>
 <ul>
 <li><strong>FR-L01 (Academic Queue Triage):</strong> Lecturers can view, filter, and inspect grievances categorized under academic and laboratory domains for their department.</li>
-<li><strong>FR-L02 (Status Transition &amp; Action Reporting):</strong> Lecturers can update ticket status (<code>In Progress</code>, <code>Resolved</code>, <code>Rejected</code>) and record mandatory official remarks and action-taken summaries.</li>
+<li><strong>FR-L02 (Status Transition & Action Reporting):</strong> Lecturers can update ticket status (<code>In Progress</code>, <code>Resolved</code>, <code>Rejected</code>) and record mandatory official remarks and action-taken summaries.</li>
 </ul>
-<h3 class="subsection-title">3. Warden (Hostel &amp; Residential Facilities Desk)</h3>
+<h3 class="subsection-title">3. Warden (Hostel & Residential Facilities Desk)</h3>
 <ul>
 <li><strong>FR-W01 (Residential Infrastructure Oversight):</strong> Wardens manage hostel room, mess, sanitation, geyser, Wi-Fi, and drinking water complaints.</li>
 <li><strong>FR-W02 (Systemic Alert Inspection):</strong> Wardens receive real-time banner notifications when 3 to 5+ complaints cluster around a single hostel block or facility within a 7-day rolling window.</li>
@@ -1465,7 +1471,7 @@
 <ul>
 <li><strong>FR-M01 (Confidential Counseling):</strong> Mentors handle sensitive student welfare, psychological stress, scholarship, and personal conduct grievances with strict privacy safeguards.</li>
 </ul>
-<h3 class="subsection-title">6. Principal (Executive Oversight &amp; Level 2 Escalation Desk)</h3>
+<h3 class="subsection-title">6. Principal (Executive Oversight & Level 2 Escalation Desk)</h3>
 <ul>
 <li><strong>FR-P01 (Campus-Wide Telemetry):</strong> Executive visibility into aggregate institutional metrics: total volume, department resolution velocities, category distributions, and SLA compliance percentages.</li>
 <li><strong>FR-P02 (Level 2 Executive Escalation):</strong> Receives tickets that exceed both standard and HOD escalation windows for final executive action.</li>
@@ -1473,18 +1479,18 @@
 </ul>
 <div class="page-break"></div>
 <h2 class="section-title">3.2 Non-Functional Requirements</h2>
-<h3 class="subsection-title">1. Performance &amp; Scalability</h3>
+<h3 class="subsection-title">1. Performance & Scalability</h3>
 <ul>
 <li><strong>NFR-P01 (Sub-Second Latency):</strong> API response times for standard queries must remain below 400 milliseconds under a concurrency of 250 simultaneous active requests.</li>
 <li><strong>NFR-P02 (60 FPS Visual Smoothness):</strong> All client-side micro-interactions and the Component 89 6-digit circular orbit animation must render at a consistent 60 frames per second on both desktop and mobile devices.</li>
 </ul>
-<h3 class="subsection-title">2. Security &amp; Data Integrity</h3>
+<h3 class="subsection-title">2. Security & Data Integrity</h3>
 <ul>
 <li><strong>NFR-S01 (Password Encryption):</strong> Passwords must be hashed using the bcrypt algorithm with a minimum work factor salt of 10. Cleartext passwords must never be stored, logged, or transmitted.</li>
 <li><strong>NFR-S02 (Stateless JWT Authentication):</strong> Sessions must be managed using signed JSON Web Tokens (HMAC-SHA256) with a 24-hour expiration window.</li>
 <li><strong>NFR-S03 (Cryptographic OTP Security):</strong> OTP tokens must be generated using cryptographically secure random integers, expire strictly after 10 minutes, and enforce a 60-second resend cooldown to prevent brute-force exploitation.</li>
 </ul>
-<h3 class="subsection-title">3. Reliability &amp; Availability</h3>
+<h3 class="subsection-title">3. Reliability & Availability</h3>
 <ul>
 <li><strong>NFR-R01 (High Uptime):</strong> The platform must maintain 99.9% operational availability by leveraging serverless Vercel edge infrastructure and automated PostgreSQL connection failover.</li>
 <li><strong>NFR-R02 (Immutable Logging):</strong> Every administrative state transition must be recorded in an immutable audit table with timestamp, user ID, previous status, updated status, and client IP metadata.</li>
@@ -1555,9 +1561,9 @@
 </tr>
 <tr>
 <td><strong>Animation Engine</strong></td>
-<td>Framer Motion &amp; Pure CSS</td>
+<td>Framer Motion & Pure CSS</td>
 <td>12.4.7</td>
-<td>Spring physics, tab transitions &amp; orbit keyframes</td>
+<td>Spring physics, tab transitions & orbit keyframes</td>
 </tr>
 <tr>
 <td><strong>Iconography</strong></td>
@@ -1597,7 +1603,7 @@
 </tr>
 <tr>
 <td><strong>Security Utilities</strong></td>
-<td>bcryptjs &amp; jsonwebtoken</td>
+<td>bcryptjs & jsonwebtoken</td>
 <td>2.4.3 / 9.0.2</td>
 <td>Salted hashing and cryptographic access tokens</td>
 </tr>
@@ -1618,15 +1624,15 @@
 <h2 class="section-title">3.4 Mathematical Formulations and Governing Equations</h2>
 <h3 class="subsection-title">1. Jaccard Similarity Coefficient for Duplicate Detection</h3>
 <p>To prevent multiple students from cluttering the queue when a common facility breaks down, the platform evaluates incoming complaint descriptions against recent active tickets in the same category using tokenized Jaccard similarity:</p>
-<p>$$J(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{|A \cap B|}{|A| + |B| - |A \cap B|}$$</p>
+<p>J(A, B) = (|A ∩ B| / |A ∪ B|) = (|A ∩ B| / |A| + |B| - |A ∩ B|)</p>
 <p>Where:</p>
 <ul>
-<li>$A$ is the set of normalized word tokens extracted from the newly submitted complaint.</li>
-<li>$B$ is the set of word tokens in an existing complaint logged within a rolling 14-day window.</li>
+<li>A is the set of normalized word tokens extracted from the newly submitted complaint.</li>
+<li>B is the set of word tokens in an existing complaint logged within a rolling 14-day window.</li>
 <li>Stop-words (e.g., <em>the, is, at, which, on</em>) are removed prior to tokenization.</li>
 </ul>
-<p>A warning threshold is enforced at $J(A, B) \ge 0.65$ (65% token overlap). When met, the student is alerted to the existing ticket ID and status.</p>
-<pre class="code-block mermaid"><code>graph TD
+<p>A warning threshold is enforced at J(A, B) ≥ 0.65 (65% token overlap). When met, the student is alerted to the existing ticket ID and status.</p>
+<pre class="code-block"><code>graph TD
     subgraph Jaccard Token Overlap
         A[Set A: New Submission Tokens] --- I[Intersection: Overlapping Keywords]
         B[Set B: Existing Active Ticket Tokens] --- I
@@ -1637,13 +1643,13 @@
 <p><em>Figure 3.1: Jaccard Token Overlap Venn Representation for Duplicate Identification</em></p>
 <h3 class="subsection-title">2. Dynamic SLA Target Time Computation</h3>
 <p>Each complaint is assigned an exact deadline based on its category and calculated urgency rating:</p>
-<p>$$T_{\text{target}} = T_{\text{submission}} + \Delta t_{\text{category, priority}}$$</p>
+<p>T_{target} = T_{submission} + Δ t_{category, priority}</p>
 <p><em>Table 3.3: SLA Resolution Windows by Category and Urgency Level</em></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
 <th>Grievance Category</th>
 <th>Calculated Urgency</th>
-<th>Turnaround Window ($\Delta t$)</th>
+<th>Turnaround Window (Δ t)</th>
 <th>Escalation Level 1 (HOD)</th>
 <th>Escalation Level 2 (Principal)</th>
 </tr></thead>
@@ -1656,14 +1662,14 @@
 <td>After 48 Hours</td>
 </tr>
 <tr>
-<td><strong>Hostel &amp; Sanitation</strong></td>
+<td><strong>Hostel & Sanitation</strong></td>
 <td>HIGH</td>
 <td><strong>72 Hours</strong></td>
 <td>After 72 Hours</td>
 <td>After 120 Hours</td>
 </tr>
 <tr>
-<td><strong>Academic &amp; Labs</strong></td>
+<td><strong>Academic & Labs</strong></td>
 <td>MEDIUM</td>
 <td><strong>5 Days (120 Hours)</strong></td>
 <td>After 5 Days</td>
@@ -1678,33 +1684,33 @@
 </tr>
 </tbody></table></div>
 <p>The remaining time is computed dynamically by the client and server:</p>
-<p>$$t_{\text{remaining}} = T_{\text{target}} - t_{\text{current}}$$</p>
-<p>If $t_{\text{remaining}} &lt; 0$ and the status is not <code>Resolved</code>, the background engine executes:</p>
-<p>$$\text{Status} \leftarrow \text{Overdue}, \quad \text{is\_escalated} \leftarrow \text{true}, \quad \text{escalation\_level} \leftarrow \min(\text{escalation\_level} + 1, 2)$$</p>
+<p>t_{remaining} = T_{target} - t_{current}</p>
+<p>If t_{remaining} < 0 and the status is not <code>Resolved</code>, the background engine executes:</p>
+<p>Status ≤ftarrow Overdue,     is\_escalated ≤ftarrow true,     escalation\_level ≤ftarrow \min(escalation\_level + 1, 2)</p>
 <h3 class="subsection-title">3. Parametric Circular Orbit Trajectory in Cartesian Coordinate Plane</h3>
-<p>The Component 89 OTP verification module transforms six horizontal boxes into a continuous circular orbit. Let $R$ denote the radius of the circular track ($R = 52\text{px}$). For $N = 6$ boxes, each box $i \in \{0, 1, 2, 3, 4, 5\}$ is assigned an initial angular offset:</p>
-<p>$$\theta_i = -\frac{\pi}{2} + i \cdot \frac{2\pi}{N} = -\frac{\pi}{2} + i \cdot \frac{\pi}{3}$$</p>
-<p>The parametric position $(X_i(t), Y_i(t))$ of box $i$ relative to the central hub at angular velocity $\omega$ is governed by:</p>
-<p>$$X_i(t) = R \cdot \cos\left(\theta_i + \omega t\right)$$</p>
-<p>$$Y_i(t) = R \cdot \sin\left(\theta_i + \omega t\right)$$</p>
-<p>In the horizontal row configuration, each box has an initial position along the X-axis given by pitch $P = 48\text{px}$:</p>
-<p>$$X_{i,\text{row}} = \left(i - \frac{N - 1}{2}\right) \cdot P = \left(i - 2.5\right) \cdot 48, \quad Y_{i,\text{row}} = 0$$</p>
-<p>Therefore, the curling delta vector $(\Delta X_i, \Delta Y_i)$ applied via CSS <code>translate</code> is:</p>
-<p>$$\Delta X_i = X_i(0) - X_{i,\text{row}} = R \cdot \cos(\theta_i) - \left(i - 2.5\right) \cdot 48$$</p>
-<p>$$\Delta Y_i = Y_i(0) - Y_{i,\text{row}} = R \cdot \sin(\theta_i)$$</p>
+<p>The Component 89 OTP verification module transforms six horizontal boxes into a continuous circular orbit. Let R denote the radius of the circular track (R = 52px). For N = 6 boxes, each box i ∈ \{0, 1, 2, 3, 4, 5\} is assigned an initial angular offset:</p>
+<p>θ_i = -(π / 2) + i · (2π / N) = -(π / 2) + i · (π / 3)</p>
+<p>The parametric position (X_i(t), Y_i(t)) of box i relative to the central hub at angular velocity \omega is governed by:</p>
+<p>X_i(t) = R · \cos≤ft(θ_i + \omega t)</p>
+<p>Y_i(t) = R · \sin≤ft(θ_i + \omega t)</p>
+<p>In the horizontal row configuration, each box has an initial position along the X-axis given by pitch P = 48px:</p>
+<p>X_{i,row} = ≤ft(i - (N - 1 / 2)) · P = ≤ft(i - 2.5) · 48,     Y_{i,row} = 0</p>
+<p>Therefore, the curling delta vector (Δ X_i, Δ Y_i) applied via CSS <code>translate</code> is:</p>
+<p>Δ X_i = X_i(0) - X_{i,row} = R · \cos(θ_i) - ≤ft(i - 2.5) · 48</p>
+<p>Δ Y_i = Y_i(0) - Y_{i,row} = R · \sin(θ_i)</p>
 <p>To maintain digit uprightness during rotation, each digit container applies an inverse angular transformation:</p>
-<p>$$\mathbf{T}_{\text{digit}}(t) = \mathbf{R}\left(-\omega t\right)$$</p>
-<pre class="code-block mermaid"><code>flowchart LR
+<p>\mathbf{T}_{digit}(t) = \mathbf{R}≤ft(-\omega t)</p>
+<pre class="code-block"><code>flowchart LR
     A[Box in Row: X_row, 0] --&gt;|Curling Vector: dx, dy| B[Position on Orbit Track: R, theta]
     B --&gt;|Ring Orbit: +omega * t| C[360 Degree Continuous Spin]
     C --&gt;|Digit Counter-Spin: -omega * t| D[Digit Remains Perfectly Upright]</code></pre>
 <p><em>Figure 3.2: Parametric Circular Orbit Trajectory in Cartesian Coordinate Plane</em></p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">CHAPTER 4: SYSTEM ARCHITECTURE &amp; DESIGN</h1>
+<div class="page-break"></div>
+<h1 class="chapter-title">CHAPTER 4: SYSTEM ARCHITECTURE & DESIGN</h1>
 <h2 class="section-title">4.1 High-Level System Architecture Block Diagram</h2>
 <p>The system follows a multi-tier microservices-inspired architecture designed for high availability, security, and low latency.</p>
-<pre class="code-block mermaid"><code>graph TD
+<pre class="code-block"><code>graph TD
     subgraph Presentation Layer [React 18 Single Page Application]
         UI[Apple Liquid Glass &amp; Pebble Interface]
         NAV[Floating Liquid Bottom Nav &amp; Header]
@@ -1768,7 +1774,7 @@
 <h2 class="section-title">4.2 Data Flow Diagrams (DFDs)</h2>
 <h3 class="subsection-title">DFD Level 0 (Context Level)</h3>
 <p>Illustrates system boundaries and interactions between external entities and the centralized Grievance Desk platform:</p>
-<pre class="code-block mermaid"><code>flowchart TD
+<pre class="code-block"><code>flowchart TD
     S[Student] --&gt;|Submit Complaint / Rate Resolution| SYS((RYMEC Grievance Desk System))
     SYS --&gt;|Issue Tracking ID, QR Pass &amp; Milestones| S
     
@@ -1783,7 +1789,7 @@
 <p><em>Figure 4.2: Data Flow Diagram (DFD Level 0: Context Level)</em></p>
 <h3 class="subsection-title">DFD Level 1 (Core Functional Subsystems)</h3>
 <p>Breaks down the context into four primary subsystems:</p>
-<pre class="code-block mermaid"><code>flowchart TD
+<pre class="code-block"><code>flowchart TD
     S[Student] --&gt;|Credentials| P1[1.0 Authentication &amp; OTP Engine]
     P1 --&gt;|Store / Validate| D1[(users Table)]
     P1 --&gt;|Dispatch OTP| SMTP[Gmail Gateway]
@@ -1804,7 +1810,7 @@
 <h2 class="section-title">4.3 Unified Modeling Language (UML) Diagrams</h2>
 <h3 class="subsection-title">4.3.1 Use Case Diagram</h3>
 <p>Maps all primary interactions across the six institutional actors:</p>
-<pre class="code-block mermaid"><code>flowchart LR
+<pre class="code-block"><code>flowchart LR
     subgraph Actors
         STU((Student))
         STA((Lecturer / Warden))
@@ -1843,8 +1849,8 @@
     PRI --&gt; UC10</code></pre>
 <p><em>Figure 4.4: Comprehensive UML Use Case Diagram Across Institutional Roles</em></p>
 <h3 class="subsection-title">4.3.2 Sequence Diagrams</h3>
-<h4 class="">End-to-End Grievance Lifecycle</h4>
-<pre class="code-block mermaid"><code>sequenceDiagram
+<h4 class="subsection-title">End-to-End Grievance Lifecycle</h4>
+<pre class="code-block"><code>sequenceDiagram
     autonumber
     actor S as Student
     participant UI as React Client
@@ -1873,8 +1879,8 @@
     UI-&gt;&gt;API: POST /api/complaints/814/rate { rating: 5 }
     API-&gt;&gt;DB: INSERT INTO complaint_ratings</code></pre>
 <p><em>Figure 4.5: UML Sequence Diagram: End-to-End Grievance Lifecycle</em></p>
-<h4 class="">Multi-Tier SLA Escalation Sequence</h4>
-<pre class="code-block mermaid"><code>sequenceDiagram
+<h4 class="subsection-title">Multi-Tier SLA Escalation Sequence</h4>
+<pre class="code-block"><code>sequenceDiagram
     autonumber
     participant D as SLA Monitoring Daemon
     participant DB as PostgreSQL Database
@@ -1893,7 +1899,7 @@
     end</code></pre>
 <p><em>Figure 4.6: UML Sequence Diagram: Multi-Tier SLA Escalation (Level 0 to Level 2)</em></p>
 <h3 class="subsection-title">4.3.3 Activity Diagram</h3>
-<pre class="code-block mermaid"><code>flowchart TD
+<pre class="code-block"><code>flowchart TD
     Start([Student Logs Grievance]) --&gt; Fill[Fill Title, Details, Evidence]
     Fill --&gt; CheckDupe{Duplicate Overlap &gt; 65%?}
     CheckDupe -- Yes --&gt; Warn[Display Duplicate Warning Banner]
@@ -1924,7 +1930,7 @@
     CanReopen -- No --&gt; Esc2</code></pre>
 <p><em>Figure 4.7: UML Activity Diagram: Grievance Triage, Resolution, and Reopening</em></p>
 <h3 class="subsection-title">4.3.4 Class Diagram</h3>
-<pre class="code-block mermaid"><code>classDiagram
+<pre class="code-block"><code>classDiagram
     class User {
         +int id
         +string full_name
@@ -1998,7 +2004,7 @@
     User "1" --&gt; "*" AuditLog : generates</code></pre>
 <p><em>Figure 4.8: UML Class Diagram of the Entity and Controller Domain</em></p>
 <h3 class="subsection-title">4.3.5 State Machine Diagram (6-Digit Circular Orbit OTP Engine)</h3>
-<pre class="code-block mermaid"><code>stateDiagram-v2
+<pre class="code-block"><code>stateDiagram-v2
     [*] --&gt; IdleRow: 6 Empty Horizontal Boxes (Box 0 Focused)
     IdleRow --&gt; Typing: Keypress 0-9
     Typing --&gt; IdleRow: Backspace / Correction
@@ -2036,9 +2042,9 @@
     FailureFlow --&gt; IdleRow: User Retries</code></pre>
 <p><em>Figure 4.9: UML State Machine Diagram: 6-Digit Circular Orbit OTP Engine</em></p>
 <div class="page-break"></div>
-<h2 class="section-title">4.4 Entity-Relationship (ER) Modeling &amp; Data Dictionary</h2>
+<h2 class="section-title">4.4 Entity-Relationship (ER) Modeling & Data Dictionary</h2>
 <p>The platform persistence layer runs on <strong>PostgreSQL (Neon Cloud)</strong> across eight normalized relational tables:</p>
-<pre class="code-block mermaid"><code>erDiagram
+<pre class="code-block"><code>erDiagram
     DEPARTMENTS ||--o{ USERS : "employs"
     DEPARTMENTS ||--o{ COMPLAINTS : "manages"
     USERS ||--o{ COMPLAINTS : "files"
@@ -2425,22 +2431,22 @@
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">CHAPTER 5: DETAILED IMPLEMENTATION &amp; MODULES</h1>
-<h2 class="section-title">5.1 Frontend Engineering &amp; Apple Liquid Glass UI Design</h2>
+<div class="page-break"></div>
+<h1 class="chapter-title">CHAPTER 5: DETAILED IMPLEMENTATION & MODULES</h1>
+<h2 class="section-title">5.1 Frontend Engineering & Apple Liquid Glass UI Design</h2>
 <p>The client-side architecture is implemented as a modern Single Page Application (SPA) leveraging <strong>React 18.3.1</strong>, <strong>TypeScript 5.6.2</strong>, and <strong>Vite 6.4.5</strong>.</p>
-<h3 class="subsection-title">1. Optical Layering &amp; Specular Highlight Architecture</h3>
+<h3 class="subsection-title">1. Optical Layering & Specular Highlight Architecture</h3>
 <p>To deliver an authentic Apple iOS / visionOS aesthetic, interface cards and interactive surfaces utilize multi-tiered optical layering rather than flat opacity overlays.</p>
-<pre class="code-block mermaid"><code>graph TD
+<pre class="code-block"><code>graph TD
     A[Screen Background: Verified RYMEC Campus Image] --&gt; B[Ambient Veil: Navy Gradient 95% opacity]
     B --&gt; C[Liquid Glass Material Layer]
     C --&gt; D[Backdrop Filter: blur 28px saturate 200% contrast 105%]
     C --&gt; E[Top Specular Glint: inset 0 1px 1.5px rgba 255,255,255,0.32]
     C --&gt; F[Deep Ambient Drop Shadow: 0 20px 40px -15px rgba 0,0,0,0.45]
     C --&gt; G[Content Layer: High-Contrast Typography &amp; Squircles]</code></pre>
-<p><em>Figure 5.1: Apple iOS Liquid Glass Optical Layering &amp; Specular Glare Architecture</em></p>
+<p><em>Figure 5.1: Apple iOS Liquid Glass Optical Layering & Specular Glare Architecture</em></p>
 <p>In <code>frontend/src/index.css</code>, the primary glass material is defined as:</p>
-<pre class="code-block css"><code>.ios-glass-card {
+<pre class="code-block"><code>.ios-glass-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(11, 19, 43, 0.58);
   backdrop-filter: blur(28px) saturate(200%) contrast(105%);
   -webkit-backdrop-filter: blur(28px) saturate(200%) contrast(105%);
@@ -2451,17 +2457,17 @@
     inset 0 -1px 1px 0 rgba(255, 255, 255, 0.05);
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }</code></pre>
-<h3 class="subsection-title">2. Universal Squircle &amp; Pebble Pill Standard</h3>
+<h3 class="subsection-title">2. Universal Squircle & Pebble Pill Standard</h3>
 <p>To eliminate visual dissonance, the platform enforces strict mathematical border curvature across all elements:</p>
 <ul>
-<li><strong>Inputs &amp; Dropdowns (<code>&lt;select&gt;</code>, <code>&lt;input&gt;</code>):</strong> Standardized to <code>border-radius: 1rem</code> (<code>rounded-2xl</code>).</li>
-<li><strong>Buttons &amp; Status Badges:</strong> Standardized through <code>.pebble-pill</code> with <code>border-radius: 9999px !important</code> (<code>rounded-full</code>), providing pill symmetry.</li>
-<li><strong>Cards &amp; Modal Dialogs:</strong> Structured with <code>rounded-3xl</code> (<code>border-radius: 1.5rem</code>), matching iOS modal presentation sheets.</li>
+<li><strong>Inputs & Dropdowns (<code><select></code>, <code><input></code>):</strong> Standardized to <code>border-radius: 1rem</code> (<code>rounded-2xl</code>).</li>
+<li><strong>Buttons & Status Badges:</strong> Standardized through <code>.pebble-pill</code> with <code>border-radius: 9999px !important</code> (<code>rounded-full</code>), providing pill symmetry.</li>
+<li><strong>Cards & Modal Dialogs:</strong> Structured with <code>rounded-3xl</code> (<code>border-radius: 1.5rem</code>), matching iOS modal presentation sheets.</li>
 </ul>
 <div class="page-break"></div>
 <h2 class="section-title">5.2 Component 89 6-Digit Circular Orbit OTP Animation Engine</h2>
 <p>A standout achievement of this project is the faithful recreation of the viral <strong>Component 89 (Gyre Architecture)</strong> visual verification state machine, adapted from a 4-box demo into a production-grade 6-digit cryptographic security gateway with zero external animation dependencies.</p>
-<pre class="code-block mermaid"><code>flowchart TD
+<pre class="code-block"><code>flowchart TD
     subgraph Component 89 Visual Transformation
         A[6 Horizontal Input Boxes] --&gt;|6th Digit Typed| B[Slots Shift to Orbit Trajectory]
         B --&gt; C[Dotted SVG Guide Track Visible: r=52px]
@@ -2475,64 +2481,64 @@
         J --&gt; K[Verified and secure Badge Displayed]
     end</code></pre>
 <p><em>Figure 5.2: Inward Box Collapse and Central Squircle Checkmark Emergence</em></p>
-<h3 class="subsection-title">1. Geometric Orbit Calculations ($R = 52	ext{px}$)</h3>
-<p>In the horizontal row, the 6 boxes have a horizontal pitch of $P = 48	ext{px}$. When the 6th digit is supplied, each box $i$ translates to its target position along a circle of radius $R = 52	ext{px}$ using Cartesian offsets:</p>
-<p><em>Table 5.1: Coordinate Offsets for 6-Box Circular Ring Formation ($R=52	ext{px}$)</em></p>
+<h3 class="subsection-title">1. Geometric Orbit Calculations (R = 52	ext{px})</h3>
+<p>In the horizontal row, the 6 boxes have a horizontal pitch of P = 48	ext{px}. When the 6th digit is supplied, each box i translates to its target position along a circle of radius R = 52	ext{px} using Cartesian offsets:</p>
+<p><em>Table 5.1: Coordinate Offsets for 6-Box Circular Ring Formation (R=52	ext{px})</em></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
-<th>Box Index ($i$)</th>
-<th>Angle ($\theta_i$)</th>
-<th>Position on Circle $(X_c, Y_c)$</th>
-<th>Initial Row Position $(X_r, 0)$</th>
-<th>Required Translation $(\Delta X_i, \Delta Y_i)$</th>
+<th>Box Index (i)</th>
+<th>Angle (θ_i)</th>
+<th>Position on Circle (X_c, Y_c)</th>
+<th>Initial Row Position (X_r, 0)</th>
+<th>Required Translation (Δ X_i, Δ Y_i)</th>
 </tr></thead>
 <tbody>
 <tr>
 <td><strong>Box 0</strong></td>
-<td>$-90^\circ$ (Top Center)</td>
-<td>$(0, -52)$</td>
-<td>$(-120, 0)$</td>
-<td><strong>$(+120\text{px}, -52\text{px})$</strong></td>
+<td>-90^° (Top Center)</td>
+<td>(0, -52)</td>
+<td>(-120, 0)</td>
+<td><strong>(+120px, -52px)</strong></td>
 </tr>
 <tr>
 <td><strong>Box 1</strong></td>
-<td>$-30^\circ$ (Top Right)</td>
-<td>$(+45, -26)$</td>
-<td>$(-72, 0)$</td>
-<td><strong>$(+117\text{px}, -26\text{px})$</strong></td>
+<td>-30^° (Top Right)</td>
+<td>(+45, -26)</td>
+<td>(-72, 0)</td>
+<td><strong>(+117px, -26px)</strong></td>
 </tr>
 <tr>
 <td><strong>Box 2</strong></td>
-<td>$+30^\circ$ (Bottom Right)</td>
-<td>$(+45, +26)$</td>
-<td>$(-24, 0)$</td>
-<td><strong>$(+21\text{px},  +26\text{px})$</strong></td>
+<td>+30^° (Bottom Right)</td>
+<td>(+45, +26)</td>
+<td>(-24, 0)</td>
+<td><strong>(+21px,  +26px)</strong></td>
 </tr>
 <tr>
 <td><strong>Box 3</strong></td>
-<td>$+90^\circ$ (Bottom Center)</td>
-<td>$(0, +52)$</td>
-<td>$(+24, 0)$</td>
-<td><strong>$(-24\text{px},  +52\text{px})$</strong></td>
+<td>+90^° (Bottom Center)</td>
+<td>(0, +52)</td>
+<td>(+24, 0)</td>
+<td><strong>(-24px,  +52px)</strong></td>
 </tr>
 <tr>
 <td><strong>Box 4</strong></td>
-<td>$+150^\circ$ (Bottom Left)</td>
-<td>$(-45, +26)$</td>
-<td>$(+72, 0)$</td>
-<td><strong>$(-117\text{px}, +26\text{px})$</strong></td>
+<td>+150^° (Bottom Left)</td>
+<td>(-45, +26)</td>
+<td>(+72, 0)</td>
+<td><strong>(-117px, +26px)</strong></td>
 </tr>
 <tr>
 <td><strong>Box 5</strong></td>
-<td>$+210^\circ$ (Top Left)</td>
-<td>$(-45, -26)$</td>
-<td>$(+120, 0)$</td>
-<td><strong>$(-165\text{px}, -26\text{px})$</strong></td>
+<td>+210^° (Top Left)</td>
+<td>(-45, -26)</td>
+<td>(+120, 0)</td>
+<td><strong>(-165px, -26px)</strong></td>
 </tr>
 </tbody></table></div>
 <h3 class="subsection-title">2. Pure CSS Hardware-Accelerated Animation Keyframes</h3>
-<p>In [OtpOrbitVerification.tsx](frontend/src/components/auth/OtpOrbitVerification.tsx), the keyframes governing 360° ring orbit, counter-rotation, horizontal error shaking, and particle dispersion are defined as:</p>
-<pre class="code-block css"><code>@keyframes otp-spin-ring {
+<p>In <a href="frontend/src/components/auth/OtpOrbitVerification.tsx" target="_blank" rel="noreferrer">OtpOrbitVerification.tsx</a>, the keyframes governing 360° ring orbit, counter-rotation, horizontal error shaking, and particle dispersion are defined as:</p>
+<pre class="code-block"><code>@keyframes otp-spin-ring {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
@@ -2559,8 +2565,8 @@
   50% { transform: translate(var(--p-x), var(--p-y)) scale(1.2); opacity: 1; }
   100% { transform: translate(calc(var(--p-x) * 1.5), calc(var(--p-y) * 1.5)) scale(0.6); opacity: 0.4; }
 }</code></pre>
-<h3 class="subsection-title">3. Verification Sequence &amp; Inward Collapse Mechanics</h3>
-<pre class="code-block typescript"><code>const triggerVerification = async (code: string) =&gt; {
+<h3 class="subsection-title">3. Verification Sequence & Inward Collapse Mechanics</h3>
+<pre class="code-block"><code>const triggerVerification = async (code: string) =&gt; {
   if (status === 'verifying' || status === 'success') return;
   setStatus('verifying');
   setErrorMessage(null);
@@ -2584,7 +2590,7 @@
   }
 };</code></pre>
 <div class="page-break"></div>
-<h2 class="section-title">5.3 Backend Microservices &amp; API Architecture</h2>
+<h2 class="section-title">5.3 Backend Microservices & API Architecture</h2>
 <p>The server application is structured into decoupled controllers and routers executing in a Node.js 20 LTS environment:</p>
 <ul>
 <li><code>backend/routes/authRoutes.js</code>: Endpoints for registration, login, OTP validation, and password resets.</li>
@@ -2595,7 +2601,7 @@
 </ul>
 <h3 class="subsection-title">Database Connection Pooling with Cloud PostgreSQL</h3>
 <p>In <code>backend/config/db.js</code>, connection pooling guarantees sub-second responsiveness while auto-healing transient network blips:</p>
-<pre class="code-block javascript"><code>const { Pool } = require('pg');
+<pre class="code-block"><code>const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -2605,7 +2611,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 5000,
 });</code></pre>
 <div class="page-break"></div>
-<h2 class="section-title">5.4 AI-Driven Semantic Triage &amp; Priority Estimation Algorithm</h2>
+<h2 class="section-title">5.4 AI-Driven Semantic Triage & Priority Estimation Algorithm</h2>
 <p>Incoming complaints are analyzed using an intelligent token-matching pipeline that scores text across institutional domain dictionaries.</p>
 <p><em>Table 5.2: Keyword Weights for Semantic NLP Domain Classification</em></p>
 <div class="table-container"><table class="report-table">
@@ -2616,17 +2622,17 @@ const pool = new Pool({
 </tr></thead>
 <tbody>
 <tr>
-<td><strong>Hostel &amp; Sanitation</strong></td>
+<td><strong>Hostel & Sanitation</strong></td>
 <td><code>geyser</code>, <code>ro water</code>, <code>purifier</code>, <code>warden</code>, <code>mess food</code></td>
 <td><code>room</code>, <code>clean</code>, <code>bed</code>, <code>washroom</code>, <code>electricity</code></td>
 </tr>
 <tr>
-<td><strong>Academic &amp; Labs</strong></td>
+<td><strong>Academic & Labs</strong></td>
 <td><code>continuous internal evaluation</code>, <code>marks</code>, <code>hall ticket</code>, <code>syllabus</code></td>
 <td><code>lab</code>, <code>computer</code>, <code>lecturer</code>, <code>attendance</code>, <code>exam</code></td>
 </tr>
 <tr>
-<td><strong>Harassment &amp; Safety</strong></td>
+<td><strong>Harassment & Safety</strong></td>
 <td><code>ragging</code>, <code>harassment</code>, <code>bullying</code>, <code>mental harassment</code>, <code>threat</code></td>
 <td><code>senior</code>, <code>safety</code>, <code>security guard</code>, <code>misconduct</code></td>
 </tr>
@@ -2637,7 +2643,7 @@ const pool = new Pool({
 </tr>
 </tbody></table></div>
 <h3 class="subsection-title">Natural Language Processing Pseudocode:</h3>
-<pre class="code-block text"><code>ALGORITHM SemanticTriage(title, description):
+<pre class="code-block"><code>ALGORITHM SemanticTriage(title, description):
   INPUT: Complaint title and description strings
   OUTPUT: Predicted Category, Calculated Priority Level, Target SLA Window
 
@@ -2660,7 +2666,7 @@ const pool = new Pool({
 <h2 class="section-title">5.5 Systemic 5+ Trend Detection Algorithm</h2>
 <p>To identify recurring infrastructure faults across the campus, a background aggregation query runs over a rolling 7-day window.</p>
 <h3 class="subsection-title">SQL Aggregation Logic:</h3>
-<pre class="code-block sql"><code>SELECT 
+<pre class="code-block"><code>SELECT 
     category,
     COUNT(id) AS complaint_count,
     ARRAY_AGG(title) AS complaint_titles
@@ -2670,11 +2676,11 @@ WHERE created_at &gt;= NOW() - INTERVAL '7 days'
 GROUP BY category
 HAVING COUNT(id) &gt;= 3;</code></pre>
 <p>When a category accumulates 3 to 5+ active grievances, the server sets a systemic alert flag. On staff and warden dashboards, a glowing alert capsule displays:</p>
-<blockquote class="academic-quote"><strong>AI Pattern Detection:</strong> <em>3+ unresolved complaints logged in Hostel &amp; Facilities in the past 7 days. Recommend root-cause inspection of block water purifiers.</em></blockquote>
+<blockquote class="academic-quote"><strong>AI Pattern Detection:</strong> <em>3+ unresolved complaints logged in Hostel & Facilities in the past 7 days. Recommend root-cause inspection of block water purifiers.</em></blockquote>
 <div class="page-break"></div>
 <h2 class="section-title">5.6 Automated Multi-Tier SLA Escalation Engine</h2>
 <p>The SLA Escalation Daemon runs every 15 minutes, inspecting open tickets against their <code>sla_deadline</code>:</p>
-<pre class="code-block javascript"><code>async function checkAndEscalateComplaints() {
+<pre class="code-block"><code>async function checkAndEscalateComplaints() {
   const overdueTickets = await pool.query(`
     SELECT id, complaint_number, category, escalation_level, sla_deadline 
     FROM complaints 
@@ -2726,7 +2732,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <p>When a student checks the "File as Anonymous Grievance" box, the client sends <code>is_anonymous = true</code>.</p>
 <h3 class="subsection-title">Server-Side Sanitization Pipeline:</h3>
 <p>In <code>backend/controllers/complaintController.js</code>, queries returning queues to faculty, wardens, and HODs apply dynamic SQL sanitization:</p>
-<pre class="code-block javascript"><code>const query = `
+<pre class="code-block"><code>const query = `
   SELECT 
     c.id, 
     c.complaint_number, 
@@ -2749,18 +2755,18 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 `;</code></pre>
 <p>This guarantees that ordinary department staff can inspect, investigate, and resolve the problem without knowing the complainant's identity, completely eliminating fear of academic reprisal.</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">CHAPTER 6: SOFTWARE TESTING &amp; QUALITY ASSURANCE</h1>
-<h2 class="section-title">6.1 Testing Methodology &amp; Strategy</h2>
+<div class="page-break"></div>
+<h1 class="chapter-title">CHAPTER 6: SOFTWARE TESTING & QUALITY ASSURANCE</h1>
+<h2 class="section-title">6.1 Testing Methodology & Strategy</h2>
 <p>Quality assurance for <strong>RYMEC GRIEVANCE DESK</strong> followed a multi-tiered software verification lifecycle incorporating:</p>
 <ol>
 <li><strong>Unit Testing:</strong> Validating individual mathematical utilities (Jaccard similarity calculations, SLA remaining time functions, coordinate offset trigonometry).</li>
 <li><strong>Integration Testing:</strong> Verifying communication between the React frontend, Express API routes, Neon PostgreSQL database pool, and the Nodemailer Gmail SMTP transporter.</li>
 <li><strong>Black-Box Testing:</strong> Exercising user interfaces without internal code knowledge, testing inputs, edge cases, error states, and responsive viewports.</li>
-<li><strong>Security &amp; Vulnerability Testing:</strong> Simulating common web attack vectors (SQL Injection, Cross-Site Scripting, brute-force OTP attacks, expired token injection).</li>
+<li><strong>Security & Vulnerability Testing:</strong> Simulating common web attack vectors (SQL Injection, Cross-Site Scripting, brute-force OTP attacks, expired token injection).</li>
 </ol>
 <div class="page-break"></div>
-<h2 class="section-title">6.2 Test Matrix &amp; Comprehensive Test Cases</h2>
+<h2 class="section-title">6.2 Test Matrix & Comprehensive Test Cases</h2>
 <p><em>Table 6.1: Comprehensive Functional Test Cases (TC-01 to TC-15)</em></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
@@ -2775,7 +2781,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <tr>
 <td><strong>TC-01</strong></td>
 <td>Student account registration</td>
-<td>Valid legal name, USN (<code>3BR21CS045</code>), valid email, password $\ge 6$ chars</td>
+<td>Valid legal name, USN (<code>3BR21CS045</code>), valid email, password ≥ 6 chars</td>
 <td>Account created in DB (<code>users</code>), 6-digit OTP dispatched via Gmail SMTP, UI shifts to OTP modal</td>
 <td>Dispatched OTP to inbox, modal loaded with 6 empty boxes</td>
 <td><strong>PASS</strong></td>
@@ -2790,7 +2796,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 </tr>
 <tr>
 <td><strong>TC-03</strong></td>
-<td>6-Digit OTP digit entry &amp; auto-advance</td>
+<td>6-Digit OTP digit entry & auto-advance</td>
 <td>Sequential keystrokes <code>4</code>, <code>7</code>, <code>1</code>, <code>9</code>, <code>2</code>, <code>0</code></td>
 <td>Active border highlights with icy blue glow (<code>#dceaff</code>), focus advances automatically from box 0 to 5</td>
 <td>Seamless auto-advance, active glow rendered</td>
@@ -2800,7 +2806,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><strong>TC-04</strong></td>
 <td>Component 89 Circular Orbit curling transition</td>
 <td>6th digit entered into box 5</td>
-<td>Horizontal row transforms into circular ring orbit along dotted track ($R=52	ext{px}$), continuous 360° rotation, digits counter-spin upright</td>
+<td>Horizontal row transforms into circular ring orbit along dotted track (R=52	ext{px}), continuous 360° rotation, digits counter-spin upright</td>
 <td>Boxes curl into circular ring, spin smoothly at 60 FPS, digits stay vertical</td>
 <td><strong>PASS</strong></td>
 </tr>
@@ -2840,7 +2846,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><strong>TC-09</strong></td>
 <td>Duplicate grievance detection warning</td>
 <td>Title identical to active complaint submitted 2 days prior</td>
-<td>Jaccard similarity score $&gt; 0.65$; UI displays duplicate warning capsule with existing ticket ID</td>
+<td>Jaccard similarity score > 0.65; UI displays duplicate warning capsule with existing ticket ID</td>
 <td>Warning banner displayed: <em>"Similar active issue found"</em></td>
 <td><strong>PASS</strong></td>
 </tr>
@@ -2893,7 +2899,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><strong>PASS</strong></td>
 </tr>
 </tbody></table></div>
-<p><em>Table 6.2: Security, Boundary &amp; Negative Test Cases (TC-16 to TC-25)</em></p>
+<p><em>Table 6.2: Security, Boundary & Negative Test Cases (TC-16 to TC-25)</em></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
 <th>Test ID</th>
@@ -2915,7 +2921,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <tr>
 <td><strong>TC-17</strong></td>
 <td>Cross-Site Scripting (XSS) in description</td>
-<td><code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> in grievance text</td>
+<td><code><script>alert('XSS')</script></code> in grievance text</td>
 <td>React DOM escapes HTML entities; script stored as sanitized literal string</td>
 <td>Script rendered as safe plaintext; zero execution</td>
 <td><strong>PASS</strong></td>
@@ -2924,7 +2930,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><strong>TC-18</strong></td>
 <td>Expired OTP token submission</td>
 <td>Submit valid OTP after 11 minutes (past 10-minute expiry)</td>
-<td>Backend query <code>WHERE reset_expires &gt; NOW()</code> evaluates to false; returns HTTP 400 <em>"Code expired"</em></td>
+<td>Backend query <code>WHERE reset_expires > NOW()</code> evaluates to false; returns HTTP 400 <em>"Code expired"</em></td>
 <td>Rejected with expired warning message</td>
 <td><strong>PASS</strong></td>
 </tr>
@@ -2963,7 +2969,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <tr>
 <td><strong>TC-23</strong></td>
 <td>File upload size limit boundary</td>
-<td>Uploading evidence image $&gt; 10	ext{ MB}$</td>
+<td>Uploading evidence image > 10	ext{ MB}</td>
 <td>Multer rejects file with HTTP 413 <em>"File size exceeds 10MB limit"</em></td>
 <td>Upload blocked cleanly</td>
 <td><strong>PASS</strong></td>
@@ -2986,102 +2992,102 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<h2 class="section-title">6.3 Security, Vulnerability &amp; Penetration Testing</h2>
+<h2 class="section-title">6.3 Security, Vulnerability & Penetration Testing</h2>
 <p>A dedicated security audit was conducted against the Open Web Application Security Project (OWASP) Top 10 vulnerabilities:</p>
 <ol>
 <li><strong>Broken Access Control (OWASP A01):</strong> Validated by attempting horizontal privilege escalation (e.g., Student A requesting Student B's private complaint details). The API enforces <code>WHERE student_id = req.user.id</code> on personal endpoints, successfully thwarting unauthorized access.</li>
 <li><strong>Cryptographic Failures (OWASP A02):</strong> Validated that all network traffic enforces HTTPS with TLS 1.3 encryption on Vercel. Database credentials and JWT secrets are injected through encrypted environment variables.</li>
-<li><strong>Injection (OWASP A03):</strong> The node-postgres driver uses parameterized queries (<code>$1, $2, ...</code>) for all database transactions, eliminating SQL injection vulnerabilities.</li>
-<li><strong>Identification &amp; Authentication Failures (OWASP A07):</strong> Password resets mandate out-of-band verification via official institutional Gmail OTPs with a strict 10-minute expiry window.</li>
+<li><strong>Injection (OWASP A03):</strong> The node-postgres driver uses parameterized queries (<code>1, 2, ...</code>) for all database transactions, eliminating SQL injection vulnerabilities.</li>
+<li><strong>Identification & Authentication Failures (OWASP A07):</strong> Password resets mandate out-of-band verification via official institutional Gmail OTPs with a strict 10-minute expiry window.</li>
 </ol>
 <div class="page-break"></div>
-<h2 class="section-title">6.4 Usability &amp; Cross-Browser Verification</h2>
+<h2 class="section-title">6.4 Usability & Cross-Browser Verification</h2>
 <p>Testing was performed across multiple operating systems, modern browser engines, and physical mobile viewports:</p>
 <p><em>Table 6.3: Cross-Browser and Responsive Usability Test Results</em></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
 <th>Platform / Operating System</th>
-<th>Browser &amp; Version</th>
+<th>Browser & Version</th>
 <th>Viewport Resolution</th>
 <th>Orbit Animation Performance</th>
-<th>Layout &amp; Liquid Glass Verdict</th>
+<th>Layout & Liquid Glass Verdict</th>
 </tr></thead>
 <tbody>
 <tr>
 <td><strong>Windows 11</strong></td>
 <td>Google Chrome 133</td>
-<td>$1920 \times 1080$ (Desktop)</td>
+<td>1920 × 1080 (Desktop)</td>
 <td>60 FPS (Zero dropped frames)</td>
 <td>Perfect squircle symmetry, fluid blur</td>
 </tr>
 <tr>
 <td><strong>Windows 11</strong></td>
 <td>Microsoft Edge 133</td>
-<td>$1920 \times 1080$ (Desktop)</td>
+<td>1920 × 1080 (Desktop)</td>
 <td>60 FPS</td>
 <td>Perfect specular reflections</td>
 </tr>
 <tr>
 <td><strong>macOS Sonoma</strong></td>
 <td>Safari 17.4</td>
-<td>$2560 \times 1600$ (Retina)</td>
+<td>2560 × 1600 (Retina)</td>
 <td>60 FPS</td>
 <td>Native <code>-webkit-backdrop-filter</code> blur</td>
 </tr>
 <tr>
 <td><strong>Android 14</strong></td>
 <td>Chrome Mobile</td>
-<td>$1080 \times 2400$ (Samsung S23)</td>
+<td>1080 × 2400 (Samsung S23)</td>
 <td>60 FPS</td>
 <td>Responsive touch, numeric keypad pops</td>
 </tr>
 <tr>
 <td><strong>iOS 17.5</strong></td>
 <td>Mobile Safari</td>
-<td>$1179 \times 2556$ (iPhone 15 Pro)</td>
+<td>1179 × 2556 (iPhone 15 Pro)</td>
 <td>60 FPS</td>
 <td>Liquid bottom navigation adapts to safe-area</td>
 </tr>
 <tr>
 <td><strong>Ubuntu Linux 24.04</strong></td>
 <td>Mozilla Firefox 135</td>
-<td>$1920 \times 1080$ (Desktop)</td>
+<td>1920 × 1080 (Desktop)</td>
 <td>60 FPS</td>
 <td>Clean CSS transform rendering</td>
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">CHAPTER 7: RESULTS, PERFORMANCE &amp; DEPLOYMENT TELEMETRY</h1>
-<h2 class="section-title">7.1 Visual Interface Showcase &amp; Screenshot Walkthrough</h2>
-<p>The production deployment of <strong>RYMEC GRIEVANCE DESK</strong> is live at [https://rymec-complaint-desk.vercel.app](https://rymec-complaint-desk.vercel.app). Key views demonstrate the platform's visual fidelity and functionality:</p>
+<div class="page-break"></div>
+<h1 class="chapter-title">CHAPTER 7: RESULTS, PERFORMANCE & DEPLOYMENT TELEMETRY</h1>
+<h2 class="section-title">7.1 Visual Interface Showcase & Screenshot Walkthrough</h2>
+<p>The production deployment of <strong>RYMEC GRIEVANCE DESK</strong> is live at <a href="https://rymec-complaint-desk.vercel.app" target="_blank" rel="noreferrer">https://rymec-complaint-desk.vercel.app</a>. Key views demonstrate the platform's visual fidelity and functionality:</p>
 <h3 class="subsection-title">1. Landing Hero Page</h3>
 <p>Displays the verified campus photograph of Rao Bahadur Y. Mahabaleswarappa Engineering College, the golden <strong>Veerasaiva Vidyavardhaka Sangha (V.V. Sangha)</strong> trust line, NAAC A+ accreditation status pill, and primary action buttons.</p>
 <ul>
 <li><em>Figure 7.1: Production Landing Page with Verified RYMEC Campus Visual</em></li>
 </ul>
-<h3 class="subsection-title">2. Sign-In Modal &amp; Component 89 6-Digit Orbit Verification</h3>
+<h3 class="subsection-title">2. Sign-In Modal & Component 89 6-Digit Orbit Verification</h3>
 <p>Features the frosted dark modal sheet, fast 1-click demo credentials, and the 6-digit circular orbit curling verification state machine. When all six digits are typed, the input row curls into an orbit along the dotted circular track, turns neon green upon validation, and collapses into a single central squircle with an animated checkmark and floating particle dots.</p>
 <ul>
-<li><em>Figure 7.2: Authentication Modal &amp; 6-Digit Circular Orbit Verification Screen</em></li>
+<li><em>Figure 7.2: Authentication Modal & 6-Digit Circular Orbit Verification Screen</em></li>
 </ul>
-<h3 class="subsection-title">3. Student Dashboard &amp; Live Milestone Tracking Timeline</h3>
+<h3 class="subsection-title">3. Student Dashboard & Live Milestone Tracking Timeline</h3>
 <p>Presents an intuitive tracking dashboard displaying complaint status, resolution SLA countdown clock, dynamic SVG QR code pass, evidence thumbnails, and a post-resolution 5-star rating interface.</p>
 <ul>
-<li><em>Figure 7.3: Student Dashboard &amp; Live Package-Style Milestone Tracking Timeline</em></li>
+<li><em>Figure 7.3: Student Dashboard & Live Package-Style Milestone Tracking Timeline</em></li>
 </ul>
-<h3 class="subsection-title">4. Staff &amp; Warden Triage Desk</h3>
+<h3 class="subsection-title">4. Staff & Warden Triage Desk</h3>
 <p>Equipped with category-specific filters, action-taken remark forms, and a prominent 5+ systemic trend alert banner notifying staff when multiple students report recurring infrastructure failures.</p>
 <ul>
 <li><em>Figure 7.4: Warden / Staff Triage Desk with 5+ Systemic Trend Warning Banner</em></li>
 </ul>
-<h3 class="subsection-title">5. Principal Executive Telemetry &amp; Audit Trail</h3>
+<h3 class="subsection-title">5. Principal Executive Telemetry & Audit Trail</h3>
 <p>Provides comprehensive institutional analytics: monthly resolution volume, department performance bar charts, category breakdown distributions, and an immutable cryptographic audit log table.</p>
 <ul>
-<li><em>Figure 7.5: Principal Executive Telemetry &amp; Immutable Audit Log Inspection</em></li>
+<li><em>Figure 7.5: Principal Executive Telemetry & Immutable Audit Log Inspection</em></li>
 </ul>
 <div class="page-break"></div>
-<h2 class="section-title">7.2 Resolution SLA Velocity &amp; Performance Benchmarks</h2>
+<h2 class="section-title">7.2 Resolution SLA Velocity & Performance Benchmarks</h2>
 <p>Comparative field metrics demonstrate significant performance improvements over the legacy paper-based process:</p>
 <p><em>Table 7.1: Resolution Velocity Benchmark Across Campus Facilities</em></p>
 <div class="table-container"><table class="report-table">
@@ -3129,7 +3135,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><strong>68.7% Reduction</strong></td>
 </tr>
 </tbody></table></div>
-<pre class="code-block mermaid"><code>xychart-beta
+<pre class="code-block"><code>xychart-beta
     title "Average Grievance Turnaround Latency (Days)"
     x-axis ["Hostel Water", "Geyser/Power", "Lab Hardware", "Transport", "Academic CIE", "Campus Average"]
     y-axis "Resolution Time in Days" 0 --&gt; 10
@@ -3139,7 +3145,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <div class="page-break"></div>
 <h2 class="section-title">7.3 Production Cloud Deployment Telemetry</h2>
 <p>The platform is deployed globally on the <strong>Vercel Edge Platform</strong> connected to a serverless <strong>Neon Cloud PostgreSQL</strong> database located in the AWS US-East region.</p>
-<p><em>Table 7.2: Web Performance Metrics &amp; Lighthouse Audit Scores</em></p>
+<p><em>Table 7.2: Web Performance Metrics & Lighthouse Audit Scores</em></p>
 <div class="table-container"><table class="report-table">
 <thead><tr>
 <th>Performance Metric</th>
@@ -3151,74 +3157,74 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <tr>
 <td><strong>Google Lighthouse Performance Score</strong></td>
 <td><strong>98 / 100</strong></td>
-<td>$\ge 90$</td>
+<td>≥ 90</td>
 <td>Exceptional</td>
 </tr>
 <tr>
 <td><strong>Lighthouse Accessibility Score</strong></td>
 <td><strong>100 / 100</strong></td>
-<td>$\ge 90$</td>
+<td>≥ 90</td>
 <td>Flawless</td>
 </tr>
 <tr>
 <td><strong>Lighthouse Best Practices Score</strong></td>
 <td><strong>100 / 100</strong></td>
-<td>$\ge 90$</td>
+<td>≥ 90</td>
 <td>Flawless</td>
 </tr>
 <tr>
 <td><strong>Lighthouse SEO Score</strong></td>
 <td><strong>100 / 100</strong></td>
-<td>$\ge 90$</td>
+<td>≥ 90</td>
 <td>Flawless</td>
 </tr>
 <tr>
 <td><strong>First Contentful Paint (FCP)</strong></td>
 <td><strong>0.8 Seconds</strong></td>
-<td>$&lt; 1.8	ext{ s}$</td>
+<td>< 1.8	ext{ s}</td>
 <td>Good (Green)</td>
 </tr>
 <tr>
 <td><strong>Largest Contentful Paint (LCP)</strong></td>
 <td><strong>1.2 Seconds</strong></td>
-<td>$&lt; 2.5	ext{ s}$</td>
+<td>< 2.5	ext{ s}</td>
 <td>Good (Green)</td>
 </tr>
 <tr>
 <td><strong>Cumulative Layout Shift (CLS)</strong></td>
 <td><strong>0.002</strong></td>
-<td>$&lt; 0.1$</td>
+<td>< 0.1</td>
 <td>Good (Green)</td>
 </tr>
 <tr>
 <td><strong>Time to First Byte (TTFB)</strong></td>
 <td><strong>180 Milliseconds</strong></td>
-<td>$&lt; 800	ext{ ms}$</td>
+<td>< 800	ext{ ms}</td>
 <td>High-Speed Edge</td>
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">CHAPTER 8: CONCLUSION &amp; FUTURE ENHANCEMENTS</h1>
+<div class="page-break"></div>
+<h1 class="chapter-title">CHAPTER 8: CONCLUSION & FUTURE ENHANCEMENTS</h1>
 <h2 class="section-title">8.1 Concluding Remarks</h2>
 <p>The development and deployment of <strong>RYMEC GRIEVANCE DESK</strong> demonstrates how modern cloud-native web engineering, algorithmic triage, and thoughtful visual design can transform institutional governance within a premier engineering college.</p>
 <p>By replacing opaque paper registers with a transparent, responsive, and accountable digital platform, the project achieves significant institutional milestones:</p>
 <ol>
-<li><strong>Procedural Justice &amp; Student Trust:</strong> Real-time package-style milestone tracking and dynamic QR code passes give complainants complete visibility into their grievances, eliminating ambiguity and administrative cynicism.</li>
+<li><strong>Procedural Justice & Student Trust:</strong> Real-time package-style milestone tracking and dynamic QR code passes give complainants complete visibility into their grievances, eliminating ambiguity and administrative cynicism.</li>
 <li><strong>Guaranteed Administrative Accountability:</strong> Programmatic SLA countdowns and automated multi-tier escalation (Level 1 HOD and Level 2 Principal) enforce resolution discipline, reducing average turnaround latency by 68.7%.</li>
 <li><strong>Protection of Vulnerable Voices:</strong> The cryptographic anonymous reporting shield empowers students to voice sensitive safety and harassment concerns without fear of victimization.</li>
 <li><strong>Data-Driven Institutional Governance:</strong> Automated 5+ systemic trend alerts and comprehensive Principal telemetry dashboards allow college leadership to proactively identify infrastructure bottlenecks and optimize campus resource allocation.</li>
-<li><strong>Aesthetic &amp; Technical Excellence:</strong> Recreating the Component 89 6-digit circular orbit verification animation with zero external dependencies and unifying the entire interface with Apple iOS Liquid Glass aesthetics proves that academic software can match the elegance and responsiveness of consumer products.</li>
+<li><strong>Aesthetic & Technical Excellence:</strong> Recreating the Component 89 6-digit circular orbit verification animation with zero external dependencies and unifying the entire interface with Apple iOS Liquid Glass aesthetics proves that academic software can match the elegance and responsiveness of consumer products.</li>
 </ol>
 <div class="page-break"></div>
-<h2 class="section-title">8.2 Future Scope &amp; Proposed Enhancements</h2>
+<h2 class="section-title">8.2 Future Scope & Proposed Enhancements</h2>
 <p>While the current platform is fully operational in production, future development can expand its capabilities:</p>
 <ol>
 <li><strong>WhatsApp Business API Gateway:</strong></li>
 </ol>
 <p>Integrate two-way messaging via the WhatsApp Business Cloud API. Students could type <em>"Track GRV-2026-0814"</em> on WhatsApp to receive real-time status updates, or submit basic maintenance tickets via chat prompts.</p>
 <ol>
-<li><strong>Multilingual Regional Language Processing (Kannada &amp; Hindi):</strong></li>
+<li><strong>Multilingual Regional Language Processing (Kannada & Hindi):</strong></li>
 </ol>
 <p>Incorporate regional language NLP tokenizers (specifically Kannada script and bilingual transliteration) to facilitate seamless grievance filing for local support staff, transport drivers, and non-teaching personnel.</p>
 <ol>
@@ -3230,8 +3236,8 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 </ol>
 <p>Deploy dedicated, ruggedized touchscreen kiosks with biometric fingerprint readers at central campus locations (Library foyer, Hostel entrance, Administrative building) for students without continuous smartphone access.</p>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
-<h1 class="chapter-title">REFERENCES &amp; BIBLIOGRAPHY</h1>
+<div class="page-break"></div>
+<h1 class="chapter-title">REFERENCES & BIBLIOGRAPHY</h1>
 <ol>
 <li>All India Council for Technical Education (AICTE), <em>"Establishment of Mechanism for Grievance Redressal Regulations,"</em> The Gazette of India, Extraordinary, Part III, Sec. 4, New Delhi, 2019.</li>
 <li>University Grants Commission (UGC), <em>"Redressal of Grievances of Students Regulations,"</em> Ministry of Human Resource Development, Government of India, 2023.</li>
@@ -3260,7 +3266,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <li>Apple Inc., <em>"Human Interface Guidelines: Spatial Layout and Material Translucency in visionOS and iOS,"</em> Cupertino, CA, 2024.</li>
 </ol>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h1 class="chapter-title">APPENDIX A: REST API ENDPOINTS SPECIFICATION</h1>
 <p><em>Table A.1: Comprehensive REST API Endpoints Specification</em></p>
 <div class="table-container"><table class="report-table">
@@ -3284,7 +3290,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><code>/api/auth/verify-otp</code></td>
 <td>Public</td>
 <td><code>{ email, code }</code></td>
-<td>Validates registration OTP; returns JWT token &amp; user profile</td>
+<td>Validates registration OTP; returns JWT token & user profile</td>
 </tr>
 <tr>
 <td><code>POST</code></td>
@@ -3347,7 +3353,7 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 <td><code>/api/complaints/track/:number</code></td>
 <td>Public</td>
 <td>URL Param: <code>complaint_number</code></td>
-<td>Returns public tracking milestones, SLA countdown &amp; QR</td>
+<td>Returns public tracking milestones, SLA countdown & QR</td>
 </tr>
 <tr>
 <td><code>GET</code></td>
@@ -3421,9 +3427,9 @@ HAVING COUNT(id) &gt;= 3;</code></pre>
 </tr>
 </tbody></table></div>
 <div class="page-break"></div>
-<p>&lt;div class="page-break"&gt;&lt;/div&gt;</p>
+<div class="page-break"></div>
 <h1 class="chapter-title">APPENDIX B: DATABASE SQL SCHEMA DDL</h1>
-<pre class="code-block sql"><code>-- ========================================================
+<pre class="code-block"><code>-- ========================================================
 -- RYMEC GRIEVANCE DESK: POSTGRESQL RELATIONAL SCHEMA DDL
 -- Database Engine: PostgreSQL 16 on Neon Cloud Serverless
 -- Institution: Rao Bahadur Y. Mahabaleswarappa Engineering College
@@ -3545,10 +3551,9 @@ CREATE INDEX IF NOT EXISTS idx_complaints_category ON complaints(category);
 CREATE INDEX IF NOT EXISTS idx_timeline_complaint ON complaint_timeline(complaint_id);
 CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_logs(created_at);</code></pre>
 <div class="page-break"></div>
-<p>&lt;br/&gt;&lt;br/&gt;</p>
-<p>&lt;div style="text-align: center; font-weight: bold; color: #4B5563; font-size: 11pt;"&gt;</p>
-<p>— END OF OFFICIAL PROJECT REPORT —&lt;br/&gt;</p>
+<p><br/><br/></p>
+<p><div style="text-align: center; font-weight: bold; color: #4B5563; font-size: 11pt;"></p>
+<p>— END OF OFFICIAL PROJECT REPORT —<br/></p>
 <p>Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari • Academic Year 2025–2026</p>
-<p>&lt;/div&gt;</p>
 </body>
 </html>
