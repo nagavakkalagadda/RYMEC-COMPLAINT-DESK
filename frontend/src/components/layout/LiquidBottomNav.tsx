@@ -32,7 +32,7 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
     { id: 'home', label: 'Home', icon: Home },
     { id: 'submit', label: 'Submit', icon: PlusCircle },
     { id: 'track', label: 'Track', icon: Search },
-    { id: 'history', label: 'History', icon: Clock },
+    { id: 'audit-logs', label: 'Audit Logs', icon: ShieldCheck },
     { id: 'profile', label: 'Profile', icon: User },
   ];
 
@@ -40,8 +40,8 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
     { id: 'overview', label: 'Overview', icon: Home },
     { id: 'complaints', label: 'Complaints', icon: Inbox },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'departments', label: 'Departments', icon: Building },
-    { id: 'profile', label: 'Profile', icon: ShieldCheck },
+    { id: 'audit-logs', label: 'Audit Logs', icon: ShieldCheck },
+    { id: 'profile', label: 'Profile', icon: User },
   ];
 
   const items = isStaffOrAdmin ? adminNavItems : studentNavItems;

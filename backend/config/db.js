@@ -195,6 +195,11 @@ function fallbackQuery(text, params) {
   }
 
   // AUDIT LOGS
+  if (lower.startsWith('select') && lower.includes('from audit_logs')) {
+    let rows = [...inMemoryStore.audit_logs].reverse();
+    return { rows, rowCount: rows.length };
+  }
+
   if (lower.startsWith('insert into audit_logs')) {
     const log = {
       id: inMemoryStore.audit_logs.length + 1,
@@ -202,7 +207,8 @@ function fallbackQuery(text, params) {
       action: params[1],
       entity_type: params[2],
       entity_id: params[3],
-      details: params[4],
+      details: typeof params[4] === 'string' ? JSON.parse(params[4] || '{}') : (params[4] || {}),
+      ip_address: params[5] || '127.0.0.1',
       created_at: new Date()
     };
     inMemoryStore.audit_logs.push(log);

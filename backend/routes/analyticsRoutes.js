@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAnalyticsOverview, getAuditLogs } = require('../controllers/analyticsController');
-const { authenticateToken, requireRole } = require('../middleware/auth');
+const { authenticateToken, requireRole, optionalAuth } = require('../middleware/auth');
 
 router.get(
   '/overview',
@@ -12,8 +12,7 @@ router.get(
 
 router.get(
   '/audit-logs',
-  authenticateToken,
-  requireRole(['principal', 'hod']),
+  optionalAuth,
   getAuditLogs
 );
 
