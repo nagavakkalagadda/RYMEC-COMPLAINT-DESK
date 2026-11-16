@@ -573,6 +573,19 @@ For campus viva evaluations and administrative review:
 
 ---
 
+## 👥 14. Project Team & Contributors
+
+This project was architected, engineered, and evaluated by final-year students of the **Department of Computer Science & Engineering**, **Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC)**, Ballari.
+
+| Contributor | GitHub Profile | Role & Primary Responsibilities | Institutional Department |
+| :--- | :--- | :--- | :--- |
+| <img src="https://github.com/nagavakkalagadda.png" width="48" height="48" style="border-radius:50%"/> <br> **V. Naga Phanendra** | [@nagavakkalagadda](https://github.com/nagavakkalagadda) | **Project Lead & Full-Stack Architect** <br> • End-to-end system architecture & Vercel deployment <br> • Component 89 6-digit circular orbit OTP mathematics & CSS <br> • Dynamic SLA escalation engine & PostgreSQL schema | Computer Science & Engineering, RYMEC |
+| <img src="https://github.com/sumanthgodinal9369.png" width="48" height="48" style="border-radius:50%"/> <br> **Sumanth Godinal** | [@sumanthgodinal9369](https://github.com/sumanthgodinal9369) | **Core Contributor — Backend & Persistence** <br> • Express REST APIs & Neon serverless connection pooling <br> • Institutional Gmail SMTP gateway (`rymec.ismart12@gmail.com`) <br> • Data dictionaries & audit log persistence | Computer Science & Engineering, RYMEC |
+| <img src="https://github.com/vinayreddy0224.png" width="48" height="48" style="border-radius:50%"/> <br> **Vinay Reddy** | [@vinayreddy0224](https://github.com/vinayreddy0224) | **Core Contributor — UI/UX & Design Systems** <br> • Apple iOS liquid glass & pebble design integration <br> • Universal squircle inputs & responsive layout tuning <br> • Student grievance submission form & interactive tracking | Computer Science & Engineering, RYMEC |
+| <img src="https://github.com/ssharanabasavaraj371-dev.png" width="48" height="48" style="border-radius:50%"/> <br> **Sharanabasavaraj S** | [@ssharanabasavaraj371-dev](https://github.com/ssharanabasavaraj371-dev) | **Core Contributor — QA, Verification & Security** <br> • 25+ comprehensive functional test case execution <br> • OWASP penetration audits (SQLi, XSS, rate-limiting) <br> • Cryptographic anonymity verification & performance benchmarks | Computer Science & Engineering, RYMEC |
+
+---
+
 ### 🏛️ Institutional Credit & Governance
 **Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC)**  
 *Affiliated to Visvesvaraya Technological University (VTU), Belagavi • Approved by AICTE, New Delhi • Accredited by NAAC with 'A+' Grade*  

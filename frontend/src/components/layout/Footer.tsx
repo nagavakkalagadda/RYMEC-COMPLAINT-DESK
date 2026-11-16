@@ -93,8 +93,36 @@ export const Footer: React.FC = () => {
 
         </div>
 
+        {/* Project Contributors & Engineering Team Attribution */}
+        <div className="border-t border-white/10 pt-6 pb-2 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-2 text-silver-300">
+            <span className="font-semibold text-white">Engineered by CSE Capstone Team:</span>
+            <span className="text-silver-400">RYMEC Ballari</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { name: 'V. Naga Phanendra', user: 'nagavakkalagadda' },
+              { name: 'Sumanth Godinal', user: 'sumanthgodinal9369' },
+              { name: 'Vinay Reddy', user: 'vinayreddy0224' },
+              { name: 'Sharanabasavaraj S', user: 'ssharanabasavaraj371-dev' }
+            ].map((m, idx) => (
+              <a
+                key={idx}
+                href={`https://github.com/${m.user}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 rounded-full bg-white/5 hover:bg-white/15 px-2.5 py-1 text-silver-300 hover:text-white border border-white/10 text-[11px] transition-all"
+                title={`${m.name} (@${m.user})`}
+              >
+                <span className="text-cyan-400 font-mono text-[10px]">@</span>
+                <span>{m.user}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
         {/* Bottom Rights */}
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-silver-500">
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-silver-500">
           <p>© {new Date().getFullYear()} RYMEC Grievance Redressal Mechanism. All Rights Reserved.</p>
           <p className="font-mono text-[11px]">RYMEC-iSMART Grievance Portal v2.0</p>
         </div>

@@ -24,12 +24,12 @@ IN
 
 **Submitted by:**
 
-| Student Name | University Seat Number (USN) |
-|---|---|
-| **V. NAGA PHANENDRA** | **3BR21CS045** |
-| **PROJECT ASSOCIATE 1** | **3BR21CS046** |
-| **PROJECT ASSOCIATE 2** | **3BR21CS047** |
-| **PROJECT ASSOCIATE 3** | **3BR21CS048** |
+| Student Name | University Seat Number (USN) | GitHub Profile |
+|---|---|---|
+| **V. NAGA PHANENDRA** | **3BR21CS045** | [@nagavakkalagadda](https://github.com/nagavakkalagadda) (Project Lead) |
+| **SUMANTH GODINAL** | **3BR21CS046** | [@sumanthgodinal9369](https://github.com/sumanthgodinal9369) |
+| **VINAY REDDY** | **3BR21CS047** | [@vinayreddy0224](https://github.com/vinayreddy0224) |
+| **SHARANABASAVARAJ S** | **3BR21CS048** | [@ssharanabasavaraj371-dev](https://github.com/ssharanabasavaraj371-dev) |
 
 <br/>
 
@@ -66,7 +66,13 @@ Department of Computer Science & Engineering
 
 ### **CERTIFICATE**
 
-This is to certify that the project work entitled **"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"** is a bonafide work carried out by **V. NAGA PHANENDRA (USN: 3BR21CS045)** and project associates in partial fulfillment for the award of degree of **Bachelor of Engineering in Computer Science and Engineering** of the **Visvesvaraya Technological University, Belagavi** during the academic year **2025–2026**. It is certified that all suggestions indicated during internal reviews have been incorporated in this report. The project report has been approved as it satisfies the academic requirements in respect of project work prescribed for the said degree.
+This is to certify that the project work entitled **"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"** is a bonafide work carried out by:
+* **V. NAGA PHANENDRA (USN: 3BR21CS045)**
+* **SUMANTH GODINAL (USN: 3BR21CS046)**
+* **VINAY REDDY (USN: 3BR21CS047)**
+* **SHARANABASAVARAJ S (USN: 3BR21CS048)**
+
+in partial fulfillment for the award of degree of **Bachelor of Engineering in Computer Science and Engineering** of the **Visvesvaraya Technological University, Belagavi** during the academic year **2025–2026**. It is certified that all suggestions indicated during internal reviews have been incorporated in this report. The project report has been approved as it satisfies the academic requirements in respect of project work prescribed for the said degree.
 
 <br/><br/><br/>
 
@@ -92,9 +98,15 @@ Name of the Examiners:
 
 ## CANDIDATE DECLARATION
 
-I, **V. NAGA PHANENDRA (USN: 3BR21CS045)**, student of Eighth Semester B.E., Department of Computer Science and Engineering, Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari, hereby declare that the project work entitled **"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"** has been independently carried out by me and my project team members under the guidance of **Dr. Veerendra Kumar**, Professor & HOD, Department of Computer Science & Engineering, in partial fulfillment of the requirements for the award of the Degree of **Bachelor of Engineering in Computer Science and Engineering** by Visvesvaraya Technological University, Belagavi during the academic year 2025–2026.
+We, the undersigned candidates:
+1. **V. NAGA PHANENDRA (USN: 3BR21CS045)**
+2. **SUMANTH GODINAL (USN: 3BR21CS046)**
+3. **VINAY REDDY (USN: 3BR21CS047)**
+4. **SHARANABASAVARAJ S (USN: 3BR21CS048)**
 
-I further declare that this report has not been submitted previously to this or any other university for the award of any degree, diploma, associate-ship, or other similar academic recognition.
+students of Eighth Semester B.E., Department of Computer Science and Engineering, Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari, hereby declare that the project work entitled **"RYMEC GRIEVANCE DESK: An AI-Assisted Institutional Grievance Redressal, Multi-Tier SLA Escalation, and Cryptographic Tracking Platform"** has been independently carried out by us under the guidance of **Dr. Veerendra Kumar**, Professor & HOD, Department of Computer Science & Engineering, in partial fulfillment of the requirements for the award of the Degree of **Bachelor of Engineering in Computer Science and Engineering** by Visvesvaraya Technological University, Belagavi during the academic year 2025–2026.
+
+We further declare that this report has not been submitted previously to this or any other university for the award of any degree, diploma, associate-ship, or other similar academic recognition.
 
 <br/><br/>
 
@@ -103,8 +115,14 @@ Place: Ballari
 
 <br/>
 
-**V. NAGA PHANENDRA**  
-USN: 3BR21CS045  
+| Candidate Name | USN | Signature |
+|---|---|---|
+| **V. NAGA PHANENDRA** | 3BR21CS045 | ________________________ |
+| **SUMANTH GODINAL** | 3BR21CS046 | ________________________ |
+| **VINAY REDDY** | 3BR21CS047 | ________________________ |
+| **SHARANABASAVARAJ S** | 3BR21CS048 | ________________________ |
+
+<br/>
 Department of Computer Science & Engineering  
 Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari  
 
@@ -124,11 +142,15 @@ I take immense pride and honor in expressing my heartfelt gratitude to my projec
 
 I extend my sincere thanks to the **Project Coordinators** and all teaching and non-teaching faculty members of the Department of Computer Science & Engineering for their technical counsel, timely reviews, and constructive critiques.
 
-Finally, I convey my deepest appreciation to my parents, family members, and friends for their moral backing, patience, and support during the development and documentation of this project.
+Finally, we convey our deepest appreciation to our parents, family members, and friends for their moral backing, patience, and support during the development and documentation of this project.
 
 <br/>
 
-**V. NAGA PHANENDRA (USN: 3BR21CS045)**
+**Project Associates:**
+* **V. NAGA PHANENDRA (USN: 3BR21CS045)** — Project Lead & Full-Stack Architect
+* **SUMANTH GODINAL (USN: 3BR21CS046)** — Core Contributor / Backend & DB
+* **VINAY REDDY (USN: 3BR21CS047)** — Core Contributor / UI & Animations
+* **SHARANABASAVARAJ S (USN: 3BR21CS048)** — Core Contributor / QA & Security
 
 ---
 

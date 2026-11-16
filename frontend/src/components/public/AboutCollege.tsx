@@ -142,6 +142,104 @@ export const AboutCollege: React.FC = () => {
         </div>
       </GlassCard>
 
+      {/* Project Contributors & Engineering Team */}
+      <GlassCard className="p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-cyan-400" />
+            <h2 className="text-base font-bold text-white">Project Contributors &amp; Engineering Team</h2>
+          </div>
+          <span className="text-[11px] font-semibold text-silver-300 bg-white/10 border border-white/15 px-3 py-1 rounded-full w-fit">
+            Department of CSE • B.E. Capstone Team
+          </span>
+        </div>
+
+        <p className="text-xs text-silver-300 mb-6 leading-relaxed">
+          Architected and developed by final-year Computer Science &amp; Engineering students at Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              username: 'nagavakkalagadda',
+              displayName: 'V. Naga Phanendra',
+              role: 'Project Lead & Full Stack Architect',
+              avatar: 'https://github.com/nagavakkalagadda.png',
+              github: 'https://github.com/nagavakkalagadda',
+              badge: 'Lead'
+            },
+            {
+              username: 'sumanthgodinal9369',
+              displayName: 'Sumanth Godinal',
+              role: 'Core Contributor / Backend & DB',
+              avatar: 'https://github.com/sumanthgodinal9369.png',
+              github: 'https://github.com/sumanthgodinal9369',
+              badge: 'Contributor'
+            },
+            {
+              username: 'vinayreddy0224',
+              displayName: 'Vinay Reddy',
+              role: 'Core Contributor / UI & Animations',
+              avatar: 'https://github.com/vinayreddy0224.png',
+              github: 'https://github.com/vinayreddy0224',
+              badge: 'Contributor'
+            },
+            {
+              username: 'ssharanabasavaraj371-dev',
+              displayName: 'Sharanabasavaraj S',
+              role: 'Core Contributor / QA & Security',
+              avatar: 'https://github.com/ssharanabasavaraj371-dev.png',
+              github: 'https://github.com/ssharanabasavaraj371-dev',
+              badge: 'Contributor'
+            }
+          ].map((contributor, idx) => (
+            <div 
+              key={idx} 
+              className="rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col items-center text-center hover:bg-white/10 hover:border-cyan-500/40 transition-all duration-300 group"
+            >
+              <div className="relative mb-3">
+                <img 
+                  src={contributor.avatar} 
+                  alt={contributor.username}
+                  className="h-16 w-16 rounded-full object-cover border-2 border-white/20 shadow-md group-hover:border-cyan-400 group-hover:scale-105 transition-all duration-300 bg-slate-800"
+                  onError={(e) => {
+                    // Fallback to avatar placeholder if user image fails to load
+                    (e.target as HTMLElement).style.display = 'none';
+                    (e.target as HTMLElement).nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <div className="hidden h-16 w-16 rounded-full bg-slate-800 border-2 border-white/20 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                  {contributor.username.substring(0, 2).toUpperCase()}
+                </div>
+                <span className="absolute -bottom-1 -right-1 bg-cyan-500/90 text-navy-950 font-bold text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                  {contributor.badge}
+                </span>
+              </div>
+
+              <h3 className="font-bold text-white text-sm group-hover:text-cyan-300 transition-colors">
+                {contributor.displayName}
+              </h3>
+              <p className="text-[11px] text-cyan-400 font-mono mb-1">
+                @{contributor.username}
+              </p>
+              <p className="text-[10px] text-silver-400 mb-3 flex-1">
+                {contributor.role}
+              </p>
+
+              <a 
+                href={contributor.github} 
+                target="_blank" 
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-cyan-600/40 px-3 py-1 rounded-full transition-all border border-white/10 w-full justify-center"
+              >
+                <span>View GitHub</span>
+                <span className="text-cyan-400">→</span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </GlassCard>
+
     </div>
   );
 };
