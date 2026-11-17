@@ -22,7 +22,8 @@ async function register(req, res) {
       hostel_block,
       designation,
       branch,
-      section
+      section,
+      semester
     } = req.body;
 
     if (!full_name || !email || !password) {
@@ -40,14 +41,14 @@ async function register(req, res) {
     const password_hash = await bcrypt.hash(password, salt);
     const verification_code = String(Math.floor(100000 + Math.random() * 900000));
 
-    // Ensure branch and section columns exist in DB (handled dynamically if table is older)
+    // Ensure branch, section, and semester columns exist in DB
     const insertSql = `
       INSERT INTO users (
         full_name, email, password_hash, role, usn_roll, department,
-        academic_year, hostel_block, designation, branch, section,
+        academic_year, hostel_block, designation, branch, section, semester,
         is_verified, verification_code
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
-      RETURNING id, full_name, email, role, department, usn_roll, branch, section, academic_year, is_verified;
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+      RETURNING id, full_name, email, role, department, usn_roll, branch, section, semester, academic_year, is_verified;
     `;
 
     let result;
@@ -64,15 +65,17 @@ async function register(req, res) {
         designation || null,
         branch || department || null,
         section || null,
+        semester || null,
         false,
         verification_code
       ]);
     } catch (dbErr) {
-      // In case columns branch or section aren't added yet, auto-add and retry
-      if (dbErr.message && (dbErr.message.includes('branch') || dbErr.message.includes('section'))) {
+      // In case columns aren't added yet, auto-add and retry
+      if (dbErr.message && (dbErr.message.includes('branch') || dbErr.message.includes('section') || dbErr.message.includes('semester'))) {
         try {
           await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS branch VARCHAR(100);`);
           await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS section VARCHAR(100);`);
+          await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS semester VARCHAR(50);`);
           result = await db.query(insertSql, [
             full_name.trim(),
             cleanEmail,
@@ -85,6 +88,7 @@ async function register(req, res) {
             designation || null,
             branch || department || null,
             section || null,
+            semester || null,
             false,
             verification_code
           ]);
@@ -149,7 +153,7 @@ async function verifyOtp(req, res) {
     }
     const cleanEmail = email.trim().toLowerCase();
     const result = await db.query(
-      'SELECT id, verification_code, is_verified, role, full_name, department, usn_roll, branch, section, academic_year FROM users WHERE LOWER(email) = $1',
+      'SELECT id, verification_code, is_verified, role, full_name, department, usn_roll, branch, section, semester, academic_year FROM users WHERE LOWER(email) = $1',
       [cleanEmail]
     );
 
@@ -300,6 +304,7 @@ async function login(req, res) {
       designation: user.designation,
       branch: user.branch || user.department,
       section: user.section,
+      semester: user.semester,
       academic_year: user.academic_year,
       is_verified: user.is_verified,
       created_at: user.created_at
@@ -322,7 +327,7 @@ async function login(req, res) {
 async function getMe(req, res) {
   try {
     const result = await db.query(
-      'SELECT id, full_name, email, role, department, usn_roll, hostel_block, designation, branch, section, academic_year, is_verified, created_at FROM users WHERE id = $1',
+      'SELECT id, full_name, email, role, department, usn_roll, hostel_block, designation, branch, section, semester, academic_year, is_verified, created_at FROM users WHERE id = $1',
       [req.user.id]
     );
 
@@ -347,7 +352,7 @@ async function getMe(req, res) {
 async function updateProfile(req, res) {
   try {
     const userId = req.user.id;
-    const { full_name, branch, section, hostel_block, designation, academic_year, department } = req.body;
+    const { full_name, branch, section, semester, hostel_block, designation, academic_year, department } = req.body;
 
     const fields = [];
     const values = [];
@@ -369,6 +374,10 @@ async function updateProfile(req, res) {
     if (section !== undefined) {
       fields.push(`section = $${idx++}`);
       values.push(section);
+    }
+    if (semester !== undefined) {
+      fields.push(`semester = $${idx++}`);
+      values.push(semester);
     }
     if (academic_year !== undefined) {
       fields.push(`academic_year = $${idx++}`);
@@ -393,7 +402,7 @@ async function updateProfile(req, res) {
 
     fields.push(`updated_at = CURRENT_TIMESTAMP`);
     const setClause = fields.join(', ');
-    const sql = `UPDATE users SET ${setClause} WHERE id = $${idx} RETURNING id, full_name, email, role, department, usn_roll, hostel_block, designation, branch, section, academic_year, is_verified, created_at`;
+    const sql = `UPDATE users SET ${setClause} WHERE id = $${idx} RETURNING id, full_name, email, role, department, usn_roll, hostel_block, designation, branch, section, semester, academic_year, is_verified, created_at`;
     values.push(userId);
 
     const result = await db.query(sql, values);

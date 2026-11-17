@@ -114,6 +114,7 @@ function fallbackQuery(text, params) {
       designation: null,
       branch: null,
       section: null,
+      semester: null,
       is_verified: false,
       verification_code: null,
       created_at: new Date(),
@@ -164,6 +165,7 @@ function fallbackQuery(text, params) {
           if (lower.includes(`full_name = ${paramStr}`)) user.full_name = val;
           if (lower.includes(`branch = ${paramStr}`)) user.branch = val;
           if (lower.includes(`section = ${paramStr}`)) user.section = val;
+          if (lower.includes(`semester = ${paramStr}`)) user.semester = val;
           if (lower.includes(`academic_year = ${paramStr}`)) user.academic_year = val;
           if (lower.includes(`hostel_block = ${paramStr}`)) user.hostel_block = val;
           if (lower.includes(`department = ${paramStr}`)) user.department = val;

@@ -54,7 +54,7 @@ export const LiquidBottomNav: React.FC<LiquidBottomNavProps> = ({
   };
 
   return (
-    <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 safe-bottom">
+    <div className="fixed bottom-5 left-1/2 z-30 -translate-x-1/2 safe-bottom">
       <motion.nav
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

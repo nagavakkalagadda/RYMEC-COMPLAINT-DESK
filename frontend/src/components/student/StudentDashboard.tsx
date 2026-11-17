@@ -67,6 +67,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate }
                   <span className="rounded-full bg-white/10 px-2.5 py-0.5 font-bold text-cyan-300">Sec {user.section}</span>
                 </>
               )}
+              {user?.semester && (
+                <>
+                  <span className="text-silver-500">•</span>
+                  <span className="rounded-full bg-cyan-400/10 border border-cyan-400/20 px-2 py-0.5 font-bold text-cyan-300">{user.semester}</span>
+                </>
+              )}
               {user?.academic_year && (
                 <>
                   <span className="text-silver-500">•</span>

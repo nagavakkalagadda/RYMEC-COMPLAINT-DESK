@@ -52,6 +52,7 @@ export const UserProfileView: React.FC = () => {
     full_name: '',
     branch: '',
     section: '',
+    semester: '',
     academic_year: '',
     hostel_block: '',
     department: '',
@@ -73,7 +74,8 @@ export const UserProfileView: React.FC = () => {
         full_name: user.full_name || '',
         branch: user.branch || user.department || 'Computer Science & Engineering',
         section: user.section || 'A',
-        academic_year: user.academic_year || '3rd Year',
+        semester: user.semester || '1st Sem',
+        academic_year: user.academic_year || '1st Year',
         hostel_block: user.hostel_block || '',
         department: user.department || 'Computer Science & Engineering',
         designation: user.designation || 'Assistant Professor'
@@ -293,6 +295,13 @@ export const UserProfileView: React.FC = () => {
                 </div>
               )}
 
+              {user.semester && (
+                <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs">
+                  <span className="text-[10px] uppercase text-silver-400 block font-semibold">Semester</span>
+                  <span className="font-semibold text-cyan-300">{user.semester}</span>
+                </div>
+              )}
+
               {user.academic_year && (
                 <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs">
                   <span className="text-[10px] uppercase text-silver-400 block font-semibold">Year</span>
@@ -455,6 +464,29 @@ export const UserProfileView: React.FC = () => {
                         <option value="A">Section A</option>
                         <option value="B">Section B</option>
                         <option value="C">Section C</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-silver-300 mb-1.5">Current Semester</label>
+                      <select
+                        disabled={!isEditing}
+                        value={profileForm.semester}
+                        onChange={(e) => setProfileForm({ ...profileForm, semester: e.target.value })}
+                        className={`w-full rounded-xl border py-2.5 px-3 text-sm transition-all ${
+                          isEditing
+                            ? 'border-cyan-400/40 bg-navy-800 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400'
+                            : 'border-white/10 bg-white/2 text-silver-400 cursor-not-allowed'
+                        }`}
+                      >
+                        <option value="1st Sem">1st Semester (Sem 1)</option>
+                        <option value="2nd Sem">2nd Semester (Sem 2)</option>
+                        <option value="3rd Sem">3rd Semester (Sem 3)</option>
+                        <option value="4th Sem">4th Semester (Sem 4)</option>
+                        <option value="5th Sem">5th Semester (Sem 5)</option>
+                        <option value="6th Sem">6th Semester (Sem 6)</option>
+                        <option value="7th Sem">7th Semester (Sem 7)</option>
+                        <option value="8th Sem">8th Semester (Sem 8)</option>
                       </select>
                     </div>
                   </div>

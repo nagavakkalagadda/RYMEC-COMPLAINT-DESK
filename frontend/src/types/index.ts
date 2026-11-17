@@ -12,6 +12,7 @@ export interface User {
   designation?: string;
   branch?: string;
   section?: string;
+  semester?: string;
   is_verified?: boolean;
   created_at?: string;
 }

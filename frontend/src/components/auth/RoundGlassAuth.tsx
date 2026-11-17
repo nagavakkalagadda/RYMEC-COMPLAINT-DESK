@@ -56,7 +56,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
     department: 'Computer Science & Engineering',
     branch: 'Computer Science & Engineering',
     section: 'A',
-    academic_year: '3rd Year',
+    semester: '1st Sem',
+    academic_year: '1st Year',
     hostel_block: '',
     designation: 'Assistant Professor'
   });
@@ -604,8 +605,27 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
                       </div>
                     </div>
 
-                    {/* Academic Year & USN */}
+                    {/* Current Semester & Academic Year */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-silver-300 mb-1">Current Semester</label>
+                        <select
+                          name="semester"
+                          value={formData.semester}
+                          onChange={handleChange}
+                          className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-blue-400"
+                        >
+                          <option value="1st Sem">1st Semester (Sem 1)</option>
+                          <option value="2nd Sem">2nd Semester (Sem 2)</option>
+                          <option value="3rd Sem">3rd Semester (Sem 3)</option>
+                          <option value="4th Sem">4th Semester (Sem 4)</option>
+                          <option value="5th Sem">5th Semester (Sem 5)</option>
+                          <option value="6th Sem">6th Semester (Sem 6)</option>
+                          <option value="7th Sem">7th Semester (Sem 7)</option>
+                          <option value="8th Sem">8th Semester (Sem 8)</option>
+                        </select>
+                      </div>
+
                       <div>
                         <label className="block text-[11px] font-semibold text-silver-300 mb-1">Academic Year</label>
                         <select
@@ -620,7 +640,10 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
                           <option value="4th Year">4th Year (Final Year)</option>
                         </select>
                       </div>
+                    </div>
 
+                    {/* USN / Roll Number & Accommodation */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <div>
                         <label className="block text-[11px] font-semibold text-silver-300 mb-1">USN / Roll Number</label>
                         <input
@@ -633,24 +656,23 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({ isOpen, onClose 
                           className="w-full rounded-xl border border-white/10 bg-white/5 py-1.5 px-2.5 text-xs text-white font-mono uppercase placeholder-silver-500 focus:border-blue-400 focus:outline-none"
                         />
                       </div>
-                    </div>
 
-                    {/* Accommodation */}
-                    <div>
-                      <label className="block text-[11px] font-semibold text-silver-300 mb-1">
-                        Accommodation
-                      </label>
-                      <select
-                        name="hostel_block"
-                        value={formData.hostel_block}
-                        onChange={handleChange}
-                        className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-blue-400"
-                      >
-                        <option value="">Select Accommodation</option>
-                        <option value="Day Scholar">Day Scholar (Local / Commuter)</option>
-                        <option value="Hostel">Hostel (Campus Resident)</option>
-                        <option value="PG">PG (Paying Guest / Private Room)</option>
-                      </select>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-silver-300 mb-1">
+                          Accommodation
+                        </label>
+                        <select
+                          name="hostel_block"
+                          value={formData.hostel_block}
+                          onChange={handleChange}
+                          className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-blue-400"
+                        >
+                          <option value="">Select Accommodation</option>
+                          <option value="Day Scholar">Day Scholar (Local / Commuter)</option>
+                          <option value="Hostel">Hostel (Campus Resident)</option>
+                          <option value="PG">PG (Paying Guest / Private Room)</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 )}
