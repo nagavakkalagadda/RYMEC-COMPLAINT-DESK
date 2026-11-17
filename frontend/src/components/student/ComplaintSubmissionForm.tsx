@@ -12,13 +12,9 @@ import {
   ExternalLink,
   Film,
   Image as ImageIcon,
-  UploadCloud,
   Trash2,
   AlertCircle,
-  CheckCircle2,
-  FileText,
-  X,
-  Info
+  X
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { ComplaintCategory, Department } from '../../types';
@@ -42,9 +38,8 @@ interface VideoItem {
   size: number;
 }
 
-const MAX_PHOTO_SIZE = 200 * 1024; // 200 KB in bytes (204,800 bytes)
-const MAX_VIDEO_SIZE = 2 * 1024 * 1024; // 2 MB in bytes (2,097,152 bytes)
-const MIN_PHOTOS_REQUIRED = 5;
+const MAX_PHOTO_SIZE = 200 * 1024; // 200 KB per photo
+const MAX_VIDEO_SIZE = 2 * 1024 * 1024; // 2 MB per video
 
 const formatFileSize = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -63,8 +58,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
   const [departments, setDepartments] = useState<Department[]>([]);
   const [isAnonymous, setIsAnonymous] = useState(false);
 
-  // Evidence state
-  const [evidenceType, setEvidenceType] = useState<'photos' | 'video'>('photos');
+  // Evidence attachments state (both photos and video supported together)
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const [videoFile, setVideoFile] = useState<VideoItem | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -130,7 +124,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
 
     if (rejected.length > 0) {
       setUploadError(
-        `Max size limit is 200 KB per photo. Excluded ${rejected.length} file(s): ${rejected.join(', ')}. Please compress them to under 200 KB.`
+        `Max size is 200 KB per photo. Excluded: ${rejected.join(', ')}. Please compress before uploading.`
       );
     }
 
@@ -157,7 +151,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     const file = e.target.files[0];
     if (file.size > MAX_VIDEO_SIZE) {
       setUploadError(
-        `Video "${file.name}" is ${formatFileSize(file.size)}. Maximum allowed video size is 2 MB. Please select or compress a smaller video clip.`
+        `Video "${file.name}" (${formatFileSize(file.size)}) exceeds the 2 MB limit. Please compress or choose a shorter video.`
       );
       e.target.value = '';
       return;
@@ -190,31 +184,18 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
       return;
     }
 
-    // Strict validation for evidence
-    if (evidenceType === 'photos') {
-      if (photos.length < MIN_PHOTOS_REQUIRED) {
-        setError(
-          `Evidence Requirement: Please upload at least ${MIN_PHOTOS_REQUIRED} photos (currently ${photos.length}/${MIN_PHOTOS_REQUIRED} uploaded). You need ${MIN_PHOTOS_REQUIRED - photos.length} more photo(s), or switch to video evidence.`
-        );
+    // Validate photo sizes if any
+    for (const p of photos) {
+      if (p.size > MAX_PHOTO_SIZE) {
+        setError(`Photo "${p.file.name}" exceeds the 200 KB limit (${formatFileSize(p.size)}). Please remove or replace it.`);
         return;
       }
-      for (const p of photos) {
-        if (p.size > MAX_PHOTO_SIZE) {
-          setError(`Photo "${p.file.name}" exceeds the 200 KB limit (${formatFileSize(p.size)}). Please remove or replace it.`);
-          return;
-        }
-      }
-    } else {
-      if (!videoFile) {
-        setError('Evidence Requirement: Please upload a supporting video clip (maximum 2 MB), or switch to photo evidence.');
-        return;
-      }
-      if (videoFile.size > MAX_VIDEO_SIZE) {
-        setError(
-          `Video size (${formatFileSize(videoFile.size)}) exceeds the 2 MB limit. Please compress or choose a shorter video.`
-        );
-        return;
-      }
+    }
+
+    // Validate video size if any
+    if (videoFile && videoFile.size > MAX_VIDEO_SIZE) {
+      setError(`Video exceeds 2 MB limit (${formatFileSize(videoFile.size)}). Please compress or choose a shorter video.`);
+      return;
     }
 
     setSubmitting(true);
@@ -227,16 +208,20 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     if (departmentId) formData.append('department_id', departmentId);
     formData.append('is_anonymous', String(isAnonymous));
 
-    // Append attachments
-    if (evidenceType === 'photos') {
-      photos.forEach((p) => {
-        formData.append('attachments', p.file);
-      });
-      if (photos.length > 0) {
-        formData.append('attachment', photos[0].file);
-      }
-    } else if (evidenceType === 'video' && videoFile) {
+    // Append all photos
+    photos.forEach((p) => {
+      formData.append('attachments', p.file);
+    });
+
+    // Append video if present
+    if (videoFile) {
       formData.append('attachments', videoFile.file);
+    }
+
+    // Fallback single attachment for backward compatibility
+    if (photos.length > 0) {
+      formData.append('attachment', photos[0].file);
+    } else if (videoFile) {
       formData.append('attachment', videoFile.file);
     }
 
@@ -288,7 +273,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
 
             <h2 className="text-2xl font-bold text-white">Grievance Registered Successfully</h2>
             <p className="mt-1 text-xs text-silver-400">
-              Your complaint has been recorded with attached evidence and assigned to the relevant department for official action.
+              Your complaint has been recorded and assigned to the relevant department for official action.
             </p>
 
             {/* Tracking ID Badge */}
@@ -333,7 +318,12 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 <div className="mt-2 text-silver-400 space-y-1">
                   <p>Priority: <b className="text-white uppercase">{submittedData.complaint.priority}</b></p>
                   <p>Category: <b className="text-white uppercase">{submittedData.complaint.category}</b></p>
-                  <p>Evidence: <b className="text-white">{evidenceType === 'photos' ? `${photos.length} Photos` : '1 Video Clip'}</b></p>
+                  <p>Evidence: <b className="text-white">
+                    {[
+                      photos.length > 0 ? `${photos.length} Photo${photos.length > 1 ? 's' : ''}` : null,
+                      videoFile ? '1 Video Clip' : null
+                    ].filter(Boolean).join(' + ') || 'None'}
+                  </b></p>
                   <p>Anonymous: <b className="text-white">{submittedData.complaint.is_anonymous ? 'Yes' : 'No'}</b></p>
                 </div>
               </div>
@@ -364,7 +354,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                   Register a Grievance
                 </h1>
                 <p className="mt-0.5 text-xs text-silver-400">
-                  Submissions require photographic or video evidence with formal institutional timestamping.
+                  Submissions are recorded with formal institutional timestamping and SLA monitoring.
                 </p>
               </div>
               <div className="hidden sm:flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-semibold text-silver-300">
@@ -469,238 +459,134 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 />
               </div>
 
-              {/* Supporting Evidence Section (Min 5 photos <= 200KB OR video <= 2MB) */}
-              <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
-                  <div>
-                    <label className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <span>Supporting Evidence</span>
-                      <span className="text-rose-400">*</span>
-                    </label>
-                    <p className="text-[11px] text-silver-400 mt-0.5">
-                      Upload minimum <b>5 photos</b> (max 200 KB each) <i>or</i> <b>1 video clip</b> (max 2 MB).
-                    </p>
-                  </div>
+              {/* Supporting Evidence Section: Photos (≤ 200 KB) and/or Video (≤ 2 MB) */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-silver-200">
+                    Supporting Evidence (Optional)
+                  </label>
+                  <span className="text-[10px] text-silver-400">
+                    Photos ≤ 200 KB each • Video ≤ 2 MB
+                  </span>
+                </div>
 
-                  {/* Mode Toggle Switcher */}
-                  <div className="flex items-center rounded-xl bg-white/5 p-1 border border-white/10 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEvidenceType('photos');
-                        setUploadError(null);
-                      }}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                        evidenceType === 'photos'
-                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-sm'
-                          : 'text-silver-400 hover:text-white'
-                      }`}
-                    >
-                      <ImageIcon className="h-3.5 w-3.5" />
-                      <span>Photos (Min 5)</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEvidenceType('video');
-                        setUploadError(null);
-                      }}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                        evidenceType === 'video'
-                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-sm'
-                          : 'text-silver-400 hover:text-white'
-                      }`}
-                    >
-                      <Film className="h-3.5 w-3.5" />
-                      <span>Video (Max 2 MB)</span>
-                    </button>
-                  </div>
+                {/* Upload Action Buttons */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {/* Photo Upload Button */}
+                  <label className="pebble-pill flex cursor-pointer items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white transition-all">
+                    <ImageIcon className="h-4 w-4 text-cyan-400" />
+                    <span>{photos.length > 0 ? `Add Photos (${photos.length} added)` : 'Add Photos'}</span>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handlePhotoSelect}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {/* Video Upload Button */}
+                  {!videoFile ? (
+                    <label className="pebble-pill flex cursor-pointer items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 text-xs font-semibold text-silver-300 hover:bg-white/10 hover:text-white transition-all">
+                      <Film className="h-4 w-4 text-purple-400" />
+                      <span>Add Video</span>
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm,video/quicktime,video/3gpp"
+                        onChange={handleVideoSelect}
+                        className="hidden"
+                      />
+                    </label>
+                  ) : (
+                    <div className="flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-200">
+                      <Film className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                      <span className="truncate max-w-[130px] font-medium" title={videoFile.file.name}>
+                        {videoFile.file.name}
+                      </span>
+                      <span className="text-[10px] text-purple-300 font-mono">
+                        ({formatFileSize(videoFile.size)})
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleRemoveVideo}
+                        className="text-rose-400 hover:text-rose-300 ml-1 p-0.5 cursor-pointer"
+                        title="Remove Video"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {uploadError && (
-                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200 flex items-start gap-2">
+                  <div className="mt-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-200 flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
                     <span>{uploadError}</span>
                   </div>
                 )}
 
-                {/* Evidence Type: PHOTOS */}
-                {evidenceType === 'photos' ? (
-                  <div className="space-y-3">
-                    {/* Requirement Status Bar */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/5 p-2.5 border border-white/5 text-xs">
-                      <div className="flex items-center gap-2">
-                        {photos.length >= MIN_PHOTOS_REQUIRED ? (
-                          <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                            <CheckCircle2 className="h-4 w-4" />
-                            <span>Requirement Met ({photos.length} photos ready)</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1.5 text-amber-300 font-medium">
-                            <AlertCircle className="h-4 w-4 text-amber-400" />
-                            <span>
-                              {photos.length} / {MIN_PHOTOS_REQUIRED} Photos Uploaded 
-                              <span className="text-silver-400 font-normal"> (Need {MIN_PHOTOS_REQUIRED - photos.length} more)</span>
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-[11px] text-silver-400 font-mono">
-                        Limit: ≤ 200 KB per photo
-                      </span>
+                {/* Photo Thumbnails */}
+                {photos.length > 0 && (
+                  <div className="mt-3 space-y-1.5">
+                    <div className="flex items-center justify-between text-xs text-silver-400 px-0.5">
+                      <span>Attached Photos ({photos.length})</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          photos.forEach(p => URL.revokeObjectURL(p.preview));
+                          setPhotos([]);
+                        }}
+                        className="text-[11px] text-rose-400 hover:underline cursor-pointer"
+                      >
+                        Remove All Photos
+                      </button>
                     </div>
 
-                    {/* Upload Drop Zone / Button */}
-                    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/15 bg-white/5 hover:bg-white/[0.07] p-5 text-center transition-all">
-                      <UploadCloud className="h-8 w-8 text-cyan-400 mb-2 opacity-80" />
-                      <p className="text-xs font-semibold text-white">
-                        {photos.length === 0 ? 'Click to select 5 or more photos' : 'Add more photos'}
-                      </p>
-                      <p className="text-[11px] text-silver-400 mt-0.5">
-                        JPEG, PNG, or WebP • Strictly under 200 KB each
-                      </p>
-                      <label className="mt-3 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/30 cursor-pointer transition-all">
-                        <ImageIcon className="h-3.5 w-3.5" />
-                        <span>Select Photos</span>
-                        <input
-                          type="file"
-                          multiple
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={handlePhotoSelect}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-
-                    {/* Photo Thumbnails Grid */}
-                    {photos.length > 0 && (
-                      <div className="space-y-2 pt-1">
-                        <div className="flex items-center justify-between text-xs text-silver-400 px-1">
-                          <span>Attached Photos ({photos.length})</span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              photos.forEach(p => URL.revokeObjectURL(p.preview));
-                              setPhotos([]);
-                            }}
-                            className="text-[11px] text-rose-400 hover:underline"
-                          >
-                            Remove All
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
-                          {photos.map((item, index) => (
-                            <div
-                              key={item.id}
-                              className="group relative rounded-xl border border-white/10 bg-black/40 overflow-hidden flex flex-col"
+                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                      {photos.map((item, index) => (
+                        <div
+                          key={item.id}
+                          className="group relative rounded-xl border border-white/10 bg-black/40 overflow-hidden flex flex-col"
+                        >
+                          <div className="aspect-square w-full overflow-hidden bg-black/60 relative">
+                            <img
+                              src={item.preview}
+                              alt={`Evidence ${index + 1}`}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemovePhoto(item.id)}
+                              className="absolute top-1 right-1 rounded-md bg-rose-500/80 p-0.5 text-white hover:bg-rose-600 transition-colors shadow-sm cursor-pointer"
+                              title="Remove photo"
                             >
-                              <div className="aspect-square w-full overflow-hidden bg-black/60 relative">
-                                <img
-                                  src={item.preview}
-                                  alt={`Evidence ${index + 1}`}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                                />
-                                <span className="absolute top-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-mono text-white">
-                                  #{index + 1}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemovePhoto(item.id)}
-                                  className="absolute top-1 right-1 rounded-md bg-rose-500/80 p-1 text-white hover:bg-rose-600 transition-colors shadow-sm"
-                                  title="Remove photo"
-                                >
-                                  <X className="h-3 w-3" />
-                                </button>
-                              </div>
-                              <div className="p-1.5 flex items-center justify-between text-[10px] text-silver-300 bg-white/5">
-                                <span className="truncate max-w-[70px]" title={item.file.name}>
-                                  {item.file.name}
-                                </span>
-                                <span className="font-mono text-emerald-400">
-                                  {formatFileSize(item.size)}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                          <div className="p-1 flex items-center justify-between text-[9px] text-silver-300 bg-white/5">
+                            <span className="truncate max-w-[55px]" title={item.file.name}>
+                              {item.file.name}
+                            </span>
+                            <span className="font-mono text-emerald-400">
+                              {formatFileSize(item.size)}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  /* Evidence Type: VIDEO */
-                  <div className="space-y-3">
-                    {/* Requirement Status Bar */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/5 p-2.5 border border-white/5 text-xs">
-                      <div className="flex items-center gap-2">
-                        {videoFile ? (
-                          <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                            <CheckCircle2 className="h-4 w-4" />
-                            <span>Video Attached ({formatFileSize(videoFile.size)})</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1.5 text-amber-300 font-medium">
-                            <AlertCircle className="h-4 w-4 text-amber-400" />
-                            <span>1 Video Clip Required (Max 2 MB)</span>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-[11px] text-silver-400 font-mono">
-                        Limit: ≤ 2.0 MB
-                      </span>
+                      ))}
                     </div>
+                  </div>
+                )}
 
-                    {!videoFile ? (
-                      /* Upload Video Zone */
-                      <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/15 bg-white/5 hover:bg-white/[0.07] p-6 text-center transition-all">
-                        <Film className="h-8 w-8 text-cyan-400 mb-2 opacity-80" />
-                        <p className="text-xs font-semibold text-white">
-                          Select 1 Video Clip
-                        </p>
-                        <p className="text-[11px] text-silver-400 mt-0.5">
-                          MP4, WebM, MOV, or 3GP • Maximum file size 2 MB
-                        </p>
-                        <label className="mt-3 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/30 cursor-pointer transition-all">
-                          <Film className="h-3.5 w-3.5" />
-                          <span>Select Video Clip</span>
-                          <input
-                            type="file"
-                            accept="video/mp4,video/webm,video/quicktime,video/3gpp"
-                            onChange={handleVideoSelect}
-                            className="hidden"
-                          />
-                        </label>
-                      </div>
-                    ) : (
-                      /* Video Preview */
-                      <div className="rounded-2xl border border-white/10 bg-black/40 p-3 space-y-2">
-                        <div className="aspect-video w-full rounded-xl overflow-hidden bg-black/80 flex items-center justify-center">
-                          <video
-                            src={videoFile.preview}
-                            controls
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                        <div className="flex items-center justify-between text-xs px-1">
-                          <div className="flex items-center gap-2">
-                            <Film className="h-4 w-4 text-cyan-400" />
-                            <span className="text-white font-medium truncate max-w-[200px]" title={videoFile.file.name}>
-                              {videoFile.file.name}
-                            </span>
-                            <span className="text-[11px] font-mono text-emerald-400">
-                              ({formatFileSize(videoFile.size)})
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={handleRemoveVideo}
-                            className="inline-flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 text-xs text-rose-300 hover:bg-rose-500/20 transition-colors"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            <span>Remove</span>
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                {/* Video Preview */}
+                {videoFile && (
+                  <div className="mt-3 rounded-xl border border-white/10 bg-black/40 p-2.5 max-w-sm">
+                    <div className="aspect-video w-full rounded-lg overflow-hidden bg-black/80 flex items-center justify-center">
+                      <video
+                        src={videoFile.preview}
+                        controls
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
                   </div>
                 )}
               </div>

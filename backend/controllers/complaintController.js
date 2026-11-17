@@ -33,31 +33,28 @@ async function submitComplaint(req, res) {
       return res.status(400).json({ error: 'Title and detailed description are required.' });
     }
 
-    // Evidence Validation (Photos: min 5 <= 200KB each, OR Video: 1 <= 2MB)
+    // Evidence Validation (Photos: max 200KB each, Video: max 2MB)
     const filesToProcess = req.files && req.files.length > 0 ? req.files : (req.file ? [req.file] : []);
     if (filesToProcess.length > 0) {
-      const isVideo = filesToProcess.some(f => f.mimetype && f.mimetype.startsWith('video/'));
-      if (isVideo) {
-        if (filesToProcess.length > 1) {
-          return res.status(400).json({ error: 'Please upload only 1 video clip for evidence.' });
-        }
-        if (filesToProcess[0].size > 2 * 1024 * 1024) {
-          return res.status(400).json({ 
-            error: `Video file "${filesToProcess[0].originalname}" (${(filesToProcess[0].size / (1024 * 1024)).toFixed(2)} MB) exceeds the maximum allowed limit of 2 MB.` 
-          });
-        }
-      } else {
-        for (const f of filesToProcess) {
+      let videoCount = 0;
+      for (const f of filesToProcess) {
+        const isVideo = f.mimetype && f.mimetype.startsWith('video/');
+        if (isVideo) {
+          videoCount++;
+          if (videoCount > 1) {
+            return res.status(400).json({ error: 'Please upload at most 1 video clip for evidence.' });
+          }
+          if (f.size > 2 * 1024 * 1024) {
+            return res.status(400).json({ 
+              error: `Video file "${f.originalname}" (${(f.size / (1024 * 1024)).toFixed(2)} MB) exceeds the maximum allowed limit of 2 MB.` 
+            });
+          }
+        } else {
           if (f.size > 200 * 1024) {
             return res.status(400).json({ 
               error: `Photo "${f.originalname}" (${(f.size / 1024).toFixed(1)} KB) exceeds the maximum allowed size of 200 KB per photo.` 
             });
           }
-        }
-        if (filesToProcess.length < 5) {
-          return res.status(400).json({ 
-            error: `Evidence requires a minimum of 5 photos. Only ${filesToProcess.length} provided.` 
-          });
         }
       }
     }
