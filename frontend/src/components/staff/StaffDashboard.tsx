@@ -17,84 +17,84 @@ import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
 const statusFilterOptions: GlassSelectOption[] = [
   { 
     value: '', 
-    label: 'All Statuses (Full Registry)', 
+    label: 'All Statuses', 
     icon: '📁', 
-    description: 'View all active & closed grievances across lifecycle' 
+    description: 'All active & closed grievances' 
   },
   { 
     value: 'pending', 
-    label: 'Pending Verification', 
+    label: 'Pending Review', 
     icon: '⏳', 
-    description: 'Fresh grievances awaiting faculty triage & inspection' 
+    description: 'Awaiting faculty inspection' 
   },
   { 
     value: 'review', 
-    label: 'In Review / Investigation', 
+    label: 'In Review', 
     icon: '🔍', 
-    description: 'Active committee inquiry & departmental action' 
+    description: 'Under committee inquiry' 
   },
   { 
     value: 'reopened', 
-    label: 'Reopened by Student', 
+    label: 'Reopened', 
     icon: '🔄', 
-    description: 'Student requested supplementary redressal' 
+    description: 'Student requested re-inquiry' 
   },
   { 
     value: 'resolved', 
-    label: 'Resolved & Closed', 
+    label: 'Resolved', 
     icon: '✅', 
-    description: 'Action completed & official redressal recorded' 
+    description: 'Redressal completed & filed' 
   },
   { 
     value: 'rejected', 
-    label: 'Rejected / Dismissed', 
+    label: 'Rejected', 
     icon: '❌', 
-    description: 'Closed with written justification by authority' 
+    description: 'Dismissed with justification' 
   },
   { 
     value: 'overdue', 
-    label: 'Overdue (Breached SLA)', 
+    label: 'SLA Overdue', 
     icon: '⚠️', 
-    description: 'Grievances exceeding target SLA deadline' 
+    description: 'Exceeded resolution deadline' 
   },
   { 
     value: 'escalated', 
-    label: 'Escalated to Executive', 
+    label: 'Escalated to Head', 
     icon: '🏛️', 
-    description: 'Critical cases routed to HOD, Proctor, or Principal' 
+    description: 'Routed to HOD or Principal' 
   },
 ];
 
 const priorityFilterOptions: GlassSelectOption[] = [
   { 
     value: '', 
-    label: 'All Priorities (Full Queue)', 
+    label: 'All Priorities', 
     icon: '⚡', 
-    description: 'Show grievances across all severity levels' 
+    description: 'All urgency & severity levels' 
   },
   { 
     value: 'urgent', 
-    label: 'Urgent (Emergency — 24h SLA)', 
+    label: 'Urgent (24h SLA)', 
     icon: '🚨', 
-    description: 'Safety, harassment, hazard, health (24-Hour limit)' 
+    description: 'Immediate emergency action' 
   },
   { 
     value: 'high', 
-    label: 'High Priority (48h SLA)', 
+    label: 'High (48h SLA)', 
     icon: '🔥', 
-    description: 'Exams, hostel facilities, key equipment (48-Hour limit)' 
+    description: 'Essential exams & facilities' 
   },
   { 
     value: 'normal', 
-    label: 'Normal / Standard (7-Day SLA)', 
+    label: 'Normal (7-Day SLA)', 
     icon: '🟢', 
-    description: 'Routine maintenance, admin & general inquiries' 
+    description: 'Routine general inquiries' 
   },
   { 
     value: 'overdue', 
-    label: 'Breached SLA Deadlines', 
+    label: 'SLA Overdue', 
     icon: '⏰', 
-    description: 'Unresolved grievances exceeding allotted SLA' 
+    description: 'Breached deadline target' 
   },
 ];
 
@@ -182,7 +182,7 @@ export const StaffDashboard: React.FC = () => {
       <TrendAlertBanner alerts={trends} />
 
       {/* Filter and Search Bar */}
-      <GlassCard className="p-4 sm:p-6">
+      <GlassCard className="p-4 sm:p-6 relative z-30">
         <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-center">
           <div className="relative sm:col-span-2">
             <Search className="absolute left-3.5 top-3 h-4 w-4 text-silver-500" />
@@ -217,7 +217,7 @@ export const StaffDashboard: React.FC = () => {
       </GlassCard>
 
       {/* Complaints Queue Table */}
-      <GlassCard className="p-6">
+      <GlassCard className="p-6 relative z-10">
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
           <div className="flex items-center gap-2">
             <Inbox className="h-5 w-5 text-silver-400" />
