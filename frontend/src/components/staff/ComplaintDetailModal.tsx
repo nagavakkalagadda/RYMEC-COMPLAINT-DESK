@@ -4,7 +4,10 @@ import {
   X, 
   Clock, 
   User, 
-  CheckCircle
+  CheckCircle,
+  Film,
+  Image as ImageIcon,
+  Paperclip
 } from 'lucide-react';
 import { Complaint } from '../../types';
 import { api } from '../../services/api';
@@ -121,6 +124,43 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
               {complaint.description}
             </div>
           </div>
+
+          {/* Supporting Evidence Attachments */}
+          {complaint.attachments && complaint.attachments.length > 0 && (
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-silver-400 block mb-1">
+                Supporting Evidence ({complaint.attachments.length} file{complaint.attachments.length > 1 ? 's' : ''})
+              </label>
+              <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar p-1">
+                {complaint.attachments.map((att: any) => {
+                  const isVideo = att.mime_type?.startsWith('video/') || att.file_name?.match(/\.(mp4|webm|mov|3gp)$/i);
+                  return (
+                    <a
+                      key={att.id || att.file_url}
+                      href={att.file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-silver-300 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      {isVideo ? (
+                        <Film className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                      ) : (
+                        <ImageIcon className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                      )}
+                      <span className="truncate max-w-[120px] text-[11px]">{att.file_name}</span>
+                      {att.file_size && (
+                        <span className="text-[9px] text-silver-500 font-mono">
+                          {att.file_size > 1048576 
+                            ? `${(att.file_size / 1048576).toFixed(1)}MB` 
+                            : `${Math.round(att.file_size / 1024)}KB`}
+                        </span>
+                      )}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Action Form */}
           <form id="complaintReviewForm" onSubmit={handleUpdate} className="space-y-3 border-t border-white/10 pt-3">

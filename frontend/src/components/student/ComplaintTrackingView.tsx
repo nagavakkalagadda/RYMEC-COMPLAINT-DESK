@@ -7,7 +7,9 @@ import {
   AlertCircle, 
   RotateCcw, 
   QrCode, 
-  Paperclip
+  Paperclip,
+  Film,
+  Image as ImageIcon
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { Complaint, TimelineEvent, Attachment } from '../../types';
@@ -213,23 +215,66 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
               </div>
             </div>
 
-            {/* Attachments */}
+            {/* Supporting Evidence Attachments */}
             {attachments.length > 0 && (
               <div className="mt-4 pt-4 border-t border-white/10">
-                <span className="text-[11px] font-semibold uppercase text-silver-400 block mb-2">Supporting Documents</span>
-                <div className="flex flex-wrap gap-2">
-                  {attachments.map((att) => (
-                    <a
-                      key={att.id}
-                      href={att.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-silver-300 hover:bg-white/10 hover:text-white"
-                    >
-                      <Paperclip className="h-3.5 w-3.5" />
-                      <span>{att.file_name}</span>
-                    </a>
-                  ))}
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400 block mb-3">
+                  Supporting Evidence ({attachments.length} file{attachments.length > 1 ? 's' : ''})
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {attachments.map((att) => {
+                    const isVideo = att.mime_type?.startsWith('video/') || att.file_name?.match(/\.(mp4|webm|mov|3gp)$/i);
+                    const isImage = att.mime_type?.startsWith('image/') || att.file_name?.match(/\.(jpg|jpeg|png|webp|gif)$/i);
+
+                    return (
+                      <div
+                        key={att.id}
+                        className="rounded-xl border border-white/10 bg-black/30 p-2.5 flex flex-col gap-2 overflow-hidden hover:border-cyan-500/40 transition-all"
+                      >
+                        {isVideo ? (
+                          <div className="rounded-lg overflow-hidden bg-black/60 aspect-video flex items-center justify-center">
+                            <video
+                              src={att.file_url}
+                              controls
+                              className="w-full h-full object-contain"
+                              preload="metadata"
+                            />
+                          </div>
+                        ) : isImage ? (
+                          <a
+                            href={att.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg overflow-hidden bg-black/40 aspect-video block group relative"
+                          >
+                            <img
+                              src={att.file_url}
+                              alt={att.file_name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                            />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs text-white font-medium transition-opacity">
+                              View Full Image
+                            </div>
+                          </a>
+                        ) : (
+                          <div className="rounded-lg bg-white/5 aspect-video flex items-center justify-center">
+                            <Paperclip className="h-8 w-8 text-silver-400" />
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between text-xs pt-1">
+                          <span className="text-white font-medium truncate max-w-[150px]" title={att.file_name}>
+                            {att.file_name}
+                          </span>
+                          <span className="text-[10px] text-silver-400 font-mono">
+                            {att.file_size > 1048576 
+                              ? `${(att.file_size / 1048576).toFixed(1)} MB` 
+                              : `${Math.round(att.file_size / 1024)} KB`}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

@@ -23,6 +23,11 @@ const fileFilter = (req, file, cb) => {
     'image/jpeg',
     'image/png',
     'image/webp',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime',
+    'video/x-msvideo',
+    'video/3gpp',
     'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -31,7 +36,7 @@ const fileFilter = (req, file, cb) => {
   if (allowedMime.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Only images (JPEG, PNG, WEBP) and documents (PDF, DOC, DOCX) are permitted'), false);
+    cb(new Error('Only photos (JPEG, PNG, WEBP), videos (MP4, WEBM, MOV), and documents (PDF) are permitted'), false);
   }
 };
 

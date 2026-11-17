@@ -73,6 +73,7 @@ export interface Complaint {
   reopening_count: number;
   reopening_reason?: string;
   satisfaction_rating?: number;
+  attachments?: Attachment[];
   created_at: string;
   updated_at: string;
   resolved_at?: string;

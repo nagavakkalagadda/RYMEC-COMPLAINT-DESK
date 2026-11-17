@@ -33,6 +33,35 @@ async function submitComplaint(req, res) {
       return res.status(400).json({ error: 'Title and detailed description are required.' });
     }
 
+    // Evidence Validation (Photos: min 5 <= 200KB each, OR Video: 1 <= 2MB)
+    const filesToProcess = req.files && req.files.length > 0 ? req.files : (req.file ? [req.file] : []);
+    if (filesToProcess.length > 0) {
+      const isVideo = filesToProcess.some(f => f.mimetype && f.mimetype.startsWith('video/'));
+      if (isVideo) {
+        if (filesToProcess.length > 1) {
+          return res.status(400).json({ error: 'Please upload only 1 video clip for evidence.' });
+        }
+        if (filesToProcess[0].size > 2 * 1024 * 1024) {
+          return res.status(400).json({ 
+            error: `Video file "${filesToProcess[0].originalname}" (${(filesToProcess[0].size / (1024 * 1024)).toFixed(2)} MB) exceeds the maximum allowed limit of 2 MB.` 
+          });
+        }
+      } else {
+        for (const f of filesToProcess) {
+          if (f.size > 200 * 1024) {
+            return res.status(400).json({ 
+              error: `Photo "${f.originalname}" (${(f.size / 1024).toFixed(1)} KB) exceeds the maximum allowed size of 200 KB per photo.` 
+            });
+          }
+        }
+        if (filesToProcess.length < 5) {
+          return res.status(400).json({ 
+            error: `Evidence requires a minimum of 5 photos. Only ${filesToProcess.length} provided.` 
+          });
+        }
+      }
+    }
+
     const studentId = req.user ? req.user.id : null;
     const studentName = req.user ? req.user.name : 'Guest User';
     const studentEmail = req.user ? req.user.email : null;
@@ -98,22 +127,26 @@ async function submitComplaint(req, res) {
 
     const complaint = complaintRes.rows[0];
 
-    // Handle File Attachment if present
-    let attachmentData = null;
-    if (req.file) {
+    // Handle File Attachment(s) if present
+    const filesToProcess = req.files && req.files.length > 0 ? req.files : (req.file ? [req.file] : []);
+    const savedAttachments = [];
+    for (const f of filesToProcess) {
       const attachRes = await db.query(
         `INSERT INTO complaint_attachments (complaint_id, file_name, file_url, file_size, mime_type)
          VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
         [
           complaint.id,
-          req.file.originalname,
-          `/uploads/${req.file.filename}`,
-          req.file.size,
-          req.file.mimetype
+          f.originalname,
+          `/uploads/${f.filename}`,
+          f.size,
+          f.mimetype
         ]
       );
-      attachmentData = attachRes.rows[0];
+      if (attachRes.rows && attachRes.rows.length > 0) {
+        savedAttachments.push(attachRes.rows[0]);
+      }
     }
+    const attachmentData = savedAttachments[0] || null;
 
     // Initial Timeline Event
     await db.query(
@@ -213,6 +246,7 @@ async function submitComplaint(req, res) {
       message: 'Grievance submitted successfully',
       complaint: maskAnonymousData(complaint, req.user),
       attachment: attachmentData,
+      attachments: savedAttachments,
       qrCode: qrCodeDataUrl,
       prediction,
       duplicateWarning: duplicateMatch,
@@ -308,6 +342,7 @@ async function getMyComplaints(req, res) {
     const result = await db.query(
       `SELECT c.*, d.name as department_name,
         (SELECT COUNT(*) FROM complaint_attachments WHERE complaint_id = c.id) as attachment_count,
+        COALESCE((SELECT json_agg(a.*) FROM complaint_attachments a WHERE a.complaint_id = c.id), '[]'::json) as attachments,
         (SELECT rating FROM complaint_ratings WHERE complaint_id = c.id LIMIT 1) as satisfaction_rating
        FROM complaints c
        LEFT JOIN departments d ON c.department_id = d.id
@@ -330,7 +365,8 @@ async function getAllComplaints(req, res) {
 
     let queryText = `
       SELECT c.*, d.name as department_name, u.email as student_email, u.usn_roll as student_usn,
-        (SELECT rating FROM complaint_ratings WHERE complaint_id = c.id LIMIT 1) as satisfaction_rating
+        (SELECT rating FROM complaint_ratings WHERE complaint_id = c.id LIMIT 1) as satisfaction_rating,
+        COALESCE((SELECT json_agg(a.*) FROM complaint_attachments a WHERE a.complaint_id = c.id), '[]'::json) as attachments
       FROM complaints c
       LEFT JOIN departments d ON c.department_id = d.id
       LEFT JOIN users u ON c.student_id = u.id

@@ -21,8 +21,8 @@ const {
 router.get('/public-feed', getPublicResolvedFeed);
 router.get('/track/:complaintNumber', optionalAuth, trackComplaint);
 
-// Submission can be authenticated or guest
-router.post('/submit', optionalAuth, upload.single('attachment'), submitComplaint);
+// Submission can be authenticated or guest (supports multiple photos or video attachments)
+router.post('/submit', optionalAuth, upload.any(), submitComplaint);
 
 // Student endpoints
 router.get('/my', authenticateToken, getMyComplaints);

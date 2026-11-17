@@ -220,6 +220,29 @@ function fallbackQuery(text, params) {
     return { rows: [newComplaint], rowCount: 1 };
   }
 
+  // COMPLAINT ATTACHMENTS
+  if (lower.startsWith('insert into complaint_attachments')) {
+    const attachment = {
+      id: inMemoryStore.complaint_attachments.length + 1,
+      complaint_id: params[0],
+      file_name: params[1],
+      file_url: params[2],
+      file_size: params[3],
+      mime_type: params[4],
+      uploaded_at: new Date()
+    };
+    inMemoryStore.complaint_attachments.push(attachment);
+    return { rows: [attachment], rowCount: 1 };
+  }
+
+  if (lower.startsWith('select') && lower.includes('from complaint_attachments')) {
+    let rows = [...inMemoryStore.complaint_attachments];
+    if (lower.includes('where complaint_id = $1')) {
+      rows = rows.filter(a => a.complaint_id === Number(params[0]));
+    }
+    return { rows, rowCount: rows.length };
+  }
+
   // AUDIT LOGS
   if (lower.startsWith('select') && lower.includes('from audit_logs')) {
     let rows = [...inMemoryStore.audit_logs].reverse();
