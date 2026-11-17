@@ -150,7 +150,7 @@ export const StaffDashboard: React.FC = () => {
   const roleInfo = user?.role ? roleTitleMap[user.role] : { title: 'Administrative Desk', scope: 'Authorized Grievances' };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 py-8 space-y-6 pb-28">
       
       {/* Header Banner */}
       <GlassCard className="p-6 sm:p-8">

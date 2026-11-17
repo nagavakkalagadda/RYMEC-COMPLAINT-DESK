@@ -96,7 +96,7 @@ export const GlassSelect: React.FC<GlassSelectProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
-            className={`absolute top-full mt-1.5 z-[100] rounded-2xl border border-white/15 bg-navy-900/98 backdrop-blur-2xl shadow-2xl p-1.5 max-h-72 overflow-y-auto custom-scrollbar w-full min-w-full ${
+            className={`absolute top-full mt-1.5 z-[100] rounded-2xl border border-white/20 bg-[#0b132b] shadow-2xl p-1.5 max-h-72 overflow-y-auto custom-scrollbar w-full min-w-full ${
               dropdownAlign === 'right' 
                 ? 'right-0' 
                 : 'left-0'

@@ -12,7 +12,6 @@ import {
 import { Complaint } from '../../types';
 import { api } from '../../services/api';
 import { EvidenceViewerModal, EvidenceItem } from '../common/EvidenceViewerModal';
-import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
 
 interface ComplaintDetailModalProps {
   complaint: Complaint | null;
@@ -33,12 +32,11 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [viewingAttachment, setViewingAttachment] = useState<EvidenceItem | null>(null);
 
-  const statusOptions: GlassSelectOption[] = [
-    { value: 'pending', label: 'Pending Verification', icon: '⏳', description: 'Fresh grievance awaiting faculty inspection' },
-    { value: 'review', label: 'In Review / In Investigation', icon: '🔍', description: 'Under active inquiry by committee' },
-    { value: 'reopened', label: 'Reopened for Follow-up', icon: '🔄', description: 'Requires secondary redressal or action' },
-    { value: 'resolved', label: 'Resolved & Closed', icon: '✅', description: 'Action completed and redressal recorded' },
-    { value: 'rejected', label: 'Rejected / Dismissed', icon: '❌', description: 'Dismissed with official justification' }
+  const statusOptions = [
+    { value: 'pending', label: 'Pending', icon: '⏳' },
+    { value: 'review', label: 'In Review', icon: '🔍' },
+    { value: 'resolved', label: 'Resolved', icon: '✅' },
+    { value: 'rejected', label: 'Rejected', icon: '❌' }
   ];
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -195,23 +193,37 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 items-end">
-              <div>
-                <GlassSelect
-                  label="Update Status"
-                  options={statusOptions}
-                  value={status}
-                  onChange={(val) => setStatus(val as any)}
-                  className="w-full"
-                />
+            {/* Status Update Options (Segmented Liquid-Glass Selector) */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-semibold text-silver-300">
+                  Update Grievance Status
+                </label>
+                <div className="flex items-center gap-1.5 text-[10px] text-silver-400">
+                  <Clock className="h-3 w-3 text-cyan-400 shrink-0" />
+                  <span>Target SLA: {new Date(complaint.sla_deadline).toLocaleDateString()}</span>
+                </div>
               </div>
 
-              <div>
-                <label className="text-[11px] font-semibold text-silver-300 block mb-1">Target Resolution</label>
-                <div className="rounded-xl border border-white/10 bg-white/5 py-2.5 px-3 text-xs text-silver-300 flex items-center gap-1.5 h-[42px]">
-                  <Clock className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-                  <span>{new Date(complaint.sla_deadline).toLocaleDateString()}</span>
-                </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {statusOptions.map((opt) => {
+                  const isSelected = status === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setStatus(opt.value as any)}
+                      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-left cursor-pointer border ${
+                        isSelected
+                          ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/80 shadow-md shadow-cyan-950/40 ring-1 ring-cyan-400/40'
+                          : 'bg-white/5 text-silver-300 border-white/10 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <span className="text-sm shrink-0">{opt.icon}</span>
+                      <span className="truncate">{opt.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
