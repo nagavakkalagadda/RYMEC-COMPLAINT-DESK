@@ -1,10 +1,16 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-let connectionString = process.env.DATABASE_URL || 
-  'postgresql://neondb_owner:npg_Pfy0XE7TnhMN@ep-raspy-river-ar9edhbp.c-4.us-west-2.aws.neon.tech/neondb?sslmode=require';
-if (connectionString.includes('-pooler.')) {
-  connectionString = connectionString.replace('-pooler.', '.');
+let rawConn = process.env.DATABASE_URL || 
+  'postgresql://neondb_owner:npg_Pfy0XE7TnhMN@ep-raspy-river-ar9edhbp-pooler.c-4.us-west-2.aws.neon.tech/neondb?sslmode=require';
+
+// Sanitize connection string for node-postgres (strip unsupported channel_binding parameter)
+let connectionString = rawConn
+  .replace(/([&?])channel_binding=[^&]+(&|$)/g, '$1')
+  .replace(/[?&]$/, '');
+
+if (!connectionString.includes('sslmode=')) {
+  connectionString += (connectionString.includes('?') ? '&' : '?') + 'sslmode=require';
 }
 
 let pool;
@@ -18,7 +24,7 @@ try {
     },
     max: 10,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
+    connectionTimeoutMillis: 25000, // 25s allows Neon serverless compute to wake up from cold start
   });
 
   pool.on('error', (err) => {
@@ -42,12 +48,30 @@ const inMemoryStore = {
 
 async function query(text, params = []) {
   if (pool) {
-    try {
-      const res = await pool.query(text, params);
-      return res;
-    } catch (err) {
-      console.warn(`[DB PG Query Error, falling back gracefully]: ${err.message} - SQL: ${text.slice(0, 60)}...`);
-      return fallbackQuery(text, params);
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const res = await pool.query(text, params);
+        return res;
+      } catch (err) {
+        // If it's a transient connection error / cold start, retry once after a short delay
+        const isTransient = err.message && (
+          err.message.includes('timeout') ||
+          err.message.includes('Connection terminated') ||
+          err.message.includes('server closed the connection') ||
+          err.message.includes('Connection reset') ||
+          err.code === '57P01' ||
+          err.code === 'ECONNRESET'
+        );
+
+        if (attempt === 1 && isTransient) {
+          console.warn(`[Neon DB Cold Start / Busy]: Retrying query after brief pause (${err.message})...`);
+          await new Promise(r => setTimeout(r, 1500));
+          continue;
+        }
+
+        console.warn(`[DB PG Query Error, falling back gracefully]: ${err.message} - SQL: ${text.slice(0, 60)}...`);
+        return fallbackQuery(text, params);
+      }
     }
   }
   return fallbackQuery(text, params);
