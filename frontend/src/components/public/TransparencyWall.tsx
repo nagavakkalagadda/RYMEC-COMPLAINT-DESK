@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { ShieldCheck, CheckCircle2, Star, Filter } from 'lucide-react';
 import { api } from '../../services/api';
 import { GlassCard } from '../3d/GlassCard';
+import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
+
+const publicCategoryOptions: GlassSelectOption[] = [
+  { value: '', label: 'All Categories', icon: '🌐' },
+  { value: 'hostel', label: 'Hostel & Facilities', icon: '🏢' },
+  { value: 'academic', label: 'Academic & Labs', icon: '📚' },
+  { value: 'harassment', label: 'Safety & Security', icon: '🛡️' },
+  { value: 'admin', label: 'Administration', icon: '🏛️' },
+  { value: 'other', label: 'General Amenities', icon: '✨' },
+];
 
 export const TransparencyWall: React.FC = () => {
   const [feed, setFeed] = useState<any[]>([]);
@@ -36,20 +46,13 @@ export const TransparencyWall: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-silver-400" />
-            <select
+          <div className="w-full sm:w-56">
+            <GlassSelect
+              options={publicCategoryOptions}
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="rounded-xl border border-white/10 bg-navy-900 py-1.5 px-3 text-xs text-white focus:outline-none"
-            >
-              <option value="">All Categories</option>
-              <option value="hostel">Hostel & Facilities</option>
-              <option value="academic">Academic & Labs</option>
-              <option value="harassment">Safety & Security</option>
-              <option value="admin">Administration</option>
-              <option value="other">General Amenities</option>
-            </select>
+              onChange={(val) => setCategoryFilter(val)}
+              placeholder="All Categories"
+            />
           </div>
         </div>
       </GlassCard>

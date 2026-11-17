@@ -12,6 +12,7 @@ import {
 import { Complaint } from '../../types';
 import { api } from '../../services/api';
 import { EvidenceViewerModal, EvidenceItem } from '../common/EvidenceViewerModal';
+import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
 
 interface ComplaintDetailModalProps {
   complaint: Complaint | null;
@@ -31,6 +32,13 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [viewingAttachment, setViewingAttachment] = useState<EvidenceItem | null>(null);
+
+  const statusOptions: GlassSelectOption[] = [
+    { value: 'pending', label: 'Pending Review', icon: '⏳', description: 'Awaiting faculty verification' },
+    { value: 'review', label: 'In Review / In Investigation', icon: '🔍', description: 'Under active inquiry by committee' },
+    { value: 'resolved', label: 'Resolved', icon: '✅', description: 'Action completed and redressal recorded' },
+    { value: 'rejected', label: 'Rejected', icon: '❌', description: 'Dismissed with official justification' }
+  ];
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,25 +194,21 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 items-end">
               <div>
-                <label className="text-[11px] font-semibold text-silver-300 block mb-1">Update Status</label>
-                <select
+                <GlassSelect
+                  label="Update Status"
+                  options={statusOptions}
                   value={status}
-                  onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="review">In Review</option>
-                  <option value="resolved">Resolved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
+                  onChange={(val) => setStatus(val as any)}
+                  className="w-full"
+                />
               </div>
 
               <div>
                 <label className="text-[11px] font-semibold text-silver-300 block mb-1">Target Resolution</label>
-                <div className="rounded-xl border border-white/10 bg-white/5 py-1.5 px-2.5 text-xs text-silver-300 flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5 text-silver-400 shrink-0" />
+                <div className="rounded-xl border border-white/10 bg-white/5 py-2.5 px-3 text-xs text-silver-300 flex items-center gap-1.5 h-[42px]">
+                  <Clock className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
                   <span>{new Date(complaint.sla_deadline).toLocaleDateString()}</span>
                 </div>
               </div>

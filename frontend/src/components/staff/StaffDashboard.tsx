@@ -12,6 +12,23 @@ import { Complaint, TrendAlert } from '../../types';
 import { GlassCard } from '../3d/GlassCard';
 import { TrendAlertBanner } from './TrendAlertBanner';
 import { ComplaintDetailModal } from './ComplaintDetailModal';
+import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
+
+const statusFilterOptions: GlassSelectOption[] = [
+  { value: '', label: 'All Statuses', icon: '📁' },
+  { value: 'pending', label: 'Pending', icon: '⏳' },
+  { value: 'review', label: 'In Review', icon: '🔍' },
+  { value: 'reopened', label: 'Reopened', icon: '🔄' },
+  { value: 'resolved', label: 'Resolved', icon: '✅' },
+  { value: 'rejected', label: 'Rejected', icon: '❌' },
+];
+
+const priorityFilterOptions: GlassSelectOption[] = [
+  { value: '', label: 'All Priorities', icon: '⚡' },
+  { value: 'urgent', label: 'Urgent', icon: '🔴' },
+  { value: 'high', label: 'High', icon: '🟠' },
+  { value: 'normal', label: 'Normal', icon: '🟢' },
+];
 
 export const StaffDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -98,44 +115,34 @@ export const StaffDashboard: React.FC = () => {
 
       {/* Filter and Search Bar */}
       <GlassCard className="p-4 sm:p-6">
-        <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-center">
           <div className="relative sm:col-span-2">
-            <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-silver-500" />
+            <Search className="absolute left-3.5 top-3 h-4 w-4 text-silver-500" />
             <input
               type="text"
               placeholder="Search by ID, keyword..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-xs text-white placeholder-silver-500 focus:border-brand-accent focus:outline-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-9 pr-3 text-xs text-white placeholder-silver-500 focus:border-brand-accent focus:outline-none"
             />
           </div>
 
           <div>
-            <select
+            <GlassSelect
+              options={statusFilterOptions}
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-navy-900 py-2 px-3 text-xs text-white focus:outline-none"
-            >
-              <option value="">All Statuses</option>
-              <option value="pending">Pending</option>
-              <option value="review">In Review</option>
-              <option value="reopened">Reopened</option>
-              <option value="resolved">Resolved</option>
-              <option value="rejected">Rejected</option>
-            </select>
+              onChange={(val) => setStatusFilter(val)}
+              placeholder="All Statuses"
+            />
           </div>
 
           <div>
-            <select
+            <GlassSelect
+              options={priorityFilterOptions}
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-navy-900 py-2 px-3 text-xs text-white focus:outline-none"
-            >
-              <option value="">All Priorities</option>
-              <option value="urgent">Urgent</option>
-              <option value="high">High</option>
-              <option value="normal">Normal</option>
-            </select>
+              onChange={(val) => setPriorityFilter(val)}
+              placeholder="All Priorities"
+            />
           </div>
         </form>
       </GlassCard>
