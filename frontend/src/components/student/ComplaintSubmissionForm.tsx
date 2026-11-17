@@ -19,6 +19,7 @@ import {
 import { api } from '../../services/api';
 import { ComplaintCategory, Department } from '../../types';
 import { GlassCard } from '../3d/GlassCard';
+import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
 
 interface ComplaintSubmissionFormProps {
   onSuccess?: (complaintNumber: string) => void;
@@ -259,6 +260,32 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     setError(null);
   };
 
+  const categoryOptions: GlassSelectOption[] = [
+    { value: 'hostel', label: 'Hostel & Facilities', icon: '🏢', description: 'Rooms, food, water, hygiene, maintenance' },
+    { value: 'academic', label: 'Academic & Curriculum', icon: '📚', description: 'Classes, labs, faculty, marks, exams' },
+    { value: 'harassment', label: 'Harassment & Safety', icon: '🛡️', description: 'Ragging, bullying, campus safety concerns' },
+    { value: 'admin', label: 'Administration & Transport', icon: '🏛️', description: 'Fees, bus routes, certificates, office' },
+    { value: 'other', label: 'Other / General Grievance', icon: '💬', description: 'Miscellaneous campus matters' },
+  ];
+
+  const authorityOptions: GlassSelectOption[] = [
+    { value: 'auto', label: 'Auto-Route by Category', icon: '⚡', description: 'Institutional routing system allocates' },
+    { value: 'mentor', label: 'Class Mentor / Proctor', icon: '🎓', description: 'Directly to your assigned faculty mentor' },
+    { value: 'hod', label: 'Head of Department (HOD)', icon: '🏛️', description: 'Departmental leadership resolution' },
+    { value: 'warden', label: 'Hostel Chief Warden', icon: '🏢', description: 'Hostel mess & resident authority' },
+    { value: 'lecturer', label: 'Course Lecturer / Faculty', icon: '👨‍🏫', description: 'Subject teacher or lab in-charge' },
+    { value: 'principal', label: 'Principal / Central Office', icon: '🎖️', description: 'Senior institutional executive' },
+  ];
+
+  const departmentOptions: GlassSelectOption[] = [
+    { value: '', label: 'Auto-Route by Category', icon: '⚡' },
+    ...departments.map((d) => ({
+      value: String(d.id),
+      label: `${d.name} (${d.code})`,
+      icon: '🏛️'
+    }))
+  ];
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <AnimatePresence mode="wait">
@@ -405,65 +432,29 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 />
               </div>
 
-              {/* Category, Authority Routing & Department */}
+              {/* Category, Authority Routing & Department (Frosted Liquid Glass Selects) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-semibold text-silver-200">Grievance Category</label>
-                    {detectedCategory && (
-                      <span className="text-[10px] text-silver-400 font-semibold">
-                        Auto: {detectedCategory}
-                      </span>
-                    )}
-                  </div>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value as ComplaintCategory)}
-                    className="w-full rounded-xl border border-white/10 bg-navy-900 py-2.5 px-3 text-sm text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="hostel">Hostel & Facilities</option>
-                    <option value="academic">Academic & Curriculum</option>
-                    <option value="harassment">Harassment & Safety</option>
-                    <option value="admin">Administration & Transport</option>
-                    <option value="other">Other / General</option>
-                  </select>
-                </div>
+                <GlassSelect
+                  label="Grievance Category"
+                  badge={detectedCategory ? `Auto: ${detectedCategory}` : undefined}
+                  options={categoryOptions}
+                  value={category}
+                  onChange={(val) => setCategory(val as ComplaintCategory)}
+                />
 
-                <div>
-                  <label className="block text-xs font-semibold text-silver-200 mb-1.5">
-                    Route to Faculty / Authority
-                  </label>
-                  <select
-                    value={targetRole}
-                    onChange={(e) => setTargetRole(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-navy-900 py-2.5 px-3 text-sm text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="auto">Auto-Route by Role</option>
-                    <option value="mentor">🎓 Class Mentor / Proctor</option>
-                    <option value="hod">🏛️ Head of Department (HOD)</option>
-                    <option value="warden">🏢 Hostel Warden</option>
-                    <option value="lecturer">👨‍🏫 Course Lecturer / Faculty</option>
-                    <option value="principal">🎖️ Principal / Central Office</option>
-                  </select>
-                </div>
+                <GlassSelect
+                  label="Route to Faculty / Authority"
+                  options={authorityOptions}
+                  value={targetRole}
+                  onChange={(val) => setTargetRole(val)}
+                />
 
-                <div>
-                  <label className="block text-xs font-semibold text-silver-200 mb-1.5">
-                    Routing Department (Optional)
-                  </label>
-                  <select
-                    value={departmentId}
-                    onChange={(e) => setDepartmentId(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-navy-900 py-2.5 px-3 text-sm text-white focus:border-cyan-400 focus:outline-none"
-                  >
-                    <option value="">Auto-Route by Category</option>
-                    {departments.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.name} ({d.code})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <GlassSelect
+                  label="Routing Department (Optional)"
+                  options={departmentOptions}
+                  value={departmentId}
+                  onChange={(val) => setDepartmentId(val)}
+                />
               </div>
 
               {/* Description */}
