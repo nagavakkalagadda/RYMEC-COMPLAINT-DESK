@@ -11,6 +11,26 @@ function getAuthHeaders(): HeadersInit {
   return headers;
 }
 
+async function handleResponse(res: Response, defaultError = 'Request failed') {
+  const text = await res.text();
+  let data: any = null;
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    if (!res.ok) {
+      throw new Error(text && text.length < 250 ? text : `Server error (${res.status}: ${res.statusText || 'Internal Error'})`);
+    }
+    return text;
+  }
+  if (!res.ok) {
+    const errorMsg = data?.error || data?.message || defaultError;
+    const err: any = new Error(errorMsg);
+    err.data = data;
+    throw err;
+  }
+  return data;
+}
+
 export const api = {
   // Auth
   async login(email: string, password: string) {
@@ -19,13 +39,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-    const data = await res.json();
-    if (!res.ok) {
-      const err: any = new Error(data.error || 'Failed to login');
-      err.data = data;
-      throw err;
-    }
-    return data;
+    return await handleResponse(res, 'Failed to login');
   },
 
   async register(formData: any) {
@@ -34,9 +48,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to register');
-    return data;
+    return await handleResponse(res, 'Failed to register');
   },
 
   async verifyOtp(email: string, code: string) {
@@ -45,9 +57,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, code }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'OTP verification failed');
-    return data;
+    return await handleResponse(res, 'OTP verification failed');
   },
 
   async resendOtp(email: string) {
@@ -56,9 +66,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to resend OTP');
-    return data;
+    return await handleResponse(res, 'Failed to resend OTP');
   },
 
   async forgotPassword(email: string) {
@@ -67,9 +75,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to request password reset code');
-    return data;
+    return await handleResponse(res, 'Failed to request password reset code');
   },
 
   async verifyResetOtp(email: string, code: string) {
@@ -78,9 +84,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, code }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Invalid or expired OTP code');
-    return data;
+    return await handleResponse(res, 'Invalid or expired OTP code');
   },
 
   async resetPassword(email: string, code: string, new_password: string) {
@@ -89,18 +93,14 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, code, new_password }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to reset password');
-    return data;
+    return await handleResponse(res, 'Failed to reset password');
   },
 
   async getMe() {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: getAuthHeaders(),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch user');
-    return data;
+    return await handleResponse(res, 'Failed to fetch user profile');
   },
 
   async updateProfile(profileData: any) {
@@ -109,9 +109,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(profileData),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to update profile');
-    return data;
+    return await handleResponse(res, 'Failed to update profile');
   },
 
   async changePassword(current_password: string, new_password: string) {
@@ -120,14 +118,12 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ current_password, new_password }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to change password');
-    return data;
+    return await handleResponse(res, 'Failed to change password');
   },
 
   async getDemoAccounts() {
     const res = await fetch(`${API_BASE}/auth/demo-accounts`);
-    return await res.json();
+    return await handleResponse(res, 'Failed to fetch demo accounts');
   },
 
   // Complaints
@@ -141,27 +137,22 @@ export const api = {
       headers,
       body: formData,
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Submission failed');
-    return data;
+    return await handleResponse(res, 'Submission failed');
   },
 
   async trackComplaint(id: string) {
     const res = await fetch(`${API_BASE}/complaints/track/${id}`, {
       headers: getAuthHeaders(),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Complaint not found');
-    return data;
+    return await handleResponse(res, 'Complaint not found');
   },
 
   async getMyComplaints() {
     const res = await fetch(`${API_BASE}/complaints/my`, {
       headers: getAuthHeaders(),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to load complaints');
-    return data.complaints;
+    const data = await handleResponse(res, 'Failed to load complaints');
+    return data.complaints || [];
   },
 
   async getAllComplaints(params: Record<string, string> = {}) {
@@ -169,9 +160,8 @@ export const api = {
     const res = await fetch(`${API_BASE}/complaints/all?${query}`, {
       headers: getAuthHeaders(),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch complaints queue');
-    return data.complaints;
+    const data = await handleResponse(res, 'Failed to fetch complaints queue');
+    return data.complaints || [];
   },
 
   async updateStatus(complaintId: number, status: string, remarks: string, assignedTo?: number) {
@@ -180,9 +170,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ status, remarks, assigned_to: assignedTo }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to update status');
-    return data;
+    return await handleResponse(res, 'Failed to update status');
   },
 
   async reopenComplaint(complaintId: number, justification: string) {
@@ -191,9 +179,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ justification }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to reopen complaint');
-    return data;
+    return await handleResponse(res, 'Failed to reopen complaint');
   },
 
   async rateComplaint(complaintId: number, rating: number, feedback: string) {
@@ -202,15 +188,13 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ rating, feedback }),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to submit rating');
-    return data;
+    return await handleResponse(res, 'Failed to submit rating');
   },
 
   async getPublicFeed() {
     const res = await fetch(`${API_BASE}/complaints/public-feed`);
-    const data = await res.json();
-    return data.feed;
+    const data = await handleResponse(res, 'Failed to load public feed');
+    return data.feed || [];
   },
 
   // Analytics
@@ -218,16 +202,14 @@ export const api = {
     const res = await fetch(`${API_BASE}/analytics/overview`, {
       headers: getAuthHeaders(),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to fetch analytics');
-    return data;
+    return await handleResponse(res, 'Failed to fetch analytics');
   },
 
   // Departments
   async getDepartments() {
     const res = await fetch(`${API_BASE}/departments`);
-    const data = await res.json();
-    return data.departments;
+    const data = await handleResponse(res, 'Failed to fetch departments');
+    return data.departments || [];
   },
 
   // Notifications
@@ -235,8 +217,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/notifications`, {
       headers: getAuthHeaders(),
     });
-    const data = await res.json();
-    return data;
+    return await handleResponse(res, 'Failed to fetch notifications');
   },
 
   async markNotificationRead(id: string | number) {
@@ -244,12 +225,12 @@ export const api = {
       method: 'PATCH',
       headers: getAuthHeaders(),
     });
-    return await res.json();
+    return await handleResponse(res, 'Failed to mark notification read');
   },
 
   async getDevOutbox() {
     const res = await fetch(`${API_BASE}/notifications/dev-outbox`);
-    const data = await res.json();
-    return data.outbox;
+    const data = await handleResponse(res, 'Failed to fetch dev outbox');
+    return data.outbox || [];
   }
 };

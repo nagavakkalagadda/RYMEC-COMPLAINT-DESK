@@ -128,7 +128,6 @@ async function submitComplaint(req, res) {
     const complaint = complaintRes.rows[0];
 
     // Handle File Attachment(s) if present
-    const filesToProcess = req.files && req.files.length > 0 ? req.files : (req.file ? [req.file] : []);
     const savedAttachments = [];
     for (const f of filesToProcess) {
       const attachRes = await db.query(
