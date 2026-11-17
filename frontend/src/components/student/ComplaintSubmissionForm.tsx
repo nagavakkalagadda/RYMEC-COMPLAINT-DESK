@@ -71,6 +71,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
   // AI & Feedback states
   const [detectedCategory, setDetectedCategory] = useState<string | null>(null);
   const [detectedPriority, setDetectedPriority] = useState<string>('normal');
+  const [priority, setPriority] = useState<string>('normal');
   const [submitting, setSubmitting] = useState(false);
   const [submittedData, setSubmittedData] = useState<any | null>(null);
   const [copied, setCopied] = useState(false);
@@ -84,16 +85,23 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     const text = (title + ' ' + description).toLowerCase();
     if (text.includes('ragging') || text.includes('harass') || text.includes('unsafe') || text.includes('emergency')) {
       setDetectedPriority('urgent');
+      setPriority('urgent');
       setDetectedCategory('harassment');
     } else if (text.includes('exam') || text.includes('marks') || text.includes('syllabus') || text.includes('professor')) {
       setDetectedCategory('academic');
-      setDetectedPriority(text.includes('tomorrow') ? 'high' : 'normal');
+      const p = text.includes('tomorrow') ? 'high' : 'normal';
+      setDetectedPriority(p);
+      setPriority(p);
     } else if (text.includes('hostel') || text.includes('room') || text.includes('water') || text.includes('mess') || text.includes('food')) {
       setDetectedCategory('hostel');
-      setDetectedPriority(text.includes('poison') || text.includes('shock') ? 'urgent' : 'normal');
+      const p = text.includes('poison') || text.includes('shock') ? 'urgent' : 'normal';
+      setDetectedPriority(p);
+      setPriority(p);
     } else if (text.includes('fee') || text.includes('scholarship') || text.includes('certificate')) {
       setDetectedCategory('admin');
-      setDetectedPriority(text.includes('deadline') ? 'high' : 'normal');
+      const p = text.includes('deadline') ? 'high' : 'normal';
+      setDetectedPriority(p);
+      setPriority(p);
     }
   }, [title, description]);
 
@@ -211,6 +219,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     formData.append('description', description.trim());
     formData.append('category', category);
     formData.append('target_role', targetRole);
+    formData.append('priority', priority);
     if (departmentId) formData.append('department_id', departmentId);
     formData.append('is_anonymous', String(isAnonymous));
 
@@ -310,6 +319,12 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
         description: b.altName
       };
     })
+  ];
+
+  const submissionPriorityOptions: GlassSelectOption[] = [
+    { value: 'normal', label: 'Normal / Standard (7-Day SLA)', icon: '🟢', description: 'Routine maintenance, admin, general inquiries' },
+    { value: 'high', label: 'High Priority (48h SLA)', icon: '🔥', description: 'Time-critical exam, essential facilities, lab issues' },
+    { value: 'urgent', label: 'Urgent (Emergency — 24h SLA)', icon: '🚨', description: 'Critical safety, harassment, health, or hazard' }
   ];
 
   return (
@@ -458,8 +473,8 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 />
               </div>
 
-              {/* Category, Authority Routing & Department (Frosted Liquid Glass Selects) */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              {/* Category, Authority Routing, Department & Priority (Frosted Liquid Glass Selects) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <GlassSelect
                   label="Grievance Category"
                   badge={detectedCategory ? `Auto: ${detectedCategory}` : undefined}
@@ -480,6 +495,14 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                   options={departmentOptions}
                   value={departmentId}
                   onChange={(val) => setDepartmentId(val)}
+                />
+
+                <GlassSelect
+                  label="Urgency & Priority Tier"
+                  badge={detectedPriority !== 'normal' ? `AI: ${detectedPriority.toUpperCase()}` : undefined}
+                  options={submissionPriorityOptions}
+                  value={priority}
+                  onChange={(val) => setPriority(val)}
                 />
               </div>
 

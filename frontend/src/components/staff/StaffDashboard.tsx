@@ -15,19 +15,87 @@ import { ComplaintDetailModal } from './ComplaintDetailModal';
 import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
 
 const statusFilterOptions: GlassSelectOption[] = [
-  { value: '', label: 'All Statuses', icon: '📁' },
-  { value: 'pending', label: 'Pending', icon: '⏳' },
-  { value: 'review', label: 'In Review', icon: '🔍' },
-  { value: 'reopened', label: 'Reopened', icon: '🔄' },
-  { value: 'resolved', label: 'Resolved', icon: '✅' },
-  { value: 'rejected', label: 'Rejected', icon: '❌' },
+  { 
+    value: '', 
+    label: 'All Statuses (Full Registry)', 
+    icon: '📁', 
+    description: 'View all active & closed grievances across lifecycle' 
+  },
+  { 
+    value: 'pending', 
+    label: 'Pending Verification', 
+    icon: '⏳', 
+    description: 'Fresh grievances awaiting faculty triage & inspection' 
+  },
+  { 
+    value: 'review', 
+    label: 'In Review / Investigation', 
+    icon: '🔍', 
+    description: 'Active committee inquiry & departmental action' 
+  },
+  { 
+    value: 'reopened', 
+    label: 'Reopened by Student', 
+    icon: '🔄', 
+    description: 'Student requested supplementary redressal' 
+  },
+  { 
+    value: 'resolved', 
+    label: 'Resolved & Closed', 
+    icon: '✅', 
+    description: 'Action completed & official redressal recorded' 
+  },
+  { 
+    value: 'rejected', 
+    label: 'Rejected / Dismissed', 
+    icon: '❌', 
+    description: 'Closed with written justification by authority' 
+  },
+  { 
+    value: 'overdue', 
+    label: 'Overdue (Breached SLA)', 
+    icon: '⚠️', 
+    description: 'Grievances exceeding target SLA deadline' 
+  },
+  { 
+    value: 'escalated', 
+    label: 'Escalated to Executive', 
+    icon: '🏛️', 
+    description: 'Critical cases routed to HOD, Proctor, or Principal' 
+  },
 ];
 
 const priorityFilterOptions: GlassSelectOption[] = [
-  { value: '', label: 'All Priorities', icon: '⚡' },
-  { value: 'urgent', label: 'Urgent', icon: '🔴' },
-  { value: 'high', label: 'High', icon: '🟠' },
-  { value: 'normal', label: 'Normal', icon: '🟢' },
+  { 
+    value: '', 
+    label: 'All Priorities (Full Queue)', 
+    icon: '⚡', 
+    description: 'Show grievances across all severity levels' 
+  },
+  { 
+    value: 'urgent', 
+    label: 'Urgent (Emergency — 24h SLA)', 
+    icon: '🚨', 
+    description: 'Safety, harassment, hazard, health (24-Hour limit)' 
+  },
+  { 
+    value: 'high', 
+    label: 'High Priority (48h SLA)', 
+    icon: '🔥', 
+    description: 'Exams, hostel facilities, key equipment (48-Hour limit)' 
+  },
+  { 
+    value: 'normal', 
+    label: 'Normal / Standard (7-Day SLA)', 
+    icon: '🟢', 
+    description: 'Routine maintenance, admin & general inquiries' 
+  },
+  { 
+    value: 'overdue', 
+    label: 'Breached SLA Deadlines', 
+    icon: '⏰', 
+    description: 'Unresolved grievances exceeding allotted SLA' 
+  },
 ];
 
 export const StaffDashboard: React.FC = () => {
@@ -142,6 +210,7 @@ export const StaffDashboard: React.FC = () => {
               value={priorityFilter}
               onChange={(val) => setPriorityFilter(val)}
               placeholder="All Priorities"
+              dropdownAlign="right"
             />
           </div>
         </form>

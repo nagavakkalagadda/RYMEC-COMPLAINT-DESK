@@ -427,12 +427,22 @@ async function getAllComplaints(req, res) {
       queryText += ` AND c.category = $${queryParams.length}`;
     }
     if (status) {
-      queryParams.push(status);
-      queryText += ` AND c.status = $${queryParams.length}`;
+      if (status === 'overdue') {
+        queryText += ` AND c.status NOT IN ('resolved', 'rejected') AND c.sla_deadline < NOW()`;
+      } else if (status === 'escalated') {
+        queryText += ` AND (c.target_role IN ('principal', 'hod') OR c.priority = 'urgent')`;
+      } else {
+        queryParams.push(status);
+        queryText += ` AND c.status = $${queryParams.length}`;
+      }
     }
     if (priority) {
-      queryParams.push(priority);
-      queryText += ` AND c.priority = $${queryParams.length}`;
+      if (priority === 'overdue') {
+        queryText += ` AND c.status NOT IN ('resolved', 'rejected') AND c.sla_deadline < NOW()`;
+      } else {
+        queryParams.push(priority);
+        queryText += ` AND c.priority = $${queryParams.length}`;
+      }
     }
     if (department_id) {
       queryParams.push(Number(department_id));

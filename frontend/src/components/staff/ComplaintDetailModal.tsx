@@ -34,10 +34,11 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
   const [viewingAttachment, setViewingAttachment] = useState<EvidenceItem | null>(null);
 
   const statusOptions: GlassSelectOption[] = [
-    { value: 'pending', label: 'Pending Review', icon: '⏳', description: 'Awaiting faculty verification' },
+    { value: 'pending', label: 'Pending Verification', icon: '⏳', description: 'Fresh grievance awaiting faculty inspection' },
     { value: 'review', label: 'In Review / In Investigation', icon: '🔍', description: 'Under active inquiry by committee' },
-    { value: 'resolved', label: 'Resolved', icon: '✅', description: 'Action completed and redressal recorded' },
-    { value: 'rejected', label: 'Rejected', icon: '❌', description: 'Dismissed with official justification' }
+    { value: 'reopened', label: 'Reopened for Follow-up', icon: '🔄', description: 'Requires secondary redressal or action' },
+    { value: 'resolved', label: 'Resolved & Closed', icon: '✅', description: 'Action completed and redressal recorded' },
+    { value: 'rejected', label: 'Rejected / Dismissed', icon: '❌', description: 'Dismissed with official justification' }
   ];
 
   const handleUpdate = async (e: React.FormEvent) => {

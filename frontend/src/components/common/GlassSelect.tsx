@@ -17,6 +17,7 @@ interface GlassSelectProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  dropdownAlign?: 'left' | 'right' | 'auto';
 }
 
 export const GlassSelect: React.FC<GlassSelectProps> = ({
@@ -26,7 +27,8 @@ export const GlassSelect: React.FC<GlassSelectProps> = ({
   value,
   onChange,
   placeholder = 'Select an option',
-  className = ''
+  className = '',
+  dropdownAlign = 'auto'
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +96,13 @@ export const GlassSelect: React.FC<GlassSelectProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
-            className="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-2xl border border-white/15 bg-navy-900/95 backdrop-blur-2xl shadow-2xl p-1.5 max-h-60 overflow-y-auto custom-scrollbar"
+            className={`absolute top-full mt-1.5 z-50 rounded-2xl border border-white/15 bg-navy-900/95 backdrop-blur-2xl shadow-2xl p-1.5 max-h-72 overflow-y-auto custom-scrollbar ${
+              dropdownAlign === 'right' 
+                ? 'right-0 left-auto min-w-full sm:min-w-[280px]' 
+                : dropdownAlign === 'left'
+                ? 'left-0 right-auto min-w-full sm:min-w-[280px]'
+                : 'left-0 min-w-full sm:min-w-[280px]'
+            }`}
           >
             {options.map((opt) => {
               const isSelected = opt.value === value;
