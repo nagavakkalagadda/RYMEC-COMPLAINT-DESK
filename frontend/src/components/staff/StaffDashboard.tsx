@@ -193,6 +193,9 @@ export const StaffDashboard: React.FC = () => {
                     </td>
                     <td className="py-3 px-3 uppercase text-[10px] text-silver-400 font-semibold">
                       {c.category}
+                      {c.target_role && c.target_role !== 'auto' && (
+                        <span className="block text-[9px] text-cyan-300 font-mono">→ {c.target_role.toUpperCase()}</span>
+                      )}
                     </td>
                     <td className="py-3 px-3">
                       <span className="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-white/10 text-silver-300">

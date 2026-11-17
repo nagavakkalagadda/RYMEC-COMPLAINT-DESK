@@ -65,6 +65,7 @@ export interface Complaint {
   department_name?: string;
   priority: ComplaintPriority;
   status: ComplaintStatus;
+  target_role?: string;
   assigned_to?: number;
   sla_deadline: string;
   is_escalated: boolean;

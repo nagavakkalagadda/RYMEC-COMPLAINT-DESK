@@ -55,6 +55,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<ComplaintCategory>('hostel');
   const [departmentId, setDepartmentId] = useState<string>('');
+  const [targetRole, setTargetRole] = useState<string>('auto');
   const [departments, setDepartments] = useState<Department[]>([]);
   const [isAnonymous, setIsAnonymous] = useState(false);
 
@@ -205,6 +206,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     formData.append('title', title.trim());
     formData.append('description', description.trim());
     formData.append('category', category);
+    formData.append('target_role', targetRole);
     if (departmentId) formData.append('department_id', departmentId);
     formData.append('is_anonymous', String(isAnonymous));
 
@@ -252,6 +254,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     setSubmittedData(null);
     setTitle('');
     setDescription('');
+    setTargetRole('auto');
     setUploadError(null);
     setError(null);
   };
@@ -318,6 +321,7 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 <div className="mt-2 text-silver-400 space-y-1">
                   <p>Priority: <b className="text-white uppercase">{submittedData.complaint.priority}</b></p>
                   <p>Category: <b className="text-white uppercase">{submittedData.complaint.category}</b></p>
+                  <p>Routing: <b className="text-white uppercase">{submittedData.complaint.target_role && submittedData.complaint.target_role !== 'auto' ? submittedData.complaint.target_role : 'Automatic'}</b></p>
                   <p>Evidence: <b className="text-white">
                     {[
                       photos.length > 0 ? `${photos.length} Photo${photos.length > 1 ? 's' : ''}` : null,
@@ -401,8 +405,8 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 />
               </div>
 
-              {/* Category & Department */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Category, Authority Routing & Department */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-xs font-semibold text-silver-200">Grievance Category</label>
@@ -422,6 +426,24 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                     <option value="harassment">Harassment & Safety</option>
                     <option value="admin">Administration & Transport</option>
                     <option value="other">Other / General</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-silver-200 mb-1.5">
+                    Route to Faculty / Authority
+                  </label>
+                  <select
+                    value={targetRole}
+                    onChange={(e) => setTargetRole(e.target.value)}
+                    className="w-full rounded-xl border border-white/10 bg-navy-900 py-2.5 px-3 text-sm text-white focus:border-cyan-400 focus:outline-none"
+                  >
+                    <option value="auto">Auto-Route by Role</option>
+                    <option value="mentor">🎓 Class Mentor / Proctor</option>
+                    <option value="hod">🏛️ Head of Department (HOD)</option>
+                    <option value="warden">🏢 Hostel Warden</option>
+                    <option value="lecturer">👨‍🏫 Course Lecturer / Faculty</option>
+                    <option value="principal">🎖️ Principal / Central Office</option>
                   </select>
                 </div>
 

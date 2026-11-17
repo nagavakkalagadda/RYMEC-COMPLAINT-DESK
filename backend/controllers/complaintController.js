@@ -26,7 +26,8 @@ async function submitComplaint(req, res) {
       description,
       category: requestedCategory,
       department_id,
-      is_anonymous = false
+      is_anonymous = false,
+      target_role = 'auto'
     } = req.body;
 
     if (!title || !description) {
@@ -100,11 +101,27 @@ async function submitComplaint(req, res) {
 
     const complaintNumber = generateComplaintId();
 
+    const selectedRole = target_role && ['mentor', 'hod', 'warden', 'lecturer', 'principal'].includes(target_role.toLowerCase())
+      ? target_role.toLowerCase()
+      : 'auto';
+
+    let targetFacultyId = null;
+    if (selectedRole !== 'auto') {
+      const facultyRes = await db.query(
+        'SELECT id FROM users WHERE role = $1 ORDER BY id ASC LIMIT 1',
+        [selectedRole]
+      );
+      if (facultyRes.rows.length > 0) {
+        targetFacultyId = facultyRes.rows[0].id;
+      }
+    }
+
     const insertSql = `
       INSERT INTO complaints (
         complaint_number, student_id, is_anonymous, student_name_snapshot,
-        title, description, category, department_id, priority, status, sla_deadline
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        title, description, category, department_id, priority, status, sla_deadline,
+        target_role, assigned_to
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING *;
     `;
 
@@ -119,21 +136,32 @@ async function submitComplaint(req, res) {
       targetDeptId,
       finalPriority,
       'pending',
-      slaDeadline
+      slaDeadline,
+      selectedRole,
+      targetFacultyId
     ]);
 
     const complaint = complaintRes.rows[0];
 
-    // Handle File Attachment(s) if present
+    // Handle File Attachment(s) if present (in-memory buffer or disk file)
     const savedAttachments = [];
     for (const f of filesToProcess) {
+      let fileUrl;
+      if (f.buffer) {
+        fileUrl = `data:${f.mimetype};base64,${f.buffer.toString('base64')}`;
+      } else if (f.filename) {
+        fileUrl = `/uploads/${f.filename}`;
+      } else {
+        fileUrl = `/uploads/${f.originalname}`;
+      }
+
       const attachRes = await db.query(
         `INSERT INTO complaint_attachments (complaint_id, file_name, file_url, file_size, mime_type)
          VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
         [
           complaint.id,
           f.originalname,
-          `/uploads/${f.filename}`,
+          fileUrl,
           f.size,
           f.mimetype
         ]
@@ -145,6 +173,9 @@ async function submitComplaint(req, res) {
     const attachmentData = savedAttachments[0] || null;
 
     // Initial Timeline Event
+    const roleRemark = selectedRole !== 'auto' 
+      ? ` Specifically routed to ${selectedRole.toUpperCase()} for direct redressal.` 
+      : '';
     await db.query(
       `INSERT INTO complaint_timeline (complaint_id, action_by, action_role, status, remark)
        VALUES ($1, $2, $3, $4, $5);`,
@@ -153,9 +184,9 @@ async function submitComplaint(req, res) {
         studentId,
         'student',
         'pending',
-        is_anonymous 
+        (is_anonymous 
           ? 'Grievance submitted in Anonymous mode. Student identity protected.' 
-          : 'Grievance filed by student.'
+          : 'Grievance filed by student.') + roleRemark
       ]
     );
 
@@ -370,21 +401,23 @@ async function getAllComplaints(req, res) {
     `;
     const queryParams = [];
 
-    // Role-based visibility enforcement
+    // Role-based visibility enforcement (supporting category mapping, target_role, and assigned_to)
     if (user.role === 'lecturer') {
       queryParams.push('academic');
-      queryText += ` AND (c.category = $${queryParams.length} OR c.assigned_to = ${user.id})`;
+      queryText += ` AND (c.category = $${queryParams.length} OR c.target_role = 'lecturer' OR c.assigned_to = ${user.id})`;
     } else if (user.role === 'warden') {
       queryParams.push('hostel');
-      queryText += ` AND (c.category = $${queryParams.length} OR c.assigned_to = ${user.id})`;
+      queryText += ` AND (c.category = $${queryParams.length} OR c.target_role = 'warden' OR c.assigned_to = ${user.id})`;
     } else if (user.role === 'hod') {
       if (user.department) {
         queryParams.push(`%${user.department.trim()}%`);
-        queryText += ` AND (d.name ILIKE $${queryParams.length} OR c.category = 'academic')`;
+        queryText += ` AND (d.name ILIKE $${queryParams.length} OR c.category = 'academic' OR c.target_role = 'hod' OR c.assigned_to = ${user.id})`;
+      } else {
+        queryText += ` AND (c.category = 'academic' OR c.target_role = 'hod' OR c.assigned_to = ${user.id})`;
       }
     } else if (user.role === 'mentor') {
       queryParams.push('other');
-      queryText += ` AND (c.category = $${queryParams.length} OR c.assigned_to = ${user.id})`;
+      queryText += ` AND (c.category = $${queryParams.length} OR c.target_role = 'mentor' OR c.assigned_to = ${user.id})`;
     }
     // 'principal' sees all records without role filters
 

@@ -1,22 +1,7 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 
-const uploadsDir = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, 'evidence-' + uniqueSuffix + ext);
-  }
-});
+// Use in-memory storage to prevent EROFS (read-only file system) errors on Vercel serverless environments
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowedMime = [
