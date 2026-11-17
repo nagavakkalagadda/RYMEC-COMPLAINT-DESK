@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Complaint } from '../../types';
 import { api } from '../../services/api';
+import { EvidenceViewerModal, EvidenceItem } from '../common/EvidenceViewerModal';
 
 interface ComplaintDetailModalProps {
   complaint: Complaint | null;
@@ -29,6 +30,7 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
   const [remarks, setRemarks] = useState('');
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [viewingAttachment, setViewingAttachment] = useState<EvidenceItem | null>(null);
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,19 +137,18 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
                 {complaint.attachments.map((att: any) => {
                   const isVideo = att.mime_type?.startsWith('video/') || att.file_name?.match(/\.(mp4|webm|mov|3gp)$/i);
                   return (
-                    <a
+                    <button
                       key={att.id || att.file_url}
-                      href={att.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group relative flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-silver-300 hover:bg-white/10 hover:text-white transition-colors"
+                      type="button"
+                      onClick={() => setViewingAttachment(att)}
+                      className="group relative flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-silver-300 hover:border-cyan-400/50 hover:bg-white/10 hover:text-white transition-all cursor-pointer text-left"
                     >
                       {isVideo ? (
                         <Film className="h-3.5 w-3.5 text-purple-400 shrink-0" />
                       ) : (
                         <ImageIcon className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
                       )}
-                      <span className="truncate max-w-[120px] text-[11px]">{att.file_name}</span>
+                      <span className="truncate max-w-[120px] text-[11px] font-medium">{att.file_name}</span>
                       {att.file_size && (
                         <span className="text-[9px] text-silver-500 font-mono">
                           {att.file_size > 1048576 
@@ -155,11 +156,22 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
                             : `${Math.round(att.file_size / 1024)}KB`}
                         </span>
                       )}
-                    </a>
+                    </button>
                   );
                 })}
               </div>
             </div>
+          )}
+
+          {/* Evidence Fullscreen Lightbox Modal */}
+          {viewingAttachment && (
+            <EvidenceViewerModal
+              item={viewingAttachment}
+              items={complaint.attachments}
+              currentIndex={complaint.attachments.findIndex((a: any) => a.id === viewingAttachment.id || a.file_url === viewingAttachment.file_url)}
+              onClose={() => setViewingAttachment(null)}
+              onNavigate={(idx) => setViewingAttachment(complaint.attachments?.[idx] || null)}
+            />
           )}
 
           {/* Action Form */}

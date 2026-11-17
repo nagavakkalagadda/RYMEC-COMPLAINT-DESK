@@ -14,6 +14,7 @@ import {
 import { api } from '../../services/api';
 import { Complaint, TimelineEvent, Attachment } from '../../types';
 import { GlassCard } from '../3d/GlassCard';
+import { EvidenceViewerModal, EvidenceItem } from '../common/EvidenceViewerModal';
 
 interface ComplaintTrackingViewProps {
   initialId?: string;
@@ -27,6 +28,7 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
   const [sla, setSla] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [viewingAttachmentIndex, setViewingAttachmentIndex] = useState<number | null>(null);
 
   // Rating state
   const [userRating, setUserRating] = useState<number>(5);
@@ -222,40 +224,40 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
                   Supporting Evidence ({attachments.length} file{attachments.length > 1 ? 's' : ''})
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {attachments.map((att) => {
+                  {attachments.map((att, idx) => {
                     const isVideo = att.mime_type?.startsWith('video/') || att.file_name?.match(/\.(mp4|webm|mov|3gp)$/i);
                     const isImage = att.mime_type?.startsWith('image/') || att.file_name?.match(/\.(jpg|jpeg|png|webp|gif)$/i);
 
                     return (
                       <div
                         key={att.id}
-                        className="rounded-xl border border-white/10 bg-black/30 p-2.5 flex flex-col gap-2 overflow-hidden hover:border-cyan-500/40 transition-all"
+                        onClick={() => setViewingAttachmentIndex(idx)}
+                        className="rounded-xl border border-white/10 bg-black/30 p-2.5 flex flex-col gap-2 overflow-hidden hover:border-cyan-400/60 transition-all cursor-pointer group"
                       >
                         {isVideo ? (
-                          <div className="rounded-lg overflow-hidden bg-black/60 aspect-video flex items-center justify-center">
+                          <div className="rounded-lg overflow-hidden bg-black/60 aspect-video flex items-center justify-center relative">
                             <video
                               src={att.file_url}
-                              controls
-                              className="w-full h-full object-contain"
+                              className="w-full h-full object-contain pointer-events-none"
                               preload="metadata"
                             />
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 flex items-center justify-center transition-colors">
+                              <span className="rounded-full bg-cyan-500/80 p-2 text-white shadow-lg">
+                                <Film className="h-4 w-4" />
+                              </span>
+                            </div>
                           </div>
                         ) : isImage ? (
-                          <a
-                            href={att.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg overflow-hidden bg-black/40 aspect-video block group relative"
-                          >
+                          <div className="rounded-lg overflow-hidden bg-black/40 aspect-video block group relative">
                             <img
                               src={att.file_url}
                               alt={att.file_name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                             />
                             <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs text-white font-medium transition-opacity">
-                              View Full Image
+                              Click to Preview
                             </div>
-                          </a>
+                          </div>
                         ) : (
                           <div className="rounded-lg bg-white/5 aspect-video flex items-center justify-center">
                             <Paperclip className="h-8 w-8 text-silver-400" />
@@ -277,6 +279,17 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
                   })}
                 </div>
               </div>
+            )}
+
+            {/* Evidence Fullscreen Lightbox Modal */}
+            {viewingAttachmentIndex !== null && attachments[viewingAttachmentIndex] && (
+              <EvidenceViewerModal
+                item={attachments[viewingAttachmentIndex]}
+                items={attachments}
+                currentIndex={viewingAttachmentIndex}
+                onClose={() => setViewingAttachmentIndex(null)}
+                onNavigate={(newIdx) => setViewingAttachmentIndex(newIdx)}
+              />
             )}
           </GlassCard>
 

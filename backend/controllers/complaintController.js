@@ -702,6 +702,39 @@ async function getPublicResolvedFeed(req, res) {
   }
 }
 
+// 9. Get Attachment Content / Stream
+async function getAttachmentById(req, res) {
+  try {
+    const { id } = req.params;
+    const result = await db.query(
+      'SELECT * FROM complaint_attachments WHERE id = $1',
+      [Number(id)]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).send('Attachment not found');
+    }
+    const att = result.rows[0];
+
+    if (att.file_url && att.file_url.startsWith('data:')) {
+      const parts = att.file_url.split(',');
+      const meta = parts[0];
+      const base64Data = parts[1];
+      const mimeMatch = meta.match(/:(.*?);/);
+      const mimeType = mimeMatch ? mimeMatch[1] : (att.mime_type || 'application/octet-stream');
+      const buffer = Buffer.from(base64Data, 'base64');
+
+      res.setHeader('Content-Type', mimeType);
+      res.setHeader('Content-Length', buffer.length);
+      res.setHeader('Content-Disposition', `inline; filename="${att.file_name}"`);
+      return res.send(buffer);
+    } else {
+      return res.redirect(att.file_url);
+    }
+  } catch (err) {
+    return res.status(500).send('Error fetching attachment: ' + err.message);
+  }
+}
+
 module.exports = {
   submitComplaint,
   trackComplaint,
@@ -710,5 +743,6 @@ module.exports = {
   updateStatus,
   reopenComplaint,
   rateComplaint,
-  getPublicResolvedFeed
+  getPublicResolvedFeed,
+  getAttachmentById
 };

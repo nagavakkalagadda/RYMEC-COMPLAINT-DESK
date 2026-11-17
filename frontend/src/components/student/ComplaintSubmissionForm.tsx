@@ -20,6 +20,7 @@ import { api } from '../../services/api';
 import { ComplaintCategory, Department } from '../../types';
 import { GlassCard } from '../3d/GlassCard';
 import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
+import { EvidenceViewerModal, EvidenceItem } from '../common/EvidenceViewerModal';
 
 interface ComplaintSubmissionFormProps {
   onSuccess?: (complaintNumber: string) => void;
@@ -64,6 +65,8 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const [videoFile, setVideoFile] = useState<VideoItem | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [previewModalItem, setPreviewModalItem] = useState<EvidenceItem | null>(null);
+  const [previewModalIndex, setPreviewModalIndex] = useState<number>(0);
 
   // AI & Feedback states
   const [detectedCategory, setDetectedCategory] = useState<string | null>(null);
@@ -277,13 +280,36 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
     { value: 'principal', label: 'Principal / Central Office', icon: '🎖️', description: 'Senior institutional executive' },
   ];
 
+  // Comprehensive Branch & Department list matching Registration exactly
+  const ALL_REGISTRATION_BRANCHES = [
+    { label: 'Computer Science (CSE)', code: 'CSE', altName: 'Computer Science & Engineering', icon: '💻' },
+    { label: 'CSE - Cyber Security', code: 'CSE-CS', altName: 'CSE - Cyber Security', icon: '🔒' },
+    { label: 'Data Science', code: 'DS', altName: 'Data Science', icon: '📊' },
+    { label: 'Information Science (ISE)', code: 'ISE', altName: 'Information Science & Engineering', icon: '🌐' },
+    { label: 'AI & Machine Learning (AIML)', code: 'AIML', altName: 'Artificial Intelligence & Machine Learning', icon: '🤖' },
+    { label: 'Electronics & Comm. (ECE)', code: 'ECE', altName: 'Electronics & Communication Engineering', icon: '📡' },
+    { label: 'Electrical & Electronics (EEE)', code: 'EEE', altName: 'Electrical & Electronics Engineering', icon: '⚡' },
+    { label: 'Mechanical Engineering (ME)', code: 'ME', altName: 'Mechanical Engineering', icon: '⚙️' },
+    { label: 'Civil Engineering (CIVIL)', code: 'CV', altName: 'Civil Engineering', icon: '🏗️' },
+    { label: 'Hostel & Facilities', code: 'HOSTEL', altName: 'Hostel & Residential Facilities', icon: '🏢' },
+    { label: 'Student Welfare & Mentorship', code: 'MENTOR', altName: 'Student Welfare & Mentorship', icon: '🎓' },
+    { label: 'Examination & Registrar', code: 'EXAM', altName: 'Examination & Registrar Office', icon: '📝' },
+    { label: 'Safety & Anti-Ragging (ICC)', code: 'ICC', altName: 'Internal Complaints Committee (Anti-Ragging/Safety)', icon: '🛡️' }
+  ];
+
   const departmentOptions: GlassSelectOption[] = [
-    { value: '', label: 'Auto-Route by Category', icon: '⚡' },
-    ...departments.map((d) => ({
-      value: String(d.id),
-      label: `${d.name} (${d.code})`,
-      icon: '🏛️'
-    }))
+    { value: '', label: 'Auto-Route by Category', icon: '⚡', description: 'Institutional routing system allocates' },
+    ...ALL_REGISTRATION_BRANCHES.map((b) => {
+      const matchedDept = departments.find(
+        (d) => d.code === b.code || d.name.toLowerCase().includes(b.code.toLowerCase()) || d.name.toLowerCase() === b.altName.toLowerCase()
+      );
+      return {
+        value: matchedDept ? String(matchedDept.id) : b.code,
+        label: b.label,
+        icon: b.icon,
+        description: b.altName
+      };
+    })
   ];
 
   return (
@@ -559,7 +585,16 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                       {photos.map((item, index) => (
                         <div
                           key={item.id}
-                          className="group relative rounded-xl border border-white/10 bg-black/40 overflow-hidden flex flex-col"
+                          className="group relative rounded-xl border border-white/10 bg-black/40 overflow-hidden flex flex-col hover:border-cyan-400/50 transition-all cursor-pointer"
+                          onClick={() => {
+                            setPreviewModalIndex(index);
+                            setPreviewModalItem({
+                              file_name: item.file.name,
+                              file_url: item.preview,
+                              mime_type: item.file.type,
+                              file_size: item.size
+                            });
+                          }}
                         >
                           <div className="aspect-square w-full overflow-hidden bg-black/60 relative">
                             <img
@@ -567,10 +602,16 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                               alt={`Evidence ${index + 1}`}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                             />
+                            <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[10px] text-white font-medium transition-opacity">
+                              Click to Preview
+                            </div>
                             <button
                               type="button"
-                              onClick={() => handleRemovePhoto(item.id)}
-                              className="absolute top-1 right-1 rounded-md bg-rose-500/80 p-0.5 text-white hover:bg-rose-600 transition-colors shadow-sm cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemovePhoto(item.id);
+                              }}
+                              className="absolute top-1 right-1 rounded-md bg-rose-500/80 p-1 text-white hover:bg-rose-600 transition-colors shadow-sm cursor-pointer z-10"
                               title="Remove photo"
                             >
                               <X className="h-3 w-3" />
@@ -593,16 +634,60 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
                 {/* Video Preview */}
                 {videoFile && (
                   <div className="mt-3 rounded-xl border border-white/10 bg-black/40 p-2.5 max-w-sm">
-                    <div className="aspect-video w-full rounded-lg overflow-hidden bg-black/80 flex items-center justify-center">
+                    <div 
+                      className="aspect-video w-full rounded-lg overflow-hidden bg-black/80 flex items-center justify-center relative cursor-pointer group"
+                      onClick={() => {
+                        setPreviewModalIndex(0);
+                        setPreviewModalItem({
+                          file_name: videoFile.file.name,
+                          file_url: videoFile.preview,
+                          mime_type: videoFile.file.type,
+                          file_size: videoFile.size
+                        });
+                      }}
+                    >
                       <video
                         src={videoFile.preview}
                         controls
+                        playsInline
+                        preload="metadata"
                         className="w-full h-full object-contain"
                       />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-silver-400 mt-1 px-1">
+                      <span>Click to preview full-screen</span>
+                      <span className="text-cyan-400 font-mono">{formatFileSize(videoFile.size)}</span>
                     </div>
                   </div>
                 )}
               </div>
+
+              {/* Fullscreen Evidence Preview Modal */}
+              {previewModalItem && (
+                <EvidenceViewerModal
+                  item={previewModalItem}
+                  items={photos.length > 0 ? photos.map(p => ({
+                    file_name: p.file.name,
+                    file_url: p.preview,
+                    mime_type: p.file.type,
+                    file_size: p.size
+                  })) : [previewModalItem]}
+                  currentIndex={previewModalIndex}
+                  onClose={() => setPreviewModalItem(null)}
+                  onNavigate={(idx) => {
+                    setPreviewModalIndex(idx);
+                    const p = photos[idx];
+                    if (p) {
+                      setPreviewModalItem({
+                        file_name: p.file.name,
+                        file_url: p.preview,
+                        mime_type: p.file.type,
+                        file_size: p.size
+                      });
+                    }
+                  }}
+                />
+              )}
 
               {/* Submit CTA */}
               <button

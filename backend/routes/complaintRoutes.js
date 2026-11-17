@@ -14,12 +14,14 @@ const {
   updateStatus,
   reopenComplaint,
   rateComplaint,
-  getPublicResolvedFeed
+  getPublicResolvedFeed,
+  getAttachmentById
 } = require('../controllers/complaintController');
 
 // Public endpoints
 router.get('/public-feed', getPublicResolvedFeed);
 router.get('/track/:complaintNumber', optionalAuth, trackComplaint);
+router.get('/attachment/:id', getAttachmentById);
 
 // Submission can be authenticated or guest (supports multiple photos or video attachments)
 router.post('/submit', optionalAuth, upload.any(), submitComplaint);
