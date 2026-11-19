@@ -173,17 +173,6 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
             </div>
           )}
 
-          {/* Evidence Fullscreen Lightbox Modal */}
-          {viewingAttachment && (
-            <EvidenceViewerModal
-              item={viewingAttachment}
-              items={complaint.attachments}
-              currentIndex={complaint.attachments.findIndex((a: any) => a.id === viewingAttachment.id || a.file_url === viewingAttachment.file_url)}
-              onClose={() => setViewingAttachment(null)}
-              onNavigate={(idx) => setViewingAttachment(complaint.attachments?.[idx] || null)}
-            />
-          )}
-
           {/* Action Form */}
           <form id="complaintReviewForm" onSubmit={handleUpdate} className="space-y-3 border-t border-white/10 pt-3">
             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">
@@ -273,6 +262,17 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
         </div>
 
       </motion.div>
+
+      {/* Evidence Fullscreen Lightbox Modal */}
+      {viewingAttachment && (
+        <EvidenceViewerModal
+          item={viewingAttachment}
+          items={complaint.attachments}
+          currentIndex={complaint.attachments.findIndex((a: any) => a.id === viewingAttachment.id || a.file_url === viewingAttachment.file_url)}
+          onClose={() => setViewingAttachment(null)}
+          onNavigate={(idx) => setViewingAttachment(complaint.attachments?.[idx] || null)}
+        />
+      )}
     </div>
   );
 };

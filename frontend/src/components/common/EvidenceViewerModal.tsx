@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, Film, Image as ImageIcon, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -60,15 +61,18 @@ export const EvidenceViewerModal: React.FC<EvidenceViewerModalProps> = ({
     return `${(bytes / 1048576).toFixed(2)} MB`;
   };
 
-  return (
+  const modalContent = (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl">
+      <div 
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-navy-950/85 backdrop-blur-2xl"
+        onClick={onClose}
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
-          className="relative flex flex-col w-full max-w-4xl max-h-[92vh] rounded-3xl border border-white/20 bg-navy-900/95 shadow-2xl overflow-hidden"
+          className="relative flex flex-col w-full max-w-4xl max-h-[92vh] rounded-3xl border border-white/20 bg-navy-900/95 shadow-2xl overflow-hidden backdrop-blur-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header Bar */}
@@ -113,8 +117,8 @@ export const EvidenceViewerModal: React.FC<EvidenceViewerModalProps> = ({
             </div>
           </div>
 
-          {/* Media Content Preview Container */}
-          <div className="relative flex-1 min-h-[300px] max-h-[74vh] overflow-hidden bg-black/70 flex items-center justify-center p-3 sm:p-5">
+          {/* Media Content Preview Container - themed to match college dark navy glass */}
+          <div className="relative flex-1 min-h-[300px] max-h-[74vh] overflow-hidden bg-navy-950/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
             {isVideo ? (
               <video
                 src={item.file_url}
@@ -152,7 +156,7 @@ export const EvidenceViewerModal: React.FC<EvidenceViewerModalProps> = ({
                   <button
                     type="button"
                     onClick={() => onNavigate(currentIndex - 1)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/90 transition-all cursor-pointer"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-navy-900/80 border border-white/20 text-white hover:bg-navy-800 transition-all cursor-pointer backdrop-blur-md shadow-lg"
                     title="Previous file"
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -162,7 +166,7 @@ export const EvidenceViewerModal: React.FC<EvidenceViewerModalProps> = ({
                   <button
                     type="button"
                     onClick={() => onNavigate(currentIndex + 1)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/90 transition-all cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-navy-900/80 border border-white/20 text-white hover:bg-navy-800 transition-all cursor-pointer backdrop-blur-md shadow-lg"
                     title="Next file"
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -175,11 +179,13 @@ export const EvidenceViewerModal: React.FC<EvidenceViewerModalProps> = ({
           {/* Footer Info */}
           {items.length > 1 && (
             <div className="px-4 py-2 border-t border-white/10 bg-white/5 flex items-center justify-center text-xs text-silver-400">
-              <span>{currentIndex + 1} of {items.length} items</span>
+              <span className="tabular-nums">{currentIndex + 1} of {items.length} items</span>
             </div>
           )}
         </motion.div>
       </div>
     </AnimatePresence>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 };
