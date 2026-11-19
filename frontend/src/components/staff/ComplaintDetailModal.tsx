@@ -7,7 +7,10 @@ import {
   CheckCircle,
   Film,
   Image as ImageIcon,
-  Paperclip
+  Paperclip,
+  Search,
+  CheckCircle2,
+  XCircle
 } from 'lucide-react';
 import { Complaint } from '../../types';
 import { api } from '../../services/api';
@@ -33,10 +36,10 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
   const [viewingAttachment, setViewingAttachment] = useState<EvidenceItem | null>(null);
 
   const statusOptions = [
-    { value: 'pending', label: 'Pending', icon: '⏳' },
-    { value: 'review', label: 'In Review', icon: '🔍' },
-    { value: 'resolved', label: 'Resolved', icon: '✅' },
-    { value: 'rejected', label: 'Rejected', icon: '❌' }
+    { value: 'pending', label: 'Pending', icon: <Clock className="h-3.5 w-3.5 text-amber-400" /> },
+    { value: 'review', label: 'In Review', icon: <Search className="h-3.5 w-3.5 text-sky-400" /> },
+    { value: 'resolved', label: 'Resolved', icon: <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> },
+    { value: 'rejected', label: 'Rejected', icon: <XCircle className="h-3.5 w-3.5 text-rose-400" /> }
   ];
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -69,14 +72,14 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
         <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3">
           <div>
             <div className="flex flex-wrap items-center gap-1.5 mb-1">
-              <span className="font-mono text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+              <span className="font-mono text-xs font-semibold text-white bg-white/10 px-2 py-0.5 rounded-lg border border-white/10 tabular-nums">
                 {complaint.complaint_number}
               </span>
-              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
-                {complaint.priority} Priority
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium capitalize text-silver-300">
+                {complaint.priority} priority
               </span>
               {complaint.is_escalated && (
-                <span className="rounded-full bg-purple-500/15 border border-purple-500/30 px-2 py-0.5 text-[10px] font-semibold text-purple-300">
+                <span className="rounded-full bg-purple-500/15 border border-purple-500/30 px-2 py-0.5 text-[10px] font-medium text-purple-300">
                   Escalated L{complaint.escalation_level}
                 </span>
               )}
@@ -107,7 +110,7 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
                 <span className="truncate">{complaint.is_anonymous ? 'Anonymous Student' : complaint.student_name_snapshot || 'Student'}</span>
               </span>
               {!complaint.is_anonymous && complaint.student_usn && (
-                <span className="text-[10px] text-silver-400 block mt-0.5 font-mono">
+                <span className="text-[10px] text-silver-400 block mt-0.5 font-mono tabular-nums">
                   USN: {complaint.student_usn}
                 </span>
               )}
@@ -115,10 +118,10 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
 
             <div>
               <span className="text-silver-500 block text-[10px] uppercase font-semibold">Department &amp; SLA</span>
-              <span className="font-semibold text-white block mt-0.5 uppercase truncate text-[11px]">
+              <span className="font-semibold text-white block mt-0.5 capitalize truncate text-[11px]">
                 {complaint.category} • {complaint.department_name || 'General'}
               </span>
-              <span className="text-[10px] text-silver-400 block mt-0.5 font-mono">
+              <span className="text-[10px] text-silver-400 block mt-0.5 font-mono tabular-nums">
                 SLA: {new Date(complaint.sla_deadline).toLocaleDateString()}
               </span>
             </div>
@@ -199,7 +202,7 @@ export const ComplaintDetailModal: React.FC<ComplaintDetailModalProps> = ({
                 <label className="text-[11px] font-semibold text-silver-300">
                   Update Grievance Status
                 </label>
-                <div className="flex items-center gap-1.5 text-[10px] text-silver-400">
+                <div className="flex items-center gap-1.5 text-[10px] text-silver-400 tabular-nums">
                   <Clock className="h-3 w-3 text-cyan-400 shrink-0" />
                   <span>Target SLA: {new Date(complaint.sla_deadline).toLocaleDateString()}</span>
                 </div>

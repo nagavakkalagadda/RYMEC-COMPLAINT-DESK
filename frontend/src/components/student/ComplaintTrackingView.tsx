@@ -162,14 +162,14 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                  <span className="font-mono text-lg sm:text-xl font-bold text-white">
+                  <span className="font-mono text-lg sm:text-xl font-bold text-white tabular-nums">
                     {complaint.complaint_number}
                   </span>
-                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
+                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-medium capitalize text-silver-300">
                     {complaint.status}
                   </span>
-                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-silver-300">
-                    {complaint.priority} Priority
+                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-medium capitalize text-silver-300">
+                    {complaint.priority} priority
                   </span>
                 </div>
                 <h2 className="text-lg font-bold text-white">{complaint.title}</h2>
@@ -177,11 +177,11 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
 
               {sla && (
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5 text-right sm:min-w-44 text-xs">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-silver-400 block">SLA Response</span>
-                  <p className="text-sm font-bold text-white mt-0.5">
+                  <span className="text-[10px] font-medium text-silver-400 block">SLA response</span>
+                  <p className="text-sm font-bold text-white mt-0.5 tabular-nums">
                     {sla.displayText}
                   </p>
-                  <span className="text-[10px] text-silver-500 block">
+                  <span className="text-[10px] text-silver-500 block tabular-nums">
                     Target: {new Date(complaint.sla_deadline).toLocaleDateString()}
                   </span>
                 </div>
@@ -199,21 +199,21 @@ export const ComplaintTrackingView: React.FC<ComplaintTrackingViewProps> = ({ in
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-silver-300 border-t border-white/10 pt-4">
               <div>
                 <span className="text-silver-500 block text-[10px]">Category</span>
-                <span className="font-semibold text-white uppercase">{complaint.category}</span>
+                <span className="font-medium text-white capitalize">{complaint.category}</span>
               </div>
               <div>
                 <span className="text-silver-500 block text-[10px]">Department</span>
-                <span className="font-semibold text-white">{complaint.department_name || 'Central Office'}</span>
+                <span className="font-medium text-white">{complaint.department_name || 'Central Office'}</span>
               </div>
               <div>
-                <span className="text-silver-500 block text-[10px]">Submitted By</span>
-                <span className="font-semibold text-white">
+                <span className="text-silver-500 block text-[10px]">Submitted by</span>
+                <span className="font-medium text-white">
                   {complaint.is_anonymous ? 'Protected (Anonymous)' : complaint.student_name_snapshot || 'Student'}
                 </span>
               </div>
               <div>
-                <span className="text-silver-500 block text-[10px]">Registered On</span>
-                <span className="font-semibold text-white">{new Date(complaint.created_at).toLocaleDateString()}</span>
+                <span className="text-silver-500 block text-[10px]">Registered on</span>
+                <span className="font-medium text-white tabular-nums">{new Date(complaint.created_at).toLocaleDateString()}</span>
               </div>
             </div>
 

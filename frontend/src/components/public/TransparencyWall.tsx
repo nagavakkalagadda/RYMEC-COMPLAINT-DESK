@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, CheckCircle2, Star, Filter } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  CheckCircle2, 
+  Star, 
+  Layers, 
+  Building2, 
+  BookOpen, 
+  ShieldAlert, 
+  Landmark, 
+  Sparkles 
+} from 'lucide-react';
 import { api } from '../../services/api';
 import { GlassCard } from '../3d/GlassCard';
 import { GlassSelect, GlassSelectOption } from '../common/GlassSelect';
 
 const publicCategoryOptions: GlassSelectOption[] = [
-  { value: '', label: 'All Categories', icon: '🌐' },
-  { value: 'hostel', label: 'Hostel & Facilities', icon: '🏢' },
-  { value: 'academic', label: 'Academic & Labs', icon: '📚' },
-  { value: 'harassment', label: 'Safety & Security', icon: '🛡️' },
-  { value: 'admin', label: 'Administration', icon: '🏛️' },
-  { value: 'other', label: 'General Amenities', icon: '✨' },
+  { value: '', label: 'All Categories', icon: <Layers className="h-3.5 w-3.5 text-slate-400" /> },
+  { value: 'hostel', label: 'Hostel & Facilities', icon: <Building2 className="h-3.5 w-3.5 text-sky-400" /> },
+  { value: 'academic', label: 'Academic & Labs', icon: <BookOpen className="h-3.5 w-3.5 text-indigo-400" /> },
+  { value: 'harassment', label: 'Safety & Security', icon: <ShieldAlert className="h-3.5 w-3.5 text-rose-400" /> },
+  { value: 'admin', label: 'Administration', icon: <Landmark className="h-3.5 w-3.5 text-amber-400" /> },
+  { value: 'other', label: 'General Amenities', icon: <Sparkles className="h-3.5 w-3.5 text-emerald-400" /> },
 ];
 
 export const TransparencyWall: React.FC = () => {

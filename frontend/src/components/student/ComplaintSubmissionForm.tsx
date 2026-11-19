@@ -14,7 +14,27 @@ import {
   Image as ImageIcon,
   Trash2,
   AlertCircle,
-  X
+  X,
+  Building2,
+  BookOpen,
+  ShieldAlert,
+  Landmark,
+  MessageSquare,
+  Zap,
+  GraduationCap,
+  UserCheck,
+  Award,
+  Laptop,
+  Lock,
+  BarChart3,
+  Globe,
+  Cpu,
+  Radio,
+  Settings,
+  HardHat,
+  FileText,
+  Flame,
+  AlertOctagon
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { ComplaintCategory, Department } from '../../types';
@@ -273,41 +293,41 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
   };
 
   const categoryOptions: GlassSelectOption[] = [
-    { value: 'hostel', label: 'Hostel & Facilities', icon: '🏢', description: 'Rooms, food, water, hygiene, maintenance' },
-    { value: 'academic', label: 'Academic & Curriculum', icon: '📚', description: 'Classes, labs, faculty, marks, exams' },
-    { value: 'harassment', label: 'Harassment & Safety', icon: '🛡️', description: 'Ragging, bullying, campus safety concerns' },
-    { value: 'admin', label: 'Administration & Transport', icon: '🏛️', description: 'Fees, bus routes, certificates, office' },
-    { value: 'other', label: 'Other / General Grievance', icon: '💬', description: 'Miscellaneous campus matters' },
+    { value: 'hostel', label: 'Hostel & Facilities', icon: <Building2 className="h-3.5 w-3.5 text-sky-400" />, description: 'Rooms, food, water, hygiene, maintenance' },
+    { value: 'academic', label: 'Academic & Curriculum', icon: <BookOpen className="h-3.5 w-3.5 text-indigo-400" />, description: 'Classes, labs, faculty, marks, exams' },
+    { value: 'harassment', label: 'Harassment & Safety', icon: <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />, description: 'Ragging, bullying, campus safety concerns' },
+    { value: 'admin', label: 'Administration & Transport', icon: <Landmark className="h-3.5 w-3.5 text-amber-400" />, description: 'Fees, bus routes, certificates, office' },
+    { value: 'other', label: 'Other / General Grievance', icon: <MessageSquare className="h-3.5 w-3.5 text-emerald-400" />, description: 'Miscellaneous campus matters' },
   ];
 
   const authorityOptions: GlassSelectOption[] = [
-    { value: 'auto', label: 'Auto-Route by Category', icon: '⚡', description: 'Institutional routing system allocates' },
-    { value: 'mentor', label: 'Class Mentor / Proctor', icon: '🎓', description: 'Directly to your assigned faculty mentor' },
-    { value: 'hod', label: 'Head of Department (HOD)', icon: '🏛️', description: 'Departmental leadership resolution' },
-    { value: 'warden', label: 'Hostel Chief Warden', icon: '🏢', description: 'Hostel mess & resident authority' },
-    { value: 'lecturer', label: 'Course Lecturer / Faculty', icon: '👨‍🏫', description: 'Subject teacher or lab in-charge' },
-    { value: 'principal', label: 'Principal / Central Office', icon: '🎖️', description: 'Senior institutional executive' },
+    { value: 'auto', label: 'Auto-Route by Category', icon: <Zap className="h-3.5 w-3.5 text-cyan-400" />, description: 'Institutional routing system allocates' },
+    { value: 'mentor', label: 'Class Mentor / Proctor', icon: <GraduationCap className="h-3.5 w-3.5 text-indigo-400" />, description: 'Directly to your assigned faculty mentor' },
+    { value: 'hod', label: 'Head of Department (HOD)', icon: <Landmark className="h-3.5 w-3.5 text-amber-400" />, description: 'Departmental leadership resolution' },
+    { value: 'warden', label: 'Hostel Chief Warden', icon: <Building2 className="h-3.5 w-3.5 text-sky-400" />, description: 'Hostel mess & resident authority' },
+    { value: 'lecturer', label: 'Course Lecturer / Faculty', icon: <UserCheck className="h-3.5 w-3.5 text-emerald-400" />, description: 'Subject teacher or lab in-charge' },
+    { value: 'principal', label: 'Principal / Central Office', icon: <Award className="h-3.5 w-3.5 text-purple-400" />, description: 'Senior institutional executive' },
   ];
 
   // Comprehensive Branch & Department list matching Registration exactly
   const ALL_REGISTRATION_BRANCHES = [
-    { label: 'Computer Science (CSE)', code: 'CSE', altName: 'Computer Science & Engineering', icon: '💻' },
-    { label: 'CSE - Cyber Security', code: 'CSE-CS', altName: 'CSE - Cyber Security', icon: '🔒' },
-    { label: 'Data Science', code: 'DS', altName: 'Data Science', icon: '📊' },
-    { label: 'Information Science (ISE)', code: 'ISE', altName: 'Information Science & Engineering', icon: '🌐' },
-    { label: 'AI & Machine Learning (AIML)', code: 'AIML', altName: 'Artificial Intelligence & Machine Learning', icon: '🤖' },
-    { label: 'Electronics & Comm. (ECE)', code: 'ECE', altName: 'Electronics & Communication Engineering', icon: '📡' },
-    { label: 'Electrical & Electronics (EEE)', code: 'EEE', altName: 'Electrical & Electronics Engineering', icon: '⚡' },
-    { label: 'Mechanical Engineering (ME)', code: 'ME', altName: 'Mechanical Engineering', icon: '⚙️' },
-    { label: 'Civil Engineering (CIVIL)', code: 'CV', altName: 'Civil Engineering', icon: '🏗️' },
-    { label: 'Hostel & Facilities', code: 'HOSTEL', altName: 'Hostel & Residential Facilities', icon: '🏢' },
-    { label: 'Student Welfare & Mentorship', code: 'MENTOR', altName: 'Student Welfare & Mentorship', icon: '🎓' },
-    { label: 'Examination & Registrar', code: 'EXAM', altName: 'Examination & Registrar Office', icon: '📝' },
-    { label: 'Safety & Anti-Ragging (ICC)', code: 'ICC', altName: 'Internal Complaints Committee (Anti-Ragging/Safety)', icon: '🛡️' }
+    { label: 'Computer Science (CSE)', code: 'CSE', altName: 'Computer Science & Engineering', icon: <Laptop className="h-3.5 w-3.5 text-sky-400" /> },
+    { label: 'CSE - Cyber Security', code: 'CSE-CS', altName: 'CSE - Cyber Security', icon: <Lock className="h-3.5 w-3.5 text-rose-400" /> },
+    { label: 'Data Science', code: 'DS', altName: 'Data Science', icon: <BarChart3 className="h-3.5 w-3.5 text-emerald-400" /> },
+    { label: 'Information Science (ISE)', code: 'ISE', altName: 'Information Science & Engineering', icon: <Globe className="h-3.5 w-3.5 text-cyan-400" /> },
+    { label: 'AI & Machine Learning (AIML)', code: 'AIML', altName: 'Artificial Intelligence & Machine Learning', icon: <Cpu className="h-3.5 w-3.5 text-purple-400" /> },
+    { label: 'Electronics & Comm. (ECE)', code: 'ECE', altName: 'Electronics & Communication Engineering', icon: <Radio className="h-3.5 w-3.5 text-amber-400" /> },
+    { label: 'Electrical & Electronics (EEE)', code: 'EEE', altName: 'Electrical & Electronics Engineering', icon: <Zap className="h-3.5 w-3.5 text-yellow-400" /> },
+    { label: 'Mechanical Engineering (ME)', code: 'ME', altName: 'Mechanical Engineering', icon: <Settings className="h-3.5 w-3.5 text-slate-400" /> },
+    { label: 'Civil Engineering (CIVIL)', code: 'CV', altName: 'Civil Engineering', icon: <HardHat className="h-3.5 w-3.5 text-orange-400" /> },
+    { label: 'Hostel & Facilities', code: 'HOSTEL', altName: 'Hostel & Residential Facilities', icon: <Building2 className="h-3.5 w-3.5 text-sky-400" /> },
+    { label: 'Student Welfare & Mentorship', code: 'MENTOR', altName: 'Student Welfare & Mentorship', icon: <GraduationCap className="h-3.5 w-3.5 text-indigo-400" /> },
+    { label: 'Examination & Registrar', code: 'EXAM', altName: 'Examination & Registrar Office', icon: <FileText className="h-3.5 w-3.5 text-teal-400" /> },
+    { label: 'Safety & Anti-Ragging (ICC)', code: 'ICC', altName: 'Internal Complaints Committee (Anti-Ragging/Safety)', icon: <ShieldAlert className="h-3.5 w-3.5 text-rose-400" /> }
   ];
 
   const departmentOptions: GlassSelectOption[] = [
-    { value: '', label: 'Auto-Route by Category', icon: '⚡', description: 'Institutional routing system allocates' },
+    { value: '', label: 'Auto-Route by Category', icon: <Zap className="h-3.5 w-3.5 text-cyan-400" />, description: 'Institutional routing system allocates' },
     ...ALL_REGISTRATION_BRANCHES.map((b) => {
       const matchedDept = departments.find(
         (d) => d.code === b.code || d.name.toLowerCase().includes(b.code.toLowerCase()) || d.name.toLowerCase() === b.altName.toLowerCase()
@@ -322,9 +342,9 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
   ];
 
   const submissionPriorityOptions: GlassSelectOption[] = [
-    { value: 'normal', label: 'Normal / Standard (7-Day SLA)', icon: '🟢', description: 'Routine maintenance, admin, general inquiries' },
-    { value: 'high', label: 'High Priority (48h SLA)', icon: '🔥', description: 'Time-critical exam, essential facilities, lab issues' },
-    { value: 'urgent', label: 'Urgent (Emergency — 24h SLA)', icon: '🚨', description: 'Critical safety, harassment, health, or hazard' }
+    { value: 'normal', label: 'Normal / Standard (7-Day SLA)', icon: <Check className="h-3.5 w-3.5 text-emerald-400" />, description: 'Routine maintenance, admin, general inquiries' },
+    { value: 'high', label: 'High Priority (48h SLA)', icon: <Flame className="h-3.5 w-3.5 text-amber-400" />, description: 'Time-critical exam, essential facilities, lab issues' },
+    { value: 'urgent', label: 'Urgent (Emergency — 24h SLA)', icon: <AlertOctagon className="h-3.5 w-3.5 text-rose-400" />, description: 'Critical safety, harassment, health, or hazard' }
   ];
 
   return (
@@ -350,8 +370,8 @@ export const ComplaintSubmissionForm: React.FC<ComplaintSubmissionFormProps> = (
             {/* Tracking ID Badge */}
             <div className="my-6 inline-flex flex-col sm:flex-row items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-silver-400">Tracking Reference ID</span>
-                <p className="font-mono text-xl sm:text-2xl font-bold tracking-wider text-white">
+                <span className="text-[10px] font-semibold tracking-wide text-silver-400">Tracking reference ID</span>
+                <p className="font-mono text-xl sm:text-2xl font-bold tracking-wider text-white tabular-nums">
                   {submittedData.complaint.complaint_number}
                 </p>
               </div>

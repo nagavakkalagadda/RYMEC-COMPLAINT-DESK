@@ -24,10 +24,10 @@ export const AboutCollege: React.FC = () => {
           </div>
 
           <div className="space-y-1 text-center sm:text-left">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-cyan-400">
-              VEERASAIVA VIDYAVARDHAKA SANGHA, BALLARI
+            <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
+              Veerasaiva Vidyavardhaka Sangha, Ballari
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Rao Bahadur Y. Mahabaleswarappa Engineering College
             </h1>
             <p className="text-xs sm:text-sm text-silver-300">
@@ -54,7 +54,7 @@ export const AboutCollege: React.FC = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
-              <span className="font-mono text-xl font-bold text-cyan-400">1980</span>
+              <span className="font-mono text-xl font-bold text-cyan-400 tabular-nums">1980</span>
               <span className="text-[10px] text-silver-400 block">Established</span>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">

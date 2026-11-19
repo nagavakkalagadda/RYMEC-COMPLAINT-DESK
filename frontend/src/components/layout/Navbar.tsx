@@ -66,10 +66,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-white via-sky-100 to-sky-200 bg-clip-text text-transparent">
+              <span className="font-bold text-base tracking-wide text-white">
                 RYMEC
               </span>
-              <span className="rounded-full bg-amber-400/15 border border-amber-300/30 px-2 py-0.5 text-[10px] font-bold text-amber-300 shadow-sm">
+              <span className="rounded-full bg-amber-400/15 border border-amber-300/30 px-2 py-0.5 text-[10px] font-semibold text-amber-300 shadow-sm">
                 NAAC A+
               </span>
             </div>

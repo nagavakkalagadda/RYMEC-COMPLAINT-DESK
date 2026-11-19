@@ -50,15 +50,15 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
         {/* Institution Identity */}
         <div className="space-y-3 mb-6">
-          <p className="text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-400 bg-clip-text text-transparent drop-shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-amber-300/90">
             Veerasaiva Vidyavardhaka Sangha, Ballari
           </p>
 
-          <h2 className="text-lg sm:text-xl md:text-2xl font-medium text-slate-100 leading-snug drop-shadow-sm">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-normal text-slate-100 leading-snug drop-shadow-sm">
             Rao Bahadur Y. Mahabaleswarappa Engineering College
           </h2>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mt-1 bg-gradient-to-b from-white via-slate-50 to-sky-200 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(255,255,255,0.22)]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mt-1 text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
             RYMEC Grievance Desk
           </h1>
         </div>
