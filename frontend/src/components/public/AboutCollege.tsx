@@ -19,8 +19,12 @@ export const AboutCollege: React.FC = () => {
       {/* College Heritage Banner */}
       <GlassCard className="p-6 sm:p-8" glow>
         <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 shadow-glass-glow text-white">
-            <Building2 className="h-10 w-10" />
+          <div className="relative flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/10 p-1 shadow-lg backdrop-blur-md overflow-hidden">
+            <img
+              src="/images/rao-bahadur.png"
+              alt="Rao Bahadur Y. Mahabaleswarappa"
+              className="h-full w-full object-contain rounded-xl drop-shadow-md"
+            />
           </div>
 
           <div className="space-y-1 text-center sm:text-left">
